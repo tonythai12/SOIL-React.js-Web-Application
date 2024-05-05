@@ -1,0 +1,110 @@
+{
+  "Tomatoes": {
+    "tip": "To grow tomatoes successfully, ensure they are planted in well-drained soil and receive plenty of sunlight. Keep the soil consistently moist and provide adequate support for the plants as they grow.",
+    "specials": [
+      {
+        "name": "Organic Tomatoes",
+        "imageUrl": "/img/specialProducts/tomato.jpg",
+        "price": 3.99,
+        "salePrice": 2.99
+      },
+      {
+        "name": "Organic Tomato Seeds",
+        "imageUrl": "/img/specialProducts/tomatoseed.jpg",
+        "price": 1.99,
+        "salePrice": 1.49
+      }
+    ],
+    "imageUrl": "/img/specialProducts/tomatotip.jpg"
+  },
+  "Lettuce": {
+    "tip": "To grow organic lettuce successfully: Optimal Environmental Conditions: Lettuce thrives in partial shade, so place it where it won't receive harsh sunlight. Temperatures around 15-20°C are ideal.\n2. Soil: Lettuce prefers well-drained soil rich in organic matter.\n3. Proper Watering: Keep the soil consistently moist. Lettuce tends to bolt if the soil becomes too dry, resulting in a bitter taste.\n4. Regular Harvesting: Harvest lettuce leaves uniformly. If leaves grow too large, they may become bitter, so it's best to harvest them at a moderate size.\n5. Use of Organic Matter: Maintain soil fertility by using organic matter. This ensures healthier and tastier lettuce.\n6. Pest Management: Protect lettuce from pests using organic methods. Consider biological or organic pest control instead of chemical pesticides.\n\nFollowing these tips will help you grow bountiful organic lettuce.",
+    "specials": [
+      {
+        "name": "Organic Lettuce",
+        "imageUrl": "/img/specialProducts/lettuce.jpg",
+        "price": 2.49,
+        "salePrice": 1.99
+      },
+      {
+        "name": "Organic Lettuce Mix Seeds",
+        "imageUrl": "/img/specialProducts/lettuceseed.jpg",
+        "price": 1.79,
+        "salePrice": 1.29
+      }
+    ],
+    "imageUrl": "/img/specialProducts/lettucetip.jpg"
+  },
+  "Carrots": {
+    "tip": "While covering the soil, sprinkle the seeds thinly, about 2-3cm deep, so they are barely visible. Then, lightly spread a thin layer of finely crushed, well-decomposed compost over the soil. Carrot seeds are small and thin, so if the soil covering is too thick, it may reduce the germination rate. When the carrot seedlings emerge and the true leaves start to appear, thin them out.",
+    "specials": [
+      {
+        "name": "Organic Carrots",
+        "imageUrl": "/img/carrot.jpg",
+        "price": 2.29,
+        "salePrice": 1.79
+      },
+      {
+        "name": "Organic Carrot Seeds",
+        "imageUrl": "/img/specialProducts/carrotseed.jpg",
+        "price": 1.49,
+        "salePrice": 0.99
+      }
+    ],
+    "imageUrl": "/img/specialProducts/carrottip.jpg"
+  },
+  "Broccoli": {
+    "tip": "Soil Preparation: Broccoli thrives in well-drained soil rich in organic matter. Ensure the soil pH is between 6.0 and 7.0. Planting: Sow broccoli seeds directly in the garden or start them indoors 6-8 weeks before the last frost date. Plant the seeds 1/2 inch deep and 3 inches apart. Sunlight and Watering: Broccoli requires full sunlight for at least 6 hours a day. Keep the soil consistently moist, especially during dry periods.\nFertilization: Apply a balanced fertilizer high in nitrogen before planting and again when the plants are about 3-4 weeks old.\nSpacing and Thinning: Once the seedlings have 3-4 true leaves, thin them to stand 18-24 inches apart.\nPest and Disease Management: Monitor for common pests like aphids and cabbage worms. Use organic pest control methods if needed.\nHarvesting: Harvest broccoli heads when they are firm and tightly closed. Cut the main head at an angle, leaving some stem to encourage side shoots to develop for additional harvests.",
+    "specials": [
+      {
+        "name": "Organic Broccoli",
+        "imageUrl": "/img/specialProducts/broccoli.jpg",
+        "price": 2.99,
+        "salePrice": 2.49
+      },
+      {
+        "name": "Organic Broccoli Seeds",
+        "imageUrl": "/img/specialProducts/broccoliseed.jpeg",
+        "price": 1.79,
+        "salePrice": 1.29
+      }
+    ],
+    "imageUrl": "/img/specialProducts/broccolitip.jpg"
+  },
+  "Spinach": {
+    "tip": "Spinach prefers well-drained soil with plenty of organic matter. Harvest leaves regularly to promote continuous growth and prevent bolting.",
+    "specials": [
+      {
+        "name": "Organic Spinach",
+        "imageUrl": "/img/specialProducts/spinach.jpg",
+        "price": 2.79,
+        "salePrice": 2.19
+      },
+      {
+        "name": "Organic Spinach Seeds",
+        "imageUrl": "/img/specialProducts/spinachseed.webp",
+        "price": 1.69,
+        "salePrice": 1.19
+      }
+    ],
+    "imageUrl": "/img/specialProducts/spinachtip.jpg"
+  },
+  "BellPeppers": {
+    "tip": "Creating Suitable Growing Conditions: Bell peppers prefer a warm climate, so a warm and sunny location is ideal. While they can be grown indoors, they thrive better outdoors.\nSoil Preparation: Bell peppers favor well-drained soil. Mixing the soil with a good amount of compost or organic matter creates fertile and healthy soil.\nSeed Preparation: Choose high-quality seeds and soak them in water for 12-24 hours before planting to improve germination rates.\nPlanting: When planting bell pepper seeds in the ground, ensure they are spaced adequately apart. The wider the spacing, the healthier the plants will grow.\nMaintenance: Bell peppers are sensitive to drought, so ensure they receive sufficient water. Direct watering around the roots is recommended. Also, since bell peppers prefer high humidity, maintaining moisture while watering is essential.\nFertilization: During the initial growth stage, use nitrogen-rich fertilizer to maintain vibrant green leaves. As the fruits develop, use fertilizer with more phosphorus to promote fruiting.\nPest and Disease Prevention: Bell peppers are susceptible to pests and diseases, so regularly inspect the plants and promptly address any signs of infestation or infection.\nHarvesting: Harvest bell peppers when they reach a sufficient size and have developed a rich color. As they mature, they become sweeter and change in color, so timing the harvest correctly is crucial.",
+    "specials": [
+      {
+        "name": "Organic Bell Peppers",
+        "imageUrl": "/img/specialProducts/bellpepper.jpg",
+        "price": 3.49,
+        "salePrice": 2.99
+      },
+      {
+        "name": "Organic Bell Pepper Seeds",
+        "imageUrl": "/img/specialProducts/bellpepperseed.jpg",
+        "price": 1.99,
+        "salePrice": 1.49
+      }
+    ],
+    "imageUrl": "/img/specialProducts/bellpeppertip.jpg"
+  }
+}

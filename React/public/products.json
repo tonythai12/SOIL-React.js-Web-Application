@@ -1,0 +1,56 @@
+[
+  {
+    "id": 1,
+    "name": "Ripe and Juicy High-Sugar Apple",
+    "price": 12.04,
+    "salePrice": 10.0,
+    "quantity": 0,
+    "imageUrl": "/img/apple.jpg",
+    "desc": "Tasty Apple. Fresh and delicious."
+  },
+  {
+    "id": 2,
+    "name": "Sweet and Energizing Banana",
+    "price": 23.0,
+    "salePrice": 18.0,
+    "quantity": 0,
+    "imageUrl": "/img/banana.jpg",
+    "desc": "Sweet Banana. Energize your day."
+  },
+  {
+    "id": 3,
+    "name": "Healthy and Vitamin-Rich Carrot",
+    "price": 18.25,
+    "salePrice": 16.0,
+    "quantity": 0,
+    "imageUrl": "/img/carrot.jpg",
+    "desc": "Healthy Carrot. Rich in Vitamin A."
+  },
+  {
+    "id": 4,
+    "name": "Fresh and Nutritious Blueberry",
+    "price": 15.1,
+    "salePrice": 12.0,
+    "quantity": 0,
+    "imageUrl": "/img/blueberry.jpg",
+    "desc": "Fresh Blueberry. Rich in nutrients."
+  },
+  {
+    "id": 5,
+    "name": "Nutrient-Rich Culinary Mushroom",
+    "price": 10.0,
+    "salePrice": 8.0,
+    "quantity": 0,
+    "imageUrl": "/img/mushroom.jpg",
+    "desc": "Nutritious Mushroom. Great for dishes."
+  },
+  {
+    "id": 6,
+    "name": "Refreshing and Flavorful Pineapple",
+    "price": 20.0,
+    "salePrice": 17.0,
+    "quantity": 0,
+    "imageUrl": "/img/pineapple.jpg",
+    "desc": "Refreshing Pineapple. Full of flavor."
+  }
+]

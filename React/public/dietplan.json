@@ -1,0 +1,98 @@
+[
+  {
+    "id": 1,
+    "title": "Weight Loss Plan",
+    "description": "Focused on low-calorie, nutrient-rich foods.",
+    "products": ["Kale", "Chicken Breast", "Blueberries"],
+    "bgColor": "bg-green-100",
+    "icon": "<FaSeedling className='text-green-500 text-3xl' />"
+  },
+  {
+    "id": 2,
+    "title": "Muscle Building Plan",
+    "description": "Protein-packed meals for muscle gain.",
+    "products": ["Eggs", "Quinoa", "Spinach"],
+    "bgColor": "bg-blue-100",
+    "icon": "<FaDumbbell className='text-blue-500 text-3xl' />"
+  },
+  {
+    "id": 3,
+    "title": "Balanced Diet Plan",
+    "description": "A well-rounded diet plan focusing on a variety of nutrients from fruits, vegetables, lean proteins, and whole grains.",
+    "products": ["Brown Rice", "Broccoli", "Salmon"],
+    "bgColor": "bg-yellow-100",
+    "icon": "<FaAppleAlt className='text-red-500 text-3xl' />"
+  },
+  {
+    "id": 4,
+    "title": "Low Carb Plan",
+    "description": "A diet plan low in carbohydrates, suitable for those aiming for weight loss or managing blood sugar levels.",
+    "products": ["Avocado", "Salmon", "Cauliflower"],
+    "bgColor": "bg-ornage-200",
+    "icon": "<FaLeaf className='text-orange-500 text-3xl' />"
+  },
+  {
+    "id": 5,
+    "title": "Vegan Plan",
+    "description": "A plant-based diet plan suitable for vegans and those interested in reducing their consumption of animal products.",
+    "products": ["Tofu", "Quinoa", "Chickpeas"],
+    "bgColor": "bg-purple-100",
+    "icon": "<FaCarrot className='text-purple-500 text-3xl' />"
+  },
+  {
+    "id": 6,
+    "title": "Intermittent Fasting Plan",
+    "description": "A diet plan incorporating periods of fasting and eating, known to promote weight loss and improve metabolic health.",
+    "products": ["Black Coffee", "Green Tea", "Berries"],
+    "bgColor": "bg-red-100",
+    "icon": "<FaClock className='text-red-500 text-3xl' />"
+  },
+  {
+    "id": 7,
+    "title": "Mediterranean Diet Plan",
+    "description": "A diet plan inspired by the traditional eating habits of people from Mediterranean countries, emphasizing whole grains, olive oil, fish, and vegetables.",
+    "products": ["Olive Oil", "Tomatoes", "Feta Cheese"],
+    "bgColor": "bg-blue-200",
+    "icon": "<FaGlobe className='text-blue-500 text-3xl' />"
+  },
+  {
+    "id": 8,
+    "title": "High Protein Plan",
+    "description": "A diet plan rich in protein, suitable for muscle building and recovery after exercise.",
+    "products": ["Chicken Breast", "Greek Yogurt", "Almonds"],
+    "bgColor": "bg-green-200",
+    "icon": "<FaDumbbell className='text-green-500 text-3xl' />"
+  },
+  {
+    "id": 9,
+    "title": "Flexitarian Plan",
+    "description": "A flexible diet plan that combines vegetarian and occasional meat-based meals, suitable for those looking for a balanced approach to eating.",
+    "products": ["Beans", "Eggs", "Lean Beef"],
+    "bgColor": "bg-yellow-200",
+    "icon": "<FaBalanceScale className='text-yellow-500 text-3xl' />"
+  },
+  {
+    "id": 10,
+    "title": "Keto Plan",
+    "description": "A high-fat, low-carb diet plan designed to force the body into ketosis, a metabolic state in which the body burns fat for fuel.",
+    "products": ["Butter", "Eggs", "Bacon"],
+    "bgColor": "bg-purple-200",
+    "icon": "<FaBacon className='text-purple-500 text-3xl' />"
+  },
+  {
+    "id": 11,
+    "title": "Whole30 Plan",
+    "description": "A 30-day diet plan focused on whole foods and eliminating sugar, alcohol, grains, legumes, soy, and dairy.",
+    "products": ["Sweet Potato", "Almond Butter", "Wild-caught Fish"],
+    "bgColor": "bg-purple-200",
+    "icon": "<FaSeedling className='text-orange-500 text-3xl' />"
+  },
+  {
+    "id": 12,
+    "title": "Gluten-Free Plan",
+    "description": "A diet plan excluding gluten-containing foods, suitable for individuals with gluten intolerance or celiac disease.",
+    "products": ["Quinoa", "Almond Flour", "Coconut Oil"],
+    "bgColor": "bg-red-200",
+    "icon": "<FaBan className='text-red-500 text-3xl' />"
+  }
+]
