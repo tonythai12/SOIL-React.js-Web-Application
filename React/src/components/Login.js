@@ -65,15 +65,16 @@ export default function LogIn({
       }
 
       const user = userListData.find((user) => user.email === email);
+      console.log(user);
       logIn({
         name: user.name,
         email: email,
         password: password,
         date: user.date,
-        preference: user.preference,
-        dietProfile: user.dietProfile,
-        dietPlan: user.dietPlan,
-        imgUrl: user.imgUrl,
+        preference: user?.preference,
+        dietProfile: user?.dietProfile,
+        dietPlan: user?.dietPlan,
+        imgUrl: user?.imgUrl,
       });
 
       alert('Login successful');
