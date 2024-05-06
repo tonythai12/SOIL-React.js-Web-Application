@@ -101,22 +101,36 @@ export default function SignUp({
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
       />
-      {/* ImgUrl */}
       {formik.touched.password && formik.errors.password && (
         <p className='text-red-500'>{formik.errors.password}</p>
       )}
+      {/* ImgUrl */}
       <input
-        type='text'
+        type='file'
+        accept='image/*'
+        id='imgUrlInput'
         name='imgUrl'
-        placeholder='Image URL'
-        className='w-full h-10 px-3 bg-gray-200 rounded-md'
-        value={formik.values.imgUrl}
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
+        className='hidden'
+        onChange={(event) => {
+          formik.setFieldValue('imgUrl', event.currentTarget.files[0]);
+        }}
       />
+      <label htmlFor='imgUrlInput' className='cursor-pointer'>
+        <span className=' w-full h-10 px-3 mt-3 bg-gray-300 rounded-md flex items-center justify-center'>
+          {formik.values.imgUrl ? (
+            <span className='text-gray-800'>{formik.values.imgUrl.name}</span>
+          ) : (
+            <span className='text-gray-600'>Select Image</span>
+          )}
+        </span>
+      </label>
       {formik.touched.imgUrl && formik.errors.imgUrl && (
         <p className='text-red-500'>{formik.errors.imgUrl}</p>
       )}
+      <span className='text-sm text-gray-500'>
+        *If no image is provided, a default image icon will be set.
+      </span>
+
       {/* Error message */}
       {errorMessage && <p className='text-red-500'>{errorMessage}</p>}
       <input

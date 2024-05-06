@@ -15,15 +15,22 @@ export const AuthProvider = ({ children }) => {
     const loginName = localStorage.getItem('loginName');
     const loginEmail = localStorage.getItem('loginEmail');
     const loginPW = localStorage.getItem('loginPW');
-    const address = localStorage.getItem('address');
+    const address =
+      localStorage.getItem('address') || 'Spenser st, Melbourne, Australia';
     const singUpDate = localStorage.getItem('signUpDate');
 
     const preference = localStorage.getItem('preference');
     const dietProfile = localStorage.getItem('dietProfile');
     const dietPlan = localStorage.getItem('dietPlan');
-    const imgUrl = localStorage.getItem('imgUrl');
+
+    let imgUrl = localStorage.getItem('imgUrl');
 
     if (loginEmail && loginPW) {
+      if (imgUrl) {
+        if (imgUrl.startsWith('data:')) {
+          imgUrl = base64ToFile(imgUrl, 'image.jpg', 'image/jpeg');
+        }
+      }
       // If user information exists in local storage, set the user as logged in.
       setUserData({
         name: loginName,
@@ -34,7 +41,7 @@ export const AuthProvider = ({ children }) => {
         preference: preference,
         dietProfile: JSON.parse(dietProfile),
         dietPlan: JSON.parse(dietPlan),
-        imgUrl,
+        imgUrl: imgUrl,
       });
     }
   }, []);
@@ -66,10 +73,19 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('loginPW', userInfo.password);
     localStorage.setItem('address', userInfo.address);
     localStorage.setItem('signUpDate', userInfo.date);
-    localStorage.setItem('preference', userInfo.preference);
-    localStorage.getItem('dietProfile', userInfo.dietProfile);
-    localStorage.getItem('dietPlan', userInfo.dietPlan);
-    localStorage.getItem('imgUrl', userInfo?.imgUrl);
+    localStorage.setItem('preference', userInfo?.preference);
+    localStorage.getItem('dietProfile', userInfo?.dietProfile);
+    localStorage.getItem('dietPlan', userInfo?.dietPlan);
+    localStorage.setItem('imgUrl', userInfo.imgUrl);
+
+    // if imgUrl is File system or not.
+    if (userInfo.imgUrl instanceof File) {
+      fileToBase64(userInfo.imgUrl)
+        .then((base64String) => localStorage.setItem('imgUrl', base64String))
+        .catch((error) => console.error('Error:', error));
+    } else {
+      localStorage.setItem('imgUrl', userInfo.imgUrl);
+    }
   };
 
   const logOut = () => {
@@ -82,6 +98,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('preference');
     localStorage.removeItem('dietProfile');
     localStorage.removeItem('dietPlan');
+    localStorage.removeItem('imgUrl');
   };
 
   const savePreference = (preference, email) => {
@@ -99,9 +116,6 @@ export const AuthProvider = ({ children }) => {
   };
 
   const saveDietProfile = (profileInfo, email, dietPlan) => {
-    console.log(profileInfo);
-    // 1. 받아온 profileInfo를 userData에 저장하기, localSotrage도 같이
-    // 2. DietPlan에서 profileInfo가 있다면 그에 맞는 다이어트 계획 DB를 가진 컴포넌트를 보여준다.("글자로 거르기??")
     const updatedUserDataList = userListData.map((user) => {
       if (user.email === email) {
         return {
@@ -146,3 +160,24 @@ export const AuthProvider = ({ children }) => {
 
 // Custom hook for using context
 export const useAuth = () => useContext(AuthContext);
+
+// Decode the Base64 string to binary data and create a File object
+function base64ToFile(base64String, fileName, fileType) {
+  const byteCharacters = atob(base64String.split(',')[1]);
+  const byteNumbers = new Array(byteCharacters.length);
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i);
+  }
+  const byteArray = new Uint8Array(byteNumbers);
+  return new File([byteArray], fileName, { type: fileType });
+}
+
+// Function to convert a file to Base64 encoding for imgUrl in logIn function.
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+    reader.readAsDataURL(file);
+  });
+}

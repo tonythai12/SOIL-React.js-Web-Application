@@ -53,9 +53,17 @@ const MyPage = () => {
   const userInfo = {
     name: userData?.name,
     email: userData?.email,
-    address: userData?.address || 'Spenser st, Melbourne, Australia',
+    address:
+      userData?.address === 'undefined'
+        ? 'Spenser st, Melbourne, Australia'
+        : userData?.address,
     password: userData?.password,
     registration_date: userData?.date,
+    imgUrl: userData?.imgUrl
+      ? URL.createObjectURL(
+          new Blob([userData.imgUrl], { type: userData.imgUrl.type })
+        )
+      : null,
   };
 
   const userNameLists = userListData.map((data) => data.name);
@@ -153,7 +161,11 @@ const MyPage = () => {
             <div className='flex items-center justify-center'>
               <img
                 className='w-36 h-36 object-cover rounded-full border-4 border-green-600'
-                src={userInfo.imgUrl ? userInfo.imgUrl : '/img/wonbin.jpeg'}
+                src={
+                  userInfo.imgUrl
+                    ? userInfo.imgUrl
+                    : '/img/user_default_icon.png'
+                }
                 alt='profile'
               />
             </div>
