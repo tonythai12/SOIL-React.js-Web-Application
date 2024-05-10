@@ -12,6 +12,7 @@ const ReviewDetail = ({
   onCreate,
   setSelectedReviewIndex,
   isCreate,
+  setIsCreate,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedReview, setEditedReview] = useState(!isCreate ? review : {});
@@ -42,7 +43,14 @@ const ReviewDetail = ({
       {isCreate && <h1 className='text-white text-3xl'>Create the Review !</h1>}
       <button
         className='bg-gray-600 text-white px-4 py-2 mt-2 rounded self-end'
-        onClick={() => setSelectedReviewIndex(null)}
+        onClick={() => {
+          if (!isCreate) {
+            setSelectedReviewIndex(null);
+          } else {
+            setSelectedReviewIndex(null);
+            setIsCreate(false);
+          }
+        }}
       >
         Back to List
       </button>
@@ -58,7 +66,9 @@ const ReviewDetail = ({
             selectedRating={selectedRating}
             setSelectedRating={setSelectedRating}
             setIsEditing={setIsEditing}
+            setSelectedReviewIndex={setSelectedReviewIndex}
             isCreate={isCreate}
+            setIsCreate={setIsCreate}
           />
         ) : isCreate ? (
           <ReviewInput
@@ -71,7 +81,9 @@ const ReviewDetail = ({
             selectedRating={selectedRating}
             setSelectedRating={setSelectedRating}
             setIsEditing={setIsEditing}
+            setSelectedReviewIndex={setSelectedReviewIndex}
             isCreate={isCreate}
+            setIsCreate={setIsCreate}
           />
         ) : (
           <div className='h-900 text-white flex flex-col justify-center items-center'>
