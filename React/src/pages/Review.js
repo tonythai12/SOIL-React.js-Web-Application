@@ -31,8 +31,15 @@ const Review = ({ products, userData }) => {
     },
   ]);
   const [selectedReviewIndex, setSelectedReviewIndex] = useState(null);
+  const [isCreate, setIsCreate] = useState(false);
+  console.log(selectedReviewIndex);
   const handleViewDetail = (index) => {
     setSelectedReviewIndex(index);
+  };
+
+  const handleCreate = () => {
+    setIsCreate(true);
+    // setSelectedReviewIndex(0);
   };
 
   const handleDeleteReview = () => {
@@ -47,12 +54,33 @@ const Review = ({ products, userData }) => {
     const updatedReviews = [...reviews];
     updatedReviews[selectedReviewIndex] = editedReview;
     setReviews(updatedReviews);
-    alert('Successfully edited!');
+    alert('Successfully Edited!');
+  };
+
+  const handleCreateReview = (createReview) => {
+    const updatedReviews = [...reviews];
+    const newReview = {
+      // 임시 : 로그인한 사용자추가하면 필요없음.
+      ...createReview,
+      userImage: userData?.email
+        ? userData.imgUrl
+        : '/img/user_default_icon.png',
+      userName: 'someone',
+    };
+
+    updatedReviews.push(newReview);
+    setReviews(updatedReviews);
+    setIsCreate(false);
+    alert('Successfully Created!');
   };
   return (
     <div className='bg-slate-800'>
-      {!selectedReviewIndex && selectedReviewIndex !== 0 ? (
-        <ReviewList reviews={reviews} handleViewDetail={handleViewDetail} />
+      {!selectedReviewIndex && selectedReviewIndex !== 0 && !isCreate ? (
+        <ReviewList
+          reviews={reviews}
+          handleViewDetail={handleViewDetail}
+          handleCreate={handleCreate}
+        />
       ) : (
         <>
           <div className='flex justify-center items-center'>
@@ -63,7 +91,9 @@ const Review = ({ products, userData }) => {
               products={products}
               onDelete={handleDeleteReview}
               onEdit={handleEditReview}
+              onCreate={handleCreateReview}
               setSelectedReviewIndex={setSelectedReviewIndex} // back to list
+              isCreate={isCreate}
             />
           </div>
         </>

@@ -1,7 +1,6 @@
 import React from 'react';
 
 export default function ReviewInput({
-  review,
   products,
   handleSave,
   selectedProduct,
@@ -11,6 +10,7 @@ export default function ReviewInput({
   selectedRating,
   setSelectedRating,
   setIsEditing,
+  isCreate,
 }) {
   return (
     <div>
@@ -69,6 +69,7 @@ export default function ReviewInput({
       <textarea
         className='border p-2 mb-2 w-full h-48 resize-none'
         value={editedReview.content}
+        maxlength='100'
         onChange={(e) =>
           setEditedReview({ ...editedReview, content: e.target.value })
         }

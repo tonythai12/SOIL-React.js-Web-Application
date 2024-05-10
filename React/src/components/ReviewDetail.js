@@ -9,13 +9,19 @@ const ReviewDetail = ({
   products,
   onDelete,
   onEdit,
+  onCreate,
   setSelectedReviewIndex,
+  isCreate,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [editedReview, setEditedReview] = useState(review);
-  const [selectedProduct, setSelectedProduct] = useState(productName);
-  const [selectedRating, setSelectedRating] = useState(rating ? rating : null);
-  console.log(selectedProduct);
+  const [editedReview, setEditedReview] = useState(!isCreate ? review : {});
+  const [selectedProduct, setSelectedProduct] = useState(
+    !isCreate ? productName : ''
+  );
+  const [selectedRating, setSelectedRating] = useState(
+    isCreate ? null : rating ? rating : null
+  );
+
   const handleEdit = () => {
     setIsEditing(true);
   };
@@ -25,8 +31,15 @@ const ReviewDetail = ({
     setIsEditing(false);
   };
 
+  const handleCreate = () => {
+    onCreate(editedReview);
+    // setIsEditing(false);
+    console.log('create!');
+  };
+
   return (
     <div className='flex flex-col h-full items-center justify-center mt-10 mb-5 max-w-2xl'>
+      {isCreate && <h1 className='text-white text-3xl'>Create the Review !</h1>}
       <button
         className='bg-gray-600 text-white px-4 py-2 mt-2 rounded self-end'
         onClick={() => setSelectedReviewIndex(null)}
@@ -36,7 +49,6 @@ const ReviewDetail = ({
       <div className='max-w-2xl border mt-4 mb-12 border-gray-300 rounded-lg p-4'>
         {isEditing ? (
           <ReviewInput
-            review={review}
             products={products}
             handleSave={handleSave}
             selectedProduct={selectedProduct}
@@ -46,6 +58,20 @@ const ReviewDetail = ({
             selectedRating={selectedRating}
             setSelectedRating={setSelectedRating}
             setIsEditing={setIsEditing}
+            isCreate={isCreate}
+          />
+        ) : isCreate ? (
+          <ReviewInput
+            products={products}
+            handleSave={handleCreate}
+            selectedProduct={selectedProduct}
+            setSelectedProduct={setSelectedProduct}
+            editedReview={editedReview}
+            setEditedReview={setEditedReview}
+            selectedRating={selectedRating}
+            setSelectedRating={setSelectedRating}
+            setIsEditing={setIsEditing}
+            isCreate={isCreate}
           />
         ) : (
           <div className='h-900 text-white flex flex-col justify-center items-center'>
