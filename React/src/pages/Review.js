@@ -31,8 +31,6 @@ const Review = ({ products, userData }) => {
     },
   ]);
   const [selectedReviewIndex, setSelectedReviewIndex] = useState(null);
-  console.log(reviews);
-  // list에서 index 전달 -> detail에 전달 (review 자체를 전달).
   const handleViewDetail = (index) => {
     setSelectedReviewIndex(index);
   };

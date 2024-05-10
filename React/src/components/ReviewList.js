@@ -1,10 +1,7 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import Rating from './Rating';
 
 export default function ReviewList({ reviews, handleViewDetail }) {
-  const navigate = useNavigate();
-
   return (
     <div className='pb-7 h-full'>
       <div className='max-w-4xl mx-auto p-4'>
