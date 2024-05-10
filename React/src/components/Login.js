@@ -14,16 +14,6 @@ export default function LogIn({
   const [rememberMe, setRememberMe] = useState(false); // State to remember login
   const navigate = useNavigate();
 
-  // Remember email & password if 'remember me' is checked after logout.
-  useEffect(() => {
-    const storedEmail = localStorage.getItem('emailForRememberMe');
-    const storedPassword = localStorage.getItem('pwForRememberMe');
-    if (storedEmail && storedPassword) {
-      setRememberMe(true);
-      formik.setValues({ email: storedEmail, password: storedPassword });
-    }
-  }, []);
-
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -44,6 +34,16 @@ export default function LogIn({
       }, 400);
     },
   });
+
+  // Remember email & password if 'remember me' is checked after logout.
+  useEffect(() => {
+    const storedEmail = localStorage.getItem('emailForRememberMe');
+    const storedPassword = localStorage.getItem('pwForRememberMe');
+    if (storedEmail && storedPassword) {
+      setRememberMe(true);
+      formik.setValues({ email: storedEmail, password: storedPassword });
+    }
+  }, [formik]);
 
   const handleLogin = (values) => {
     const { email, password } = values;

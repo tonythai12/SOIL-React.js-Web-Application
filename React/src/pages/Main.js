@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
+  FaAddressBook,
   FaAppleAlt,
   FaCarrot,
   FaSeedling,
@@ -13,6 +14,7 @@ import Products from './Products';
 import GardenInfoAndSale from './GardenInfoAndSale';
 import Cart from './Cart';
 import DietPlan from './DietPlan';
+import Review from './Review';
 
 const tabs = [
   {
@@ -38,6 +40,11 @@ const tabs = [
     icon: <FaShoppingCart />,
     value: 'cart',
     // route: '/soil/cart',
+  },
+  {
+    label: 'Review',
+    icon: <FaAddressBook />,
+    value: 'review',
   },
 ];
 
@@ -199,6 +206,9 @@ function Main() {
           setCartProducts={setCartProducts}
           userData={userData}
         />
+      )}
+      {selectedTab === 'review' && (
+        <Review products={products} userData={userData} />
       )}
       {/* Footer */}
       <footer className='mt-auto bg-gray-100 p-4 text-center'>
