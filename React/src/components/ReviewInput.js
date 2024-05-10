@@ -7,10 +7,12 @@ export default function ReviewInput({
   setSelectedProduct,
   editedReview,
   setEditedReview,
+  setSelectedReviewIndex,
   selectedRating,
   setSelectedRating,
   setIsEditing,
   isCreate,
+  setIsCreate,
 }) {
   return (
     <div>
@@ -83,7 +85,14 @@ export default function ReviewInput({
         </button>
         <button
           className='bg-gray-500 text-white px-4 py-2 rounded'
-          onClick={() => setIsEditing(false)}
+          onClick={() => {
+            if (!isCreate) {
+              setIsEditing(false);
+            } else {
+              setSelectedReviewIndex(null);
+              setIsCreate(false);
+            }
+          }}
         >
           Cancel
         </button>

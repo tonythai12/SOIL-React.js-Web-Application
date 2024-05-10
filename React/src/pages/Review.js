@@ -94,6 +94,7 @@ const Review = ({ products, userData }) => {
               onCreate={handleCreateReview}
               setSelectedReviewIndex={setSelectedReviewIndex} // back to list
               isCreate={isCreate}
+              setIsCreate={setIsCreate}
             />
           </div>
         </>
