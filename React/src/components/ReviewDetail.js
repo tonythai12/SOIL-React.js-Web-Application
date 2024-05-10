@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Rating from './Rating';
+import ReviewInput from './ReviewInput';
 
 const ReviewDetail = ({
   review,
@@ -25,78 +26,27 @@ const ReviewDetail = ({
   };
 
   return (
-    <div className='flex flex-col h-full items-center justify-center mt-5 max-w-2xl'>
+    <div className='flex flex-col h-full items-center justify-center mt-10 mb-5 max-w-2xl'>
       <button
         className='bg-gray-600 text-white px-4 py-2 mt-2 rounded self-end'
         onClick={() => setSelectedReviewIndex(null)}
       >
         Back to List
       </button>
-      <div className='max-w-2xl border mt-4 mb-4 border-gray-300 rounded-lg p-4'>
+      <div className='max-w-2xl border mt-4 mb-12 border-gray-300 rounded-lg p-4'>
         {isEditing ? (
-          <div>
-            <h1 className='text-2xl text-white font-bold mb-4'>
-              {review?.title}
-            </h1>
-            <select
-              className='border p-2 mb-2 w-full'
-              value={selectedProduct}
-              onChange={(e) => {
-                return (
-                  setSelectedProduct(e.target.value),
-                  setEditedReview({
-                    ...editedReview,
-                    product: {
-                      ...editedReview.product,
-                      name: e.target.value,
-                    },
-                  })
-                );
-              }}
-            >
-              <option>Select a product</option>
-              {products.map((product) => (
-                <option key={product.id} value={product.name}>
-                  {product.name}
-                  <img src={product.imageUrl} alt='' />
-                </option>
-              ))}
-            </select>
-
-            <select
-              className='border p-2 mb-2 w-full'
-              value={selectedRating}
-              onChange={(e) => setSelectedRating(e.target.value)}
-            >
-              <option value=''>Select a rating</option>
-              {[1, 2, 3, 4, 5].map((rating) => (
-                <option key={rating} value={rating}>
-                  {Array(rating).fill('★').join('')}
-                </option>
-              ))}
-            </select>
-            <textarea
-              className='border p-2 mb-2 w-full h-48 resize-none'
-              value={editedReview.content}
-              onChange={(e) =>
-                setEditedReview({ ...editedReview, content: e.target.value })
-              }
-            ></textarea>
-            <div className='flex justify-end'>
-              <button
-                className='bg-green-500 text-white px-4 py-2 rounded mr-2'
-                onClick={handleSave}
-              >
-                Save
-              </button>
-              <button
-                className='bg-gray-500 text-white px-4 py-2 rounded'
-                onClick={() => setIsEditing(false)}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
+          <ReviewInput
+            review={review}
+            products={products}
+            handleSave={handleSave}
+            selectedProduct={selectedProduct}
+            setSelectedProduct={setSelectedProduct}
+            editedReview={editedReview}
+            setEditedReview={setEditedReview}
+            selectedRating={selectedRating}
+            setSelectedRating={setSelectedRating}
+            setIsEditing={setIsEditing}
+          />
         ) : (
           <div className='h-900 text-white flex flex-col justify-center items-center'>
             <h1 className='text-2xl font-bold mb-5'>{review?.title}</h1>
