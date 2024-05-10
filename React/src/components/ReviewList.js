@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Rating from './Rating';
 
-export default function ReviewList({ reviews, handleViewDetail }) {
+export default function ReviewList({
+  reviews,
+  handleViewDetail,
+  handleCreate,
+}) {
   return (
     <div className='pb-7 h-full'>
       <div className='max-w-4xl mx-auto p-4'>
@@ -19,7 +23,7 @@ export default function ReviewList({ reviews, handleViewDetail }) {
             >
               <div className='mr-4 w-20 flex flex-col justify-center items-center'>
                 <img
-                  className='flex-shrink-0 w-15 h-15 rounded-full'
+                  className=' w-15 h-15 rounded-full'
                   src={review?.userImage}
                   alt={review?.userName}
                 />
@@ -42,7 +46,7 @@ export default function ReviewList({ reviews, handleViewDetail }) {
           ))}
           <button
             className='w-40 bg-green-500 hover:bg-green-600 text-white mt-5 px-4 py-2 rounded-md transition duration-300 self-end justify-self-end'
-            onClick={() => alert('Service is not available')}
+            onClick={handleCreate}
           >
             Create Review
           </button>
