@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import ReviewDetail from '../components/ReviewDetail';
 import ReviewList from '../components/ReviewList';
 
-// 리뷰 컴포넌트
 const Review = ({ products, userData }) => {
   const [reviews, setReviews] = useState([
     {
@@ -29,17 +28,13 @@ const Review = ({ products, userData }) => {
         imgUrl: '/img/blueberry.jpg',
       },
     },
-  ]);
-  const [selectedReviewIndex, setSelectedReviewIndex] = useState(null);
-  const [isCreate, setIsCreate] = useState(false);
-  console.log(selectedReviewIndex);
+  ]); // get all review from db
+  const [selectedReviewIndex, setSelectedReviewIndex] = useState(null); // go to view detail.
+  const [isCreate, setIsCreate] = useState(false); // go to create review.
+
+  // when it has selected review index, it can move to view detail.
   const handleViewDetail = (index) => {
     setSelectedReviewIndex(index);
-  };
-
-  const handleCreate = () => {
-    setIsCreate(true);
-    // setSelectedReviewIndex(0);
   };
 
   const handleDeleteReview = () => {
@@ -60,7 +55,7 @@ const Review = ({ products, userData }) => {
   const handleCreateReview = (createReview) => {
     const updatedReviews = [...reviews];
     const newReview = {
-      // 임시 : 로그인한 사용자추가하면 필요없음.
+      // temp data to check UI
       ...createReview,
       userImage: userData?.email
         ? userData.imgUrl
@@ -79,10 +74,10 @@ const Review = ({ products, userData }) => {
         <ReviewList
           reviews={reviews}
           handleViewDetail={handleViewDetail}
-          handleCreate={handleCreate}
+          setIsCreate={setIsCreate}
         />
       ) : (
-        <>
+        <div>
           <div className='flex justify-center items-center'>
             <ReviewDetail
               review={reviews[selectedReviewIndex]}
@@ -97,7 +92,7 @@ const Review = ({ products, userData }) => {
               setIsCreate={setIsCreate}
             />
           </div>
-        </>
+        </div>
       )}
     </div>
   );

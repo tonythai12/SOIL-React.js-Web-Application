@@ -1,11 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Rating from './Rating';
 
-export default function ReviewList({
-  reviews,
-  handleViewDetail,
-  handleCreate,
-}) {
+export default function ReviewList({ reviews, handleViewDetail, setIsCreate }) {
   return (
     <div className='pb-7 h-full'>
       <div className='max-w-4xl mx-auto p-4'>
@@ -46,7 +42,7 @@ export default function ReviewList({
           ))}
           <button
             className='w-40 bg-green-500 hover:bg-green-600 text-white mt-5 px-4 py-2 rounded-md transition duration-300 self-end justify-self-end'
-            onClick={handleCreate}
+            onClick={() => setIsCreate(true)}
           >
             Create Review
           </button>
