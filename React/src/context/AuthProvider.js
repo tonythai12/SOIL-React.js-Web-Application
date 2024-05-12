@@ -61,6 +61,18 @@ export const AuthProvider = ({ children }) => {
     setUserListData([...newUserList]);
     // make logout the user who is deleted
     setUserData(null);
+
+    // revmove from localStorage.
+    localStorage.removeItem('loginName');
+    localStorage.removeItem('loginEmail');
+    localStorage.removeItem('loginPW');
+    localStorage.removeItem('address');
+    localStorage.removeItem('signUpDate');
+    localStorage.removeItem('preference');
+    localStorage.removeItem('dietProfile');
+    localStorage.removeItem('dietPlan');
+    localStorage.removeItem('imgUrl');
+
     // go back to home
     navigate('/');
   };

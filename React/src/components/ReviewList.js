@@ -1,7 +1,21 @@
 import React from 'react';
 import Rating from './Rating';
 
-export default function ReviewList({ reviews, handleViewDetail, setIsCreate }) {
+export default function ReviewList({
+  reviews,
+  userData,
+  handleViewDetail,
+  setIsCreate,
+}) {
+  const handleCreate = () => {
+    // only for user signed and logged in
+    if (!userData?.email) {
+      alert('This is a members-only page. You can access it after logging in');
+    } else {
+      setIsCreate(true);
+    }
+  };
+
   return (
     <div className='pb-7 h-full'>
       <div className='max-w-4xl mx-auto p-4'>
@@ -42,7 +56,7 @@ export default function ReviewList({ reviews, handleViewDetail, setIsCreate }) {
           ))}
           <button
             className='w-40 bg-green-500 hover:bg-green-600 text-white mt-5 px-4 py-2 rounded-md transition duration-300 self-end justify-self-end'
-            onClick={() => setIsCreate(true)}
+            onClick={() => handleCreate()}
           >
             Create Review
           </button>
