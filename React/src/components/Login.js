@@ -43,7 +43,7 @@ export default function LogIn({
       setRememberMe(true);
       formik.setValues({ email: storedEmail, password: storedPassword });
     }
-  }, [formik]);
+  }, []);
 
   const handleLogin = (values) => {
     const { email, password } = values;
