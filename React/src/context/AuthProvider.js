@@ -9,8 +9,6 @@ export const AuthProvider = ({ children }) => {
   const [userData, setUserData] = useState(null); // a user who is logined.
   const [userListData, setUserListData] = useState([]); // all users who are signed up in our store.
 
-  console.log(`userData => ${JSON.stringify(userData)}`);
-
   useEffect(() => {
     const loginName = localStorage.getItem('loginName');
     const loginEmail = localStorage.getItem('loginEmail');
@@ -22,6 +20,9 @@ export const AuthProvider = ({ children }) => {
     const preference = localStorage.getItem('preference');
     const dietProfile = localStorage.getItem('dietProfile');
     const dietPlan = localStorage.getItem('dietPlan');
+
+    const userDataListString = localStorage.getItem('userDataList');
+    const userDataList = JSON.parse(userDataListString);
 
     let imgUrl = localStorage.getItem('imgUrl');
 
@@ -43,13 +44,16 @@ export const AuthProvider = ({ children }) => {
         dietPlan: JSON.parse(dietPlan),
         imgUrl: imgUrl,
       });
+
+      setUserListData([...userDataList]);
     }
   }, []);
 
   // save userDataList
   const signUp = (data) => {
-    setUserListData([...userListData, data]);
-    localStorage.setItem('userDataList', userListData);
+    const updatedUserListData = [...userListData, data];
+    setUserListData(updatedUserListData);
+    localStorage.setItem('userDataList', JSON.stringify(updatedUserListData));
   };
 
   // Account deletion
@@ -72,6 +76,8 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('dietProfile');
     localStorage.removeItem('dietPlan');
     localStorage.removeItem('imgUrl');
+    localStorage.removeItem('emailForRememberMe');
+    localStorage.removeItem('pwForRememberMe');
 
     // go back to home
     navigate('/');
