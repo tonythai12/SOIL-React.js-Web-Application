@@ -2,6 +2,7 @@ import React from 'react';
 
 export default function ReviewInput({
   products,
+  userData,
   handleSave,
   selectedProduct,
   setSelectedProduct,
@@ -79,7 +80,7 @@ export default function ReviewInput({
       <div className='flex justify-end'>
         <button
           className='bg-green-500 text-white px-4 py-2 rounded mr-2'
-          onClick={handleSave}
+          onClick={() => handleSave(userData?.email)}
         >
           Save
         </button>

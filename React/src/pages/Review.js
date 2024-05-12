@@ -5,6 +5,7 @@ import ReviewList from '../components/ReviewList';
 const Review = ({ products, userData }) => {
   const [reviews, setReviews] = useState([
     {
+      user_id: '0000',
       title: 'A Fresh Carrot',
       content:
         'I bought fresh carrots from the grocery store. They were delicious and perfectly ripe, making for a satisfying snack or addition to any meal. Highly recommended!',
@@ -17,6 +18,7 @@ const Review = ({ products, userData }) => {
       },
     },
     {
+      user_id: '1111',
       title: 'So Sweet Blueberry',
       content:
         'I purchased some fresh blueberries from the store and they were fantastic! Juicy, sweet, and bursting with flavor. They were perfect for snacking on their own, adding to yogurt, or baking into muffins. Definitely a must-buy!',
@@ -40,6 +42,9 @@ const Review = ({ products, userData }) => {
   const handleDeleteReview = () => {
     const updatedReviews = [...reviews];
     updatedReviews.splice(selectedReviewIndex, 1);
+    // db로 할 때는 user_id랑 같고 해당 review인 것을 찾아서 지워주기
+    // 생성 수정은 해당 user_id를 가지고 추가 수정하지만 지울때는 해당 유저가 작성한것들이 많을 수 있기 때문에 해당 리뷰에 대한 추가정보도 필요함.
+    // 리뷰 자체 생성할때 생성되는 id를 가지고 삭제하자.(리뷰 고유 아이디)
     setReviews(updatedReviews);
     alert('Successfully deleted!');
     setSelectedReviewIndex(null);
@@ -51,16 +56,17 @@ const Review = ({ products, userData }) => {
     setReviews(updatedReviews);
     alert('Successfully Edited!');
   };
-
+  console.log(reviews);
   const handleCreateReview = (createReview) => {
     const updatedReviews = [...reviews];
+    console.log(userData);
     const newReview = {
       // temp data to check UI
       ...createReview,
-      userImage: userData?.email
-        ? userData.imgUrl
+      userImage: userData?.imgUrl
+        ? userData?.imgUrl
         : '/img/user_default_icon.png',
-      userName: 'someone',
+      userName: userData?.name,
     };
 
     updatedReviews.push(newReview);
@@ -73,6 +79,7 @@ const Review = ({ products, userData }) => {
       {!selectedReviewIndex && selectedReviewIndex !== 0 && !isCreate ? (
         <ReviewList
           reviews={reviews}
+          userData={userData}
           handleViewDetail={handleViewDetail}
           setIsCreate={setIsCreate}
         />
@@ -82,7 +89,8 @@ const Review = ({ products, userData }) => {
             <ReviewDetail
               review={reviews[selectedReviewIndex]}
               rating={reviews[selectedReviewIndex]?.rating}
-              productName={reviews[selectedReviewIndex]?.product.name}
+              userData={userData}
+              productName={reviews[selectedReviewIndex]?.product?.name}
               products={products}
               onDelete={handleDeleteReview}
               onEdit={handleEditReview}

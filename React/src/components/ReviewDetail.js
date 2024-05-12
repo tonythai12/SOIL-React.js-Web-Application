@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
 import ReviewInput from './ReviewInput';
 import ReviewInfo from './ReviewInfo';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+
+// UTC 플러그인을 추가
+dayjs.extend(utc);
 
 const ReviewDetail = ({
   review,
   productName,
   rating,
+  userData,
   products,
   onDelete,
   onEdit,
@@ -23,13 +29,19 @@ const ReviewDetail = ({
     isCreate ? null : rating ? rating : null
   );
 
-  const handleSave = () => {
-    onEdit(editedReview);
+  const handleSave = (userEmail) => {
+    const changedAt = dayjs()
+      .utcOffset('+10:00')
+      .format('ddd,D MMM,YYYY h:mm A');
+    onEdit({ ...editedReview, user_id: userEmail, changedAt });
     setIsEditing(false);
   };
 
-  const handleCreate = () => {
-    onCreate(editedReview);
+  const handleCreate = (userEmail) => {
+    const createdAt = dayjs()
+      .utcOffset('+10:00')
+      .format('ddd,D MMM,YYYY h:mm A');
+    onCreate({ ...editedReview, user_id: userEmail, createdAt });
   };
 
   return (
@@ -53,6 +65,7 @@ const ReviewDetail = ({
           // edit review
           <ReviewInput
             products={products}
+            userData={userData}
             handleSave={handleSave}
             selectedProduct={selectedProduct}
             setSelectedProduct={setSelectedProduct}
@@ -69,6 +82,7 @@ const ReviewDetail = ({
           // create review
           <ReviewInput
             products={products}
+            userData={userData}
             handleSave={handleCreate}
             selectedProduct={selectedProduct}
             setSelectedProduct={setSelectedProduct}
@@ -85,6 +99,7 @@ const ReviewDetail = ({
           // content of review
           <ReviewInfo
             review={review}
+            userData={userData}
             rating={rating}
             setIsEditing={setIsEditing}
             onDelete={onDelete}
