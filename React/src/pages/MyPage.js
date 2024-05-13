@@ -19,7 +19,7 @@ const purchaseHistory = [
   {
     icon: <FaShoppingBasket size={45} />,
     title: 'Shopping Cart',
-    route: '/',
+    route: '/soil/cart',
     selectedTab: 'cart',
   },
   {

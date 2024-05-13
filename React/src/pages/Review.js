@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import ReviewDetail from '../components/ReviewDetail';
 import ReviewList from '../components/ReviewList';
+import { useAuth } from '../context/AuthProvider';
+import { useProduct } from '../context/ProductProvider';
 
-const Review = ({ products, userData }) => {
+const Review = () => {
+  const { userData } = useAuth();
+  const { products } = useProduct();
+
   const [reviews, setReviews] = useState([
     {
       user_id: '0000',

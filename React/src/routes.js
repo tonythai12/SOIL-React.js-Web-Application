@@ -1,11 +1,12 @@
 import React from 'react';
 import Main from './pages/Main';
-// import Cart from './pages/Cart';
-// import DietPlan from './pages/DietPlan';
-// import Products from './pages/Products';
-// import SpecialSale from './pages/SpecialSale';
 import LoginAndSignUp from './pages/LoginAndSignUp';
 import MyPage from './pages/MyPage';
+import DietPlan from './pages/DietPlan';
+import Products from './pages/Products';
+import GardenInfoAndSale from './pages/GardenInfoAndSale';
+import Cart from './pages/Cart';
+import Review from './pages/Review';
 
 const routes = [
   { path: '/', element: <Main /> },
@@ -13,12 +14,13 @@ const routes = [
   {
     path: '/soil',
     element: <Main />,
-    // children: [
-    //   { path: 'product', element: <Products /> },
-    //   { path: 'sale', element: <SpecialSale /> },
-    //   { path: 'plan', element: <DietPlan /> },
-    //   { path: 'cart', element: <Cart /> },
-    // ],
+    children: [
+      { path: 'product', element: <Products /> },
+      { path: 'sale', element: <GardenInfoAndSale /> },
+      { path: 'plan', element: <DietPlan /> },
+      { path: 'cart', element: <Cart /> },
+      { path: 'review', element: <Review /> },
+    ],
   },
   { path: '/soil/:id', element: <MyPage /> },
   { path: '/soil/login', element: <LoginAndSignUp /> },

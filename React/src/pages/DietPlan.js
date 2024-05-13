@@ -12,6 +12,7 @@ import {
   FaBan,
 } from 'react-icons/fa'; // Example icons for diet plans
 import UserProfileForm from '../components/UserProfileForm';
+import { useAuth } from '../context/AuthProvider';
 
 // convert icon to JSX element from json file to use in components
 const iconComponents = {
@@ -54,27 +55,21 @@ const iconComponents = {
   ),
 };
 
-export default function DietPlan({ userData, saveDietProfile }) {
+export default function DietPlan() {
+  const { userData, saveDietProfile } = useAuth();
   const [showProfileForm, setShowProfileForm] = useState(false);
   const [dietPlan, setDietPlan] = useState([]);
 
-  // get diet plan data from json file.
   useEffect(() => {
-    const fetchDietPlanInfo = async () => {
-      try {
-        const response = await fetch('./dietplan.json');
-        if (!response.ok) {
-          throw new Error('Failed to fetch data');
-        }
-        const data = await response.json();
-
-        setDietPlan(userData?.dietPlan ? userData?.dietPlan : data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchDietPlanInfo();
+    // get products list from product.json
+    fetch('/dietplan.json')
+      .then((response) => response.json())
+      .then((data) =>
+        setDietPlan(userData?.dietPlan ? userData?.dietPlan : data)
+      )
+      .catch((error) =>
+        console.error('An error occurred while loading the data.', error)
+      );
   }, [userData?.dietPlan]);
 
   const handleProfileFormOpen = () => {

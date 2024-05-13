@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
 import { FaShoppingCart } from 'react-icons/fa';
 import Modal from '../components/Modal';
+import { useProduct } from '../context/ProductProvider';
+import { useAuth } from '../context/AuthProvider';
+import { useCart } from '../context/CartProvider';
 
-export default function Products({ products, addToCart, userData }) {
+export default function Products() {
+  const { userData } = useAuth();
+  const { products } = useProduct();
+  const { addToCart } = useCart();
+
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isOpen2, setIsOpen2] = useState(false);
-  // const [cartMessage, setCartMessage] = useState('');
 
   products.forEach((product) => {
     const discountPercentage =
