@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import { FaTrashAlt, FaMinus, FaPlus } from 'react-icons/fa';
 import Bill from '../components/Bill';
+import { useAuth } from '../context/AuthProvider';
+import { useCart } from '../context/CartProvider';
 
-export default function Cart({ cartProducts, setCartProducts, userData }) {
+export default function Cart() {
+  const { userData } = useAuth();
+  const { cartProducts, setCartProducts } = useCart();
+
   const userEmail = userData?.email;
   const userCartStorage = userEmail ? localStorage.getItem(userEmail) : null;
   const [isCheckout, setIsCheckout] = useState(false);

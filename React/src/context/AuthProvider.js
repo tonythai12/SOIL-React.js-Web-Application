@@ -23,6 +23,8 @@ export const AuthProvider = ({ children }) => {
 
     const userDataListString = localStorage.getItem('userDataList');
     const userDataList = JSON.parse(userDataListString);
+    const parsedDietProfile = JSON.parse(dietProfile);
+    const parsedDietPlan = JSON.parse(dietPlan);
 
     let imgUrl = localStorage.getItem('imgUrl');
 
@@ -40,8 +42,8 @@ export const AuthProvider = ({ children }) => {
         address: address,
         date: singUpDate,
         preference: preference,
-        dietProfile: JSON.parse(dietProfile),
-        dietPlan: JSON.parse(dietPlan),
+        dietProfile: parsedDietProfile,
+        dietPlan: parsedDietPlan,
         imgUrl: imgUrl,
       });
 
@@ -78,6 +80,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('imgUrl');
     localStorage.removeItem('emailForRememberMe');
     localStorage.removeItem('pwForRememberMe');
+    localStorage.removeItem(userData?.email);
 
     // go back to home
     navigate('/');
@@ -92,8 +95,8 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('address', userInfo.address);
     localStorage.setItem('signUpDate', userInfo.date);
     localStorage.setItem('preference', userInfo?.preference);
-    localStorage.getItem('dietProfile', userInfo?.dietProfile);
-    localStorage.getItem('dietPlan', userInfo?.dietPlan);
+    localStorage.setItem('dietProfile', userInfo?.profileInfo);
+    localStorage.setItem('dietPlan', userInfo?.dietPlan);
     localStorage.setItem('imgUrl', userInfo.imgUrl);
 
     // if imgUrl is File system or not.
@@ -152,6 +155,7 @@ export const AuthProvider = ({ children }) => {
       dietProfile: { ...profileInfo },
       dietPlan: [...dietPlan],
     });
+    localStorage.setItem('userDataList', JSON.stringify(updatedUserDataList));
     localStorage.setItem('dietProfile', JSON.stringify(profileInfo));
     localStorage.setItem('dietPlan', JSON.stringify(dietPlan));
   };

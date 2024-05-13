@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
+import { useAuth } from '../context/AuthProvider';
 
 // Component displaying helpful information for growing small vegetables.
 function SmallVegetableInfo({ tip, imageUrl }) {
@@ -54,31 +55,29 @@ function SpecialSale({ specials }) {
   );
 }
 
-export default function GardenInfoAndSale({ userData, savePreference }) {
+export default function GardenInfoAndSale() {
+  const { userData, savePreference } = useAuth();
   const [selectedVegetable, setSelectedVegetable] = useState(
-    userData?.preference === 'undifined' || userData?.preference
-      ? userData.preference
-      : 'Tomatoes'
+    !userData ||
+      userData.preference === 'undefined' ||
+      userData.preference === undefined
+      ? 'Tomatoes'
+      : userData?.preference
   );
   const [vegetablesInfo, setVegetablesInfo] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [selectedPreference, setSelectedPreference] = useState('');
 
   useEffect(() => {
-    const fetchVegetablesInfo = async () => {
-      try {
-        const response = await fetch('./specialSaleInfo.json');
-        if (!response.ok) {
-          throw new Error('Failed to fetch data');
-        }
-        const data = await response.json();
+    // get products list from product.json
+    fetch('/specialSaleInfo.json')
+      .then((response) => response.json())
+      .then((data) => {
         setVegetablesInfo(data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchVegetablesInfo();
+      })
+      .catch((error) =>
+        console.error('An error occurred while loading the data.', error)
+      );
   }, []);
 
   const handleVegetableSelect = (vegetable) => {
@@ -153,26 +152,6 @@ export default function GardenInfoAndSale({ userData, savePreference }) {
           </div>
         </div>
       </div>
-      {!selectedVegetable && (
-        <div className='py-12 bg-green-200'>
-          <div className='max-w-2xl mx-auto px-4 sm:px-6 lg:max-w-7xl lg:px-8'>
-            <h2 className='text-2xl font-extrabold tracking-tight text-gray-900'>
-              🌱 Want to Grow Organic Vegetables? 🌱
-            </h2>
-            <div className='mt-6'>
-              <p className='text-lg text-gray-700'>
-                Start your organic vegetable garden journey with Soil! 🌿
-              </p>
-              <a
-                href='https://www.soil.com'
-                className='mt-4 inline-flex items-center px-4 py-3 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-300 ease-in-out'
-              >
-                Learn More
-              </a>
-            </div>
-          </div>
-        </div>
-      )}
       {selectedVegetable && vegetablesInfo[selectedVegetable] && (
         <>
           <SmallVegetableInfo
