@@ -73,8 +73,8 @@ export default function LogIn({
         password: password,
         date: user.date,
         preference: user?.preference ? user.preference : '',
-        dietProfile: user?.dietProfile ? user.dietProfile : '',
-        dietPlan: user?.dietPlan ? user?.dietPlan : '',
+        dietProfile: user?.dietProfile ? user.dietProfile : {},
+        dietPlan: user?.dietPlan ? user?.dietPlan : [],
         imgUrl: user?.imgUrl,
       });
 

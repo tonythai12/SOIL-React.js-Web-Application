@@ -65,7 +65,11 @@ export default function DietPlan() {
     fetch('/dietplan.json')
       .then((response) => response.json())
       .then((data) =>
-        setDietPlan(userData?.dietPlan ? userData?.dietPlan : data)
+        setDietPlan(
+          userData?.dietPlan && userData?.dietPlan.length > 0
+            ? userData?.dietPlan
+            : data
+        )
       )
       .catch((error) =>
         console.error('An error occurred while loading the data.', error)
@@ -73,6 +77,11 @@ export default function DietPlan() {
   }, [userData?.dietPlan]);
 
   const handleProfileFormOpen = () => {
+    if (!userData?.email) {
+      return alert(
+        'This is a members-only page. You can access it after logging in'
+      );
+    }
     setShowProfileForm(true);
   };
 
@@ -129,7 +138,7 @@ export default function DietPlan() {
     <div className='py-5 bg-gray-50'>
       <div className=' max-w-6xl mx-auto px-4 sm:px-6 lg:px-8'>
         {/* Custom Diet Plan recommended for User */}
-        {userData?.dietProfile && userData?.dietPlan && (
+        {userData?.dietPlan && userData?.dietPlan.length > 0 && (
           <div>
             <h2 className='text-3xl font-extrabold text-center text-gray-800 mb-6 py-5'>
               {userData?.name}'s Custom Diet Plan!
@@ -159,7 +168,45 @@ export default function DietPlan() {
         )}
 
         {/* When user is not logged in */}
-        {!userData?.dietProfile && !userData?.dietPlan && (
+        {userData?.email &&
+          userData.dietPlan &&
+          userData.dietPlan.length === 0 && (
+            <div className='flex justify-center flex-col'>
+              <button
+                onClick={handleProfileFormOpen}
+                className='block text-xl  mt-8 mb-2 px-4 py-2 border border-transparent rounded-md shadow-sm  text-white bg-indigo-600 hover:bg-indigo-700 hover:text-yellow-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+              >
+                Create Your Profile ⏎
+              </button>
+              <div className='inline-block align-bottom bg-white rounded-lg  overflow-hidden shadow-xl transform transition-all '>
+                <div className='bg-yellow-200 px-6 py-8 sm:p-10 sm:pb-8 sm:rounded-lg'>
+                  <div className='sm:flex sm:items-start'>
+                    <div className='sm:w-full sm:text-center'>
+                      <h3 className='text-3xl font-bold text-gray-800 mb-4'>
+                        {' '}
+                        Diet Recommendations!
+                      </h3>
+                      <p className='text-lg text-gray-700'>
+                        Here are some diet recommendations based on your
+                        profile. Remember to consult with a nutritionist or a
+                        healthcare professional before starting any new diet
+                        plan.
+                      </p>
+                      <div className='mt-6'>
+                        <img
+                          className='mx-auto'
+                          src='/img/dietplan.jpg'
+                          alt='Diet Recommendation'
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+        {!userData?.email && (
           <div className='flex justify-center flex-col'>
             <button
               onClick={handleProfileFormOpen}
