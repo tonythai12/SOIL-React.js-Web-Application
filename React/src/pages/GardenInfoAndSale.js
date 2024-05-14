@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 import { useAuth } from '../context/AuthProvider';
 import AddCartBtn from '../components/Cart/AddCartBtn';
+import { useCart } from '../context/CartProvider';
+import Modal from '../components/Cart/Modal';
 
 // Component displaying helpful information for growing small vegetables.
 function SmallVegetableInfo({ tip, imageUrl }) {
@@ -22,7 +24,26 @@ function SmallVegetableInfo({ tip, imageUrl }) {
 }
 
 // Component displaying special deals based on the selected vegetable
-function SpecialSale({ specials }) {
+function SpecialSale({ specials, userData }) {
+  const { addToCart } = useCart();
+  const [selectedProduct, setSelectedProduct] = useState();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleAddToCart = (product) => {
+    if (!userData?.email) {
+      return alert(
+        `We need a login feature.\nAfter logging in, you can add items to your shopping cart.`
+      );
+    } else {
+      setSelectedProduct(product);
+      addToCart(product);
+
+      setIsOpen(true);
+      setTimeout(() => {
+        setIsOpen(false);
+      }, 3000);
+    }
+  };
   return (
     <div className='py-12 bg-white'>
       <div className='max-w-2xl mx-auto px-4 sm:px-6 lg:max-w-7xl lg:px-8'>
@@ -31,28 +52,37 @@ function SpecialSale({ specials }) {
         </h2>
         <div className='mt-6 grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8'>
           {specials.map((item, index) => (
-            <div key={index} className='group relative'>
-              <div className='w-full min-h-80 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none'>
-                <img
-                  src={item.imageUrl}
-                  alt={item.name}
-                  className='w-full h-full object-center object-cover lg:w-full lg:h-full'
-                />
-              </div>
-              <div className='mt-4 flex justify-center items-center'>
-                <div>
-                  <h3 className='text-sm text-gray-700'>{item.name}</h3>
-                  <p className='mt-1 text-sm text-gray-500 line-through'>
-                    {`$${item.price}`}
-                  </p>
-                  <p className='mt-1 text-sm text-red-600'>{`$${item.salePrice}`}</p>
+            <div className='flex flex-col'>
+              <div key={index} className='group relative'>
+                <div className='w-full min-h-80 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none'>
+                  <img
+                    src={item.imageUrl}
+                    alt={item.name}
+                    className='w-full h-full object-center object-cover lg:w-full lg:h-full'
+                  />
                 </div>
-                <AddCartBtn />
+                <div className='mt-4 flex justify-between'>
+                  <div>
+                    <h3 className='text-sm text-gray-700'>{item.name}</h3>
+                    <p className='mt-1 text-sm text-gray-500 line-through'>
+                      {`$${item.price}`}
+                    </p>
+                    <p className='mt-1 text-sm text-red-600'>{`$${item.salePrice}`}</p>
+                  </div>
+                </div>
               </div>
+              {/* <AddCartBtn onClick={handleAddToCart} /> */}
             </div>
           ))}
         </div>
       </div>
+      {isOpen && (
+        <Modal
+          isOpen2={isOpen}
+          setIsOpen2={setIsOpen}
+          selectedProduct={selectedProduct}
+        />
+      )}
     </div>
   );
 }
@@ -163,7 +193,10 @@ export default function GardenInfoAndSale() {
             tip={vegetablesInfo[selectedVegetable]?.tip}
             imageUrl={vegetablesInfo[selectedVegetable]?.imageUrl}
           />
-          <SpecialSale specials={vegetablesInfo[selectedVegetable]?.specials} />
+          <SpecialSale
+            specials={vegetablesInfo[selectedVegetable]?.specials}
+            userData={userData}
+          />
         </>
       )}
       {showModal && (
