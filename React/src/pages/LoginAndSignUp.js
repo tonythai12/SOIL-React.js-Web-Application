@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthProvider';
-import LogIn from '../components/Login';
-import SignUp from '../components/Signup';
+import LogIn from '../components/Login/Login';
+import SignUp from '../components/Login/Signup';
 
 function LoginAndSignUp() {
   const { userListData, logIn, signUp } = useAuth(); // get context value

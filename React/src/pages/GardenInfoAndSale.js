@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 import { useAuth } from '../context/AuthProvider';
+import AddCartBtn from '../components/Cart/AddCartBtn';
 
 // Component displaying helpful information for growing small vegetables.
 function SmallVegetableInfo({ tip, imageUrl }) {
@@ -38,7 +39,7 @@ function SpecialSale({ specials }) {
                   className='w-full h-full object-center object-cover lg:w-full lg:h-full'
                 />
               </div>
-              <div className='mt-4 flex justify-between'>
+              <div className='mt-4 flex justify-center items-center'>
                 <div>
                   <h3 className='text-sm text-gray-700'>{item.name}</h3>
                   <p className='mt-1 text-sm text-gray-500 line-through'>
@@ -46,6 +47,7 @@ function SpecialSale({ specials }) {
                   </p>
                   <p className='mt-1 text-sm text-red-600'>{`$${item.salePrice}`}</p>
                 </div>
+                <AddCartBtn />
               </div>
             </div>
           ))}
@@ -58,11 +60,7 @@ function SpecialSale({ specials }) {
 export default function GardenInfoAndSale() {
   const { userData, savePreference } = useAuth();
   const [selectedVegetable, setSelectedVegetable] = useState(
-    !userData ||
-      userData.preference === 'undefined' ||
-      userData.preference === undefined
-      ? 'Tomatoes'
-      : userData?.preference
+    userData?.preference ? userData?.preference : 'Tomatoes'
   );
   const [vegetablesInfo, setVegetablesInfo] = useState({});
   const [showModal, setShowModal] = useState(false);
@@ -79,6 +77,13 @@ export default function GardenInfoAndSale() {
         console.error('An error occurred while loading the data.', error)
       );
   }, []);
+
+  // make re-rendering whenever preference is changed.
+  useEffect(() => {
+    setSelectedVegetable(
+      userData?.preference ? userData?.preference : 'Tomatoes'
+    );
+  }, [userData?.preference]);
 
   const handleVegetableSelect = (vegetable) => {
     setSelectedVegetable(vegetable);

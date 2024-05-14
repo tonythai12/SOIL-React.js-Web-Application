@@ -11,7 +11,7 @@ import {
   FaBacon,
   FaBan,
 } from 'react-icons/fa'; // Example icons for diet plans
-import UserProfileForm from '../components/UserProfileForm';
+import UserProfileForm from '../components/DietPlan/UserProfileForm';
 import { useAuth } from '../context/AuthProvider';
 
 // convert icon to JSX element from json file to use in components
