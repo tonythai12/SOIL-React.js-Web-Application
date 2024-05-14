@@ -29,7 +29,9 @@ function SpecialSale({ specials, userData }) {
   const [selectedProduct, setSelectedProduct] = useState();
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleAddToCart = (product) => {
+  const handleAddToCart = (productId) => {
+    const product = specials.filter((special) => special.id === productId)[0];
+
     if (!userData?.email) {
       return alert(
         `We need a login feature.\nAfter logging in, you can add items to your shopping cart.`
@@ -37,7 +39,6 @@ function SpecialSale({ specials, userData }) {
     } else {
       setSelectedProduct(product);
       addToCart(product);
-
       setIsOpen(true);
       setTimeout(() => {
         setIsOpen(false);
@@ -53,7 +54,7 @@ function SpecialSale({ specials, userData }) {
         <div className='mt-6 grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8'>
           {specials.map((item, index) => (
             <div className='flex flex-col'>
-              <div key={index} className='group relative'>
+              <div key={index} className='group relative mb-3'>
                 <div className='w-full min-h-80 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none'>
                   <img
                     src={item.imageUrl}
@@ -71,7 +72,8 @@ function SpecialSale({ specials, userData }) {
                   </div>
                 </div>
               </div>
-              {/* <AddCartBtn onClick={handleAddToCart} /> */}
+
+              <AddCartBtn onClick={() => handleAddToCart(item.id)} />
             </div>
           ))}
         </div>
