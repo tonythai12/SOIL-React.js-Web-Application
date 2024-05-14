@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import ReviewDetail from '../components/ReviewDetail';
-import ReviewList from '../components/ReviewList';
+import ReviewDetail from '../components/Review/ReviewDetail';
+import ReviewList from '../components/Review/ReviewList';
 import { useAuth } from '../context/AuthProvider';
 import { useProduct } from '../context/ProductProvider';
 
@@ -61,10 +61,10 @@ const Review = () => {
     setReviews(updatedReviews);
     alert('Successfully Edited!');
   };
-  console.log(reviews);
+
   const handleCreateReview = (createReview) => {
     const updatedReviews = [...reviews];
-    console.log(userData);
+
     const newReview = {
       // temp data to check UI
       ...createReview,

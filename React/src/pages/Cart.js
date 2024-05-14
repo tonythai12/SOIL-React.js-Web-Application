@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FaTrashAlt, FaMinus, FaPlus } from 'react-icons/fa';
-import Bill from '../components/Bill';
+import Bill from '../components/Cart/Bill';
 import { useAuth } from '../context/AuthProvider';
 import { useCart } from '../context/CartProvider';
 

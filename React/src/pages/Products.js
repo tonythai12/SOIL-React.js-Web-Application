@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { FaShoppingCart } from 'react-icons/fa';
-import Modal from '../components/Modal';
+import Modal from '../components/Cart/Modal';
 import { useProduct } from '../context/ProductProvider';
 import { useAuth } from '../context/AuthProvider';
 import { useCart } from '../context/CartProvider';
+import AddCartBtn from '../components/Cart/AddCartBtn';
 
 export default function Products() {
   const { userData } = useAuth();
@@ -33,7 +33,7 @@ export default function Products() {
     } else {
       setSelectedProduct(product);
       addToCart(product);
-      // setCartMessage(`'${product.name}'`);
+
       setIsOpen2(true);
       setTimeout(() => {
         setIsOpen2(false);
@@ -68,13 +68,7 @@ export default function Products() {
                 </span>
                 <p className='text-gray-700  mb-2 ml-3'>${product.price}</p>
               </div>
-              <button
-                onClick={() => handleAddToCart(product)}
-                className='flex items-center justify-center bg-white text-green-500 py-2 px-4 rounded-lg hover:bg-green-100 transition duration-300 flex-grow border border-green-500'
-              >
-                <FaShoppingCart />
-                <span className='ml-2'>Add to Cart</span>
-              </button>
+              <AddCartBtn onClick={() => handleAddToCart(product)} />
             </div>
           </div>
         ))}
@@ -134,14 +128,8 @@ export default function Products() {
           isOpen2={isOpen2}
           setIsOpen2={setIsOpen2}
           selectedProduct={selectedProduct}
-          // cartMessage={cartMessage}
         />
       )}
-      {/* {cartMessage && (
-        <div className='fixed bottom-1/2 right-1/2 transform translate-x-1/2 translate-y-1/2 bg-green-500 text-white py-2 px-4 rounded-md shadow-md'>
-          {cartMessage}
-        </div>
-      )} */}
     </div>
   );
 }
