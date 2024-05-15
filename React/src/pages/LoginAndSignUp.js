@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthProvider';
 import LogIn from '../components/Login/Login';
 import SignUp from '../components/Login/Signup';
+import { useNavigate } from 'react-router-dom';
 
 function LoginAndSignUp() {
+  const navigate = useNavigate();
   const { userListData, logIn, signUp } = useAuth(); // get context value
   const [isLogin, setIsLogin] = useState(true); // check login or sign up UI
 
@@ -51,12 +53,11 @@ function LoginAndSignUp() {
           />
         </div>
         <p className='mt-4 text-sm text-gray-600 text-center'>
-          {isLogin ? "Don't have an account yet?" : 'Already have an account?'}{' '}
           <button
-            onClick={toggleForm}
-            className='text-blue-500 hover:text-blue-700 font-semibold focus:outline-none'
+            onClick={() => navigate('/')}
+            className='text-blue-500 hover:text-blue-700  font-semibold focus:outline-none'
           >
-            {isLogin ? 'Sign Up' : 'Log In'}
+            Go Back to home
           </button>
         </p>
       </div>
