@@ -1,4 +1,4 @@
-import * as authRepository from '../data/auth';
+import * as authRepository from '../data/auth.js';
 
 export function createUser(req, res, next) {
   const { name, email, password, imgUrl } = req.query;
