@@ -11,9 +11,10 @@ export default function Products() {
   const { addToCart } = useCart();
 
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [isOpen, setIsOpen] = useState(false);
-  const [isOpen2, setIsOpen2] = useState(false);
+  const [isOpen, setIsOpen] = useState(false); // show product detail modal
+  const [isOpen2, setIsOpen2] = useState(false); // show confirmation modal to check product which is added to cart
 
+  // calculate discount percentage and add to product as a property
   products.forEach((product) => {
     const discountPercentage =
       ((product.price - product.salePrice) / product.price) * 100;
@@ -33,7 +34,6 @@ export default function Products() {
     } else {
       setSelectedProduct(product);
       addToCart(product);
-
       setIsOpen2(true);
       setTimeout(() => {
         setIsOpen2(false);

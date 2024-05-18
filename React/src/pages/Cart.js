@@ -6,13 +6,13 @@ import { useCart } from '../context/CartProvider';
 
 export default function Cart() {
   const { userData } = useAuth();
-  const { cartProducts, setCartProducts } = useCart();
+  const { cartProducts, setCartProducts, userCartStorage } = useCart();
 
   const userEmail = userData?.email;
-  const userCartStorage = userEmail ? localStorage.getItem(userEmail) : null;
+  // const userCartStorage = userEmail ? localStorage.getItem(userEmail) : null;
   const [isCheckout, setIsCheckout] = useState(false);
   const [cartItems, setCartItems] = useState(
-    userCartStorage
+    userEmail
       ? JSON.parse(userCartStorage)
       : cartProducts[userEmail]
       ? cartProducts[userEmail]

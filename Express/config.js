@@ -14,7 +14,7 @@ function required(key, defaultValue = undefined) {
 // using config obejct outside instead of using env value directly.
 export const config = {
   host: {
-    port: required('HOST_PORT', 8080),
+    port: required('HOST_PORT', 3306),
   },
   db: {
     host: required('DB_HOST'),

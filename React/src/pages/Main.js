@@ -50,10 +50,12 @@ function Main() {
   const navigate = useNavigate();
   const location = useLocation();
   const state = location.state;
-  console.log(state);
+
   // get Auth Context
   const { userData } = useAuth();
   const { userCartStorage } = useCart();
+
+  // change selected tab color
   const [selectedTab, setSelectedTab] = useState();
 
   return (
