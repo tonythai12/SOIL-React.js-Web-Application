@@ -28,7 +28,7 @@
     "title": "Low Carb Plan",
     "description": "A diet plan low in carbohydrates, suitable for those aiming for weight loss or managing blood sugar levels.",
     "products": ["Avocado", "Salmon", "Cauliflower"],
-    "bgColor": "bg-ornage-200",
+    "bgColor": "bg-orange-200",
     "icon": "<FaLeaf className='text-orange-500 text-3xl' />"
   },
   {
