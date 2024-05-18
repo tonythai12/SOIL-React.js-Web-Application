@@ -23,3 +23,5 @@ export const config = {
     password: required('DB_PASSWORD'),
   },
 };
+
+export default config;
