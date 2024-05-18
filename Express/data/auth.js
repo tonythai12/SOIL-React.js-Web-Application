@@ -1,4 +1,4 @@
-import db from '../db/database';
+import db from '../db/database.js';
 
 // when user sign up
 export async function create(name, email, password, imgUrl) {
