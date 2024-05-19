@@ -5,6 +5,7 @@ import cors from 'cors';
 import authRouter from './router/auth.js';
 import productRouter from './router/product.js';
 import cartRouter from './router/cart.js';
+import reviewRouter from './router/review.js';
 
 const app = express();
 app.use(express.json());
@@ -17,6 +18,7 @@ db.connect().then((connection) => console.log(connection));
 app.use('/soil/login', authRouter);
 app.use('/soil/product', productRouter);
 app.use('/soil/cart', cartRouter);
+app.use('/soil/review', reviewRouter);
 
 // server start
 app.listen(config.host.port, () => {
