@@ -1,12 +1,15 @@
 import db from '../db/database.js';
+import bcrypt from 'bcrypt';
 
 // when user sign up
 export async function create(name, email, password, imgUrl) {
+  const password_hash = bcrypt.hash(password, 10);
   const created_at = new Date(Date.now()).toISOString().split('T')[0];
+
   return db
     .execute(
       'INSERT INTO users (username, email, password_hash, imgUrl, created_at) VALUES (?,?,?,?,?)',
-      [name, email, password, imgUrl, created_at]
+      [name, email, password_hash, imgUrl, created_at]
     )
     .then((result) => {
       console.log(result[0]);
@@ -16,12 +19,27 @@ export async function create(name, email, password, imgUrl) {
 
 // when user login
 export async function get(email, password) {
-  return db
-    .execute('SELECT * FROM users WHERE email=? password=?', [email, password])
-    .then((result) => {
-      console.log(result);
-      return result[0][0];
-    });
+  try {
+    // get user's info
+    const [rows] = await db.execute('SELECT * FROM users WHERE email=?', [
+      email,
+    ]);
+    // if user does not exist, return null
+    if (rows.length === 0) {
+      return null;
+    }
+
+    // when user exists, compare password with password_hash in db
+    const user = rows[0];
+    const isMatch = await bcrypt.compare(password, user.password_hash);
+
+    // if password is matched, it return user info.
+    const result = isMatch ? user : null;
+    return result;
+  } catch (error) {
+    console.error('Database query error:', error);
+    throw error;
+  }
 }
 
 // when user update user info
