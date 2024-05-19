@@ -4,6 +4,7 @@ import db from './db/database.js';
 import cors from 'cors';
 import authRouter from './router/auth.js';
 import productRouter from './router/product.js';
+import cartRouter from './router/cart.js';
 
 const app = express();
 app.use(express.json());
@@ -14,7 +15,8 @@ db.connect().then((connection) => console.log(connection));
 
 // router (handling data and logic)
 app.use('/soil/login', authRouter);
-app.use('soil/product', productRouter);
+app.use('/soil/product', productRouter);
+app.use('/soil/cart', cartRouter);
 
 // server start
 app.listen(config.host.port, () => {
