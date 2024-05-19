@@ -9,4 +9,5 @@ const pool = mysql.createConnection({
 });
 
 const db = pool.promise();
+
 export default db;

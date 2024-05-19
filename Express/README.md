@@ -10,3 +10,4 @@
 - "mysql"
 - "cors"
 - "dotenv"
+- "bcrypt"
