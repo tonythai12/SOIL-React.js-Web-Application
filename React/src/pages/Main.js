@@ -28,8 +28,8 @@ const tabs = [
   {
     label: 'Diet Plan',
     icon: <FaCarrot />,
-    value: 'plan',
-    route: '/soil/plan',
+    value: 'dietplan',
+    route: '/soil/dietplan',
   },
   {
     label: 'Cart',
