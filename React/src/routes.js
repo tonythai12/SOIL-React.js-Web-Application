@@ -17,7 +17,7 @@ const routes = [
     children: [
       { path: 'product', element: <Products /> },
       { path: 'sale', element: <GardenInfoAndSale /> },
-      { path: 'plan', element: <DietPlan /> },
+      { path: 'dietplan', element: <DietPlan /> },
       { path: 'cart', element: <Cart /> },
       { path: 'review', element: <Review /> },
     ],
