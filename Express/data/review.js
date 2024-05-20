@@ -1,7 +1,7 @@
 import db from '../db/database.js';
 
 export async function getAll() {
-  await db.execute('SELECT * FROM reviews').then((result) => {
+  await db.execute('SELECT * FROM Reviews').then((result) => {
     console.log(result[0]);
     return result[0];
   });
@@ -12,7 +12,7 @@ export async function create(user_id, title, product_id, rating, content) {
 
   return db
     .execute(
-      'INSERT INTO reviews (user_id, title, product_id, rating, content,created_at) VALUES (?,?,?,?,?,?)',
+      'INSERT INTO Reviews (user_id, title, product_id, rating, content,created_at) VALUES (?,?,?,?,?,?)',
       [user_id, title, product_id, rating, content, created_at]
     )
     .then((result) => {
@@ -23,7 +23,7 @@ export async function create(user_id, title, product_id, rating, content) {
 
 export async function edit(review_id, title, product_id, rating, content) {
   const query = `
-      UPDATE reviews 
+      UPDATE Reviews 
       SET title = ?, product_id = ?, rating = ?, content = ?
       WHERE review_id = ?`;
 
@@ -39,5 +39,5 @@ export async function edit(review_id, title, product_id, rating, content) {
 }
 
 export async function remove(review_id) {
-  return db.execute('DELETE reviews WHERE review_id=?', [review_id]);
+  return db.execute('DELETE Reviews WHERE review_id=?', [review_id]);
 }

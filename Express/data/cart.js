@@ -2,7 +2,7 @@ import db from '../db/database.js';
 
 export async function getAll(id) {
   await db
-    .execute('SELECT * FROM shoppingCart WHERE user_id=?', [id])
+    .execute('SELECT * FROM ShoppingCart WHERE user_id=?', [id])
     .then((result) => {
       console.log(result[0]);
       return result[0];
@@ -12,7 +12,7 @@ export async function getAll(id) {
 export async function update(cart_id, product_id, quantity) {
   // Check if the cart item exists
   const [rows] = await db.execute(
-    'SELECT * FROM cartItem WHERE cart_id=? AND product_id=?',
+    'SELECT * FROM CartItems WHERE cart_id=? AND product_id=?',
     [cart_id, product_id]
   );
 
@@ -22,7 +22,7 @@ export async function update(cart_id, product_id, quantity) {
 
   // Update the quantity of the existing cart item
   const [result] = await db.execute(
-    'UPDATE cartItem SET quantity=? WHERE cart_id=? AND product_id=?',
+    'UPDATE CartItems SET quantity=? WHERE cart_id=? AND product_id=?',
     [quantity, cart_id, product_id]
   );
 
@@ -30,7 +30,7 @@ export async function update(cart_id, product_id, quantity) {
 }
 
 export async function remove(cart_id, product_id) {
-  return db.execute('DELETE cartItem WHERE cart_id=? AND product_id=?', [
+  return db.execute('DELETE CartItems WHERE cart_id=? AND product_id=?', [
     cart_id,
     product_id,
   ]);
