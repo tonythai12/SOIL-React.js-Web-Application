@@ -8,7 +8,7 @@ export async function create(name, email, password, imgUrl) {
 
   return db
     .execute(
-      'INSERT INTO users (username, email, password_hash, imgUrl, created_at) VALUES (?,?,?,?,?)',
+      'INSERT INTO Users (username, email, password_hash, imgUrl, created_at) VALUES (?,?,?,?,?)',
       [name, email, password_hash, imgUrl, created_at]
     )
     .then((result) => {
@@ -21,7 +21,7 @@ export async function create(name, email, password, imgUrl) {
 export async function get(email, password) {
   try {
     // get user's info
-    const [rows] = await db.execute('SELECT * FROM users WHERE email=?', [
+    const [rows] = await db.execute('SELECT * FROM Users WHERE email=?', [
       email,
     ]);
     // if user does not exist, return null
@@ -45,12 +45,12 @@ export async function get(email, password) {
 // when user update user info
 export async function update(user_id, name, email, password, address) {
   return db.execute(
-    'UPDATE users SET username=? email=? password=? address=? WHERE user_id=?',
+    'UPDATE Users SET username=? email=? password=? address=? WHERE user_id=?',
     [name, email, password, address, user_id]
   );
 }
 
 // when user is deleted
 export async function remove(user_id) {
-  return db.execute('DELETE users WHERE user_id=?', [user_id]);
+  return db.execute('DELETE Users WHERE user_id=?', [user_id]);
 }
