@@ -1,5 +1,11 @@
 import * as SpecialSaleRepository from '../data/specialsale.js';
 
+export function getPreference(req, res, next) {
+  const { user_id } = req.params;
+  const preference = SpecialSaleRepository.get(user_id);
+  res.status(201).json(preference);
+}
+
 export function updatePreference(req, res, next) {
   const { product_name } = req.body;
   const { user_id } = req.query;
