@@ -37,30 +37,30 @@ export async function get(email, password) {
   try {
     // get user's info
     const rows = await db.execute('SELECT * FROM Users WHERE email=?', [email]);
+    // if user does not exist, return null
     if (rows.length === 0) {
-      return { checkEmailError: "'User does not exist" };
+      return { error: "'User does not exist", type: 'email' };
     }
 
     // when user exists, compare password with password_hash in db
     const user = rows[0][0];
     const isMatch = await bcrypt.compare(password, user.password_hash);
 
-    // if password is matched, it return user info.
-    const result = isMatch ? user : null;
-
-    // if email and password is matched, find user's dietplan, preference info if it has the value.
-    if (result) {
+    // if email,password is matched, find user's dietplan, preference info if it has the value.
+    if (isMatch) {
       const dietplans = dietPlanRepository.getAll() || [];
       const preference = SpecialSaleRepository.get(user_id) || '';
 
-      // finally return object including all users info which will be saved in useState as a userData for whom logged in.
       return { ...result, dietplans, preference };
+    } else {
+      return { error: 'Incorrect password', type: 'password' };
     }
   } catch (error) {
     console.error('Database query error:', error);
     throw error;
   }
 }
+
 // when user update user info
 export async function update(user_id, name, email, password, address) {
   return db.execute(
