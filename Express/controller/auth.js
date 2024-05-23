@@ -44,10 +44,11 @@ export async function login(req, res) {
     const dietplans = dietPlanRepository.getAll() || [];
     const preference = SpecialSaleRepository.get(user_id) || '';
 
-    const token = createJwtToken(user.id);
-    res.status(200).json({ token, username });
-
-    return { ...result, dietplans, preference };
+    const token = createJwtToken(user.user_id);
+    // res.status(200).json({ token, username });
+    if (res.status === 200) {
+      return { ...result, dietplans, preference, token };
+    }
   }
 }
 
@@ -83,8 +84,21 @@ export function remove(req, res) {
 
 export async function me(req, res, next) {
   const user = await userRepository.findById(req.userId);
+  const dietplans = dietPlanRepository.getAll() || [];
+  const preference = SpecialSaleRepository.get(user_id) || '';
   if (!user) {
     return res.status(404).json({ message: 'User not found' });
   }
-  res.status(200).json({ token: req.token, username: user.username });
+  res
+    .status(200)
+    .json({
+      token: req.token,
+      username: user.username,
+      email: user.email,
+      address: user.address,
+      imgUrl: user.imgUrl,
+      created_at: user.created_at,
+      dietplans,
+      preference,
+    });
 }
