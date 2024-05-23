@@ -18,7 +18,9 @@ export function getUser(req, res, next) {
 
   if (email && password) {
     const user = authRepository.get(email, password);
-    if (user) {
+    if (user.error) {
+      return res.status(400).json({ message: user.error, type: user.type });
+    } else if (user) {
       res.status(200).json(user);
     } else {
       res.status(404).json({ message: 'User login failed' });
