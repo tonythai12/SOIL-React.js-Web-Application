@@ -1,23 +1,44 @@
 import * as authRepository from '../data/auth.js';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
+import * as dietPlanRepository from '../data/dietplan.js';
+import * as SpecialSaleRepository from '../data/specialsale.js';
 
-export async function createUser(req, res, next) {
-  const { name, email, password, imgUrl } = req.body;
-  try {
-    const user = await authRepository.create(name, email, password, imgUrl);
-    if (user.error) {
-      return res.status(400).json({ message: user.error });
-    }
-    res.status(201).json(user);
-  } catch (error) {
-    next(error);
+export async function signUp(req, res) {
+  const { username, email, password, address, imgUrl } = req.body;
+  const dupUserName = await userRepository.findByUsername(username);
+  const dupUserEmail = await userRepository.findByUseremail(email);
+  if (dupUserName) {
+    return res.status(409).json({ message: `${username} already exists` });
   }
+  if (dupUserEmail) {
+    return res.status(409).json({ message: `${email} already exists` });
+  }
+  const password_hash = await bcrypt.hash(password, config.bcrypt.saltRounds);
+  const userId = await userRepository.createUser({
+    username,
+    password_hash,
+    username,
+    email,
+    address,
+    imgUrl,
+  });
+  // create jwt token and return it to client when user sign up.
+  const token = createJwtToken(userId);
+  res.status(201).json({ token, username });
 }
 
-export function getUser(req, res, next) {
-  const { email, password } = req.query;
+function createJwtToken(id) {
+  return jwt.sign({ id }, config.jwt.secretKey, {
+    expiresIn: config.jwt.expiresInSec,
+  });
+}
+
+export function login(req, res) {
+  const { email, password } = req.body;
 
   if (email && password) {
-    const user = authRepository.get(email, password);
+    const user = authRepository.getUser(email, password);
     if (user.error) {
       return res.status(400).json({ message: user.error, type: user.type });
     } else if (user) {
@@ -28,11 +49,46 @@ export function getUser(req, res, next) {
   }
 }
 
-export function updateUser(req, res, next) {
-  const user_id = req.params.id;
-  const { name, email, password, address } = req.query;
+export async function login(req, res) {
+  const { email, password } = req.body;
+  const user = await userRepository.findByUseremail(email);
+  if (!user) {
+    return res.status(401).json({ message: 'Invalid user or password' });
+  }
+  const isValidPassword = await bcrypt.compare(password, user.password_hash);
+  if (!isValidPassword) {
+    return res.status(401).json({ message: 'Invalid user or password' });
+  }
 
-  const user = authRepository.update(user_id, name, email, password, address);
+  // if user email and password is passed, get dietplan, preference info and return all user info as an object.
+  if (isValidPassword) {
+    const dietplans = dietPlanRepository.getAll() || [];
+    const preference = SpecialSaleRepository.get(user_id) || '';
+
+    const token = createJwtToken(user.id);
+    res.status(200).json({ token, username });
+
+    return { ...result, dietplans, preference };
+  }
+}
+
+function createJwtToken(id) {
+  return jwt.sign({ id }, config.jwt.secretKey, {
+    expiresIn: config.jwt.expiresInSec,
+  });
+}
+
+export function modifyUserInfo(req, res) {
+  const user_id = req.params.id;
+  const { username, email, password, address } = req.body;
+
+  const user = authRepository.updateUser(
+    user_id,
+    username,
+    email,
+    password,
+    address
+  );
   if (user) {
     res.status(200).json(user);
   } else {
@@ -40,8 +96,16 @@ export function updateUser(req, res, next) {
   }
 }
 
-export function removeUser(req, res, next) {
+export function remove(req, res) {
   const user_id = req.params.id;
-  authRepository.remove(user_id);
+  authRepository.deleteUser(user_id);
   res.status(204);
+}
+
+export async function me(req, res, next) {
+  const user = await userRepository.findById(req.userId);
+  if (!user) {
+    return res.status(404).json({ message: 'User not found' });
+  }
+  res.status(200).json({ token: req.token, username: user.username });
 }

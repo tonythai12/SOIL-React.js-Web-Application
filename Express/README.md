@@ -11,3 +11,4 @@
 - "cors"
 - "dotenv"
 - "bcrypt"
+- "jsonwebtoken"
