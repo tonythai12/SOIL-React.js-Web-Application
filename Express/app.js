@@ -17,7 +17,7 @@ app.use(cors());
 db.connect().then((connection) => console.log(connection));
 
 // router (handling data and logic)
-app.use('/soil/login', authRouter);
+app.use('/soil/auth', authRouter);
 app.use('/soil/product', productRouter);
 app.use('/soil/sale', specialSaleRouter);
 app.use('/soil/cart', cartRouter);

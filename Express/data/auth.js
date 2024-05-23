@@ -1,68 +1,36 @@
 import db from '../db/database.js';
-import bcrypt from 'bcrypt';
-import * as dietPlanRepository from './data/dietplan.js';
-import * as SpecialSaleRepository from './data/specialsale.js';
 
-// when user sign up
-export async function create(name, email, password, imgUrl) {
-  const password_hash = await bcrypt.hash(password, 10);
-  const created_at = new Date().toISOString().split('T')[0];
-
-  const [emailRows] = await db.execute('SELECT * FROM Users WHERE email=?', [
-    email,
-  ]);
-  const [nameRows] = await db.execute('SELECT * FROM Users WHERE username=?', [
-    name,
-  ]);
-
-  // Check Email and Name duplication
-  if (emailRows.length > 0) {
-    return { error: 'This email is already in use.' };
-  }
-  if (nameRows.length > 0) {
-    return { error: 'This name is already in use.' };
-  }
-
-  const [result] = await db.execute(
-    'INSERT INTO Users (username, email, password_hash, imgUrl, created_at) VALUES (?,?,?,?,?)',
-    [name, email, password_hash, imgUrl, created_at]
-  );
-
-  console.log(result);
-  return result;
+export async function findById(user_id) {
+  return db
+    .execute('SELECT * FROM Users WHERE user_id=?', [user_id]) //
+    .then((result) => result[0][0]);
 }
 
-// when user login
-export async function get(email, password) {
-  try {
-    // get user's info
-    const rows = await db.execute('SELECT * FROM Users WHERE email=?', [email]);
-    // if user does not exist, return null
-    if (rows.length === 0) {
-      return { error: "'User does not exist", type: 'email' };
-    }
+export async function findByUsername(username) {
+  return db
+    .execute('SELECT * FROM Users WHERE username=?', [username]) //
+    .then((result) => result[0][0]);
+}
 
-    // when user exists, compare password with password_hash in db
-    const user = rows[0][0];
-    const isMatch = await bcrypt.compare(password, user.password_hash);
+export async function findByUseremail(email) {
+  return db
+    .execute('SELECT * FROM Users WHERE email=?', [email]) //
+    .then((result) => result[0][0]);
+}
 
-    // if email,password is matched, find user's dietplan, preference info if it has the value.
-    if (isMatch) {
-      const dietplans = dietPlanRepository.getAll() || [];
-      const preference = SpecialSaleRepository.get(user_id) || '';
-
-      return { ...result, dietplans, preference };
-    } else {
-      return { error: 'Incorrect password', type: 'password' };
-    }
-  } catch (error) {
-    console.error('Database query error:', error);
-    throw error;
-  }
+export async function createUser(user) {
+  const { username, password_hash, email, imgUrl } = user;
+  const created_at = new Date().toISOString().split('T')[0];
+  return db
+    .execute(
+      'INSERT INTO Users (username, email, password_hash, imgUrl, created_at) VALUES (?,?,?,?,?)',
+      [username, email, password_hash, imgUrl, created_at]
+    )
+    .then((result) => result[0].insertId);
 }
 
 // when user update user info
-export async function update(user_id, name, email, password, address) {
+export async function updateUser(user_id, name, email, password, address) {
   return db.execute(
     'UPDATE Users SET username=? email=? password=? address=? WHERE user_id=?',
     [name, email, password, address, user_id]
@@ -70,6 +38,6 @@ export async function update(user_id, name, email, password, address) {
 }
 
 // when user is deleted
-export async function remove(user_id) {
+export async function deleteUser(user_id) {
   return db.execute('DELETE Users WHERE user_id=?', [user_id]);
 }
