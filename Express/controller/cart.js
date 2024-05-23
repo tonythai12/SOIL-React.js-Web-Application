@@ -22,7 +22,7 @@ export function updatedCartQuantity(req, res, next) {
   }
 }
 
-export function deletCart(req, res, next) {
+export function deleteCart(req, res, next) {
   const { cart_id, product_id } = req.query;
   cartRepository.remove(cart_id, product_id);
   res.status(204);

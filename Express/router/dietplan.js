@@ -1,6 +1,6 @@
 import express from 'express';
 import 'express-async-errors';
-import * as dietController from '../controller/diet.js';
+import * as dietController from '../controller/dietplan.js';
 
 const router = express.Router();
 
