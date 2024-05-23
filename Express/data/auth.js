@@ -17,10 +17,10 @@ export async function create(name, email, password, imgUrl) {
 
   // Check Email and Name duplication
   if (emailRows.length > 0) {
-    return 'This email is already in use.';
+    return { error: 'This email is already in use.' };
   }
   if (nameRows.length > 0) {
-    return 'This name is already in use.';
+    return { error: 'This name is already in use.' };
   }
 
   const [result] = await db.execute(

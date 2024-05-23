@@ -1,9 +1,16 @@
 import * as authRepository from '../data/auth.js';
 
-export function createUser(req, res, next) {
-  const { name, email, password, imgUrl } = req.query;
-  const user = authRepository.create(name, email, password, imgUrl);
-  res.status(201).json(user);
+export async function createUser(req, res, next) {
+  const { name, email, password, imgUrl } = req.body;
+  try {
+    const user = await authRepository.create(name, email, password, imgUrl);
+    if (user.error) {
+      return res.status(400).json({ message: user.error });
+    }
+    res.status(201).json(user);
+  } catch (error) {
+    next(error);
+  }
 }
 
 export function getUser(req, res, next) {
