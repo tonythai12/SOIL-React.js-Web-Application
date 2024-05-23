@@ -28,27 +28,6 @@ export async function signUp(req, res) {
   res.status(201).json({ token, username });
 }
 
-function createJwtToken(id) {
-  return jwt.sign({ id }, config.jwt.secretKey, {
-    expiresIn: config.jwt.expiresInSec,
-  });
-}
-
-export function login(req, res) {
-  const { email, password } = req.body;
-
-  if (email && password) {
-    const user = authRepository.getUser(email, password);
-    if (user.error) {
-      return res.status(400).json({ message: user.error, type: user.type });
-    } else if (user) {
-      res.status(200).json(user);
-    } else {
-      res.status(404).json({ message: 'User login failed' });
-    }
-  }
-}
-
 export async function login(req, res) {
   const { email, password } = req.body;
   const user = await userRepository.findByUseremail(email);
