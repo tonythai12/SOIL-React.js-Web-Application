@@ -5,10 +5,12 @@ import * as cartController from '../controller/cart.js';
 const router = express.Router();
 
 // get user's all cart lists
-router.get('/', cartController.getCarts);
+router.get('/:user_id', cartController.getCarts);
+// add to cart
+router.post('/:user_id', cartController.addToCart);
 // update cart quantity
-router.post('/:cart_id/:product_id', cartController.updatedCartQuantity);
+router.post('/', cartController.updatedCartQuantity);
 // delete cart items
-router.delete('/:cart_id/:product_id', cartController.deleteCart);
+router.delete('/', cartController.deleteCart);
 
 export default router;
