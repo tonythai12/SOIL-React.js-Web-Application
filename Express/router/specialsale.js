@@ -4,7 +4,7 @@ import * as specialSaleController from '../controller/specialsale.js';
 
 const router = express.Router();
 
-// get user when user log in
+router.get('/', specialSaleController.getSaleProducts);
 router.get('/:user_id ', specialSaleController.getPreference);
 router.post('/:user_id ', specialSaleController.updatePreference);
 

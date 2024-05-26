@@ -1,5 +1,10 @@
 import * as SpecialSaleRepository from '../data/specialsale.js';
 
+export function getSaleProducts(req, res) {
+  const saleProducts = SpecialSaleRepository.getAll();
+  res.status(201).json(saleProducts);
+}
+
 export function getPreference(req, res) {
   const { user_id } = req.params;
   const preference = SpecialSaleRepository.get(user_id);
