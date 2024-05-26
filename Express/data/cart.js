@@ -5,6 +5,7 @@ export async function getAll(user_id) {
     const [rows] = await db.execute(
       `SELECT 
           ci.quantity, 
+          ci.cart_id,
           p.*
        FROM 
           ShoppingCart sc
@@ -41,11 +42,12 @@ export async function addProduct(user_id, product) {
     );
 
     let cart_id;
+    const created_at = new Date(Date.now()).toISOString().split('T')[0];
     if (cartRows.length === 0) {
       // 2. user_id가 없는 경우 새로운 ShoppingCart 생성
       const [result] = await db.execute(
-        'INSERT INTO ShoppingCart (user_id, created_at) VALUES (?, NOW())',
-        [user_id]
+        'INSERT INTO ShoppingCart (user_id, created_at) VALUES (?, ?)',
+        [user_id, created_at]
       );
       cart_id = result.insertId;
     } else {
@@ -90,7 +92,7 @@ export async function addProduct(user_id, product) {
   }
 }
 
-export async function update(cart_id, product_id, quantity) {
+export async function updateProductQuantity(cart_id, product_id, delta) {
   // Check if the cart item exists
   const [rows] = await db.execute(
     'SELECT * FROM CartItems WHERE cart_id=? AND product_id=?',
@@ -98,16 +100,35 @@ export async function update(cart_id, product_id, quantity) {
   );
 
   if (rows.length === 0) {
-    return null; // Return null if no such cart item exists
+    return null;
   }
 
-  // Update the quantity of the existing cart item
+  // Update the quantity of the existing cart item.
+  const quantity = Math.max(1, rows[0].quantity + delta);
+
   const [result] = await db.execute(
     'UPDATE CartItems SET quantity=? WHERE cart_id=? AND product_id=?',
     [quantity, cart_id, product_id]
   );
 
-  return result; // Return the result of the update operation
+  if (result.affectedRows > 0) {
+    const [rows] = await db.execute(
+      `SELECT p.*, ci.quantity
+      FROM CartItems ci
+      JOIN Products p ON ci.product_id = p.product_id
+      WHERE ci.cart_id = ? AND ci.product_id = ?`,
+      [cart_id, product_id]
+    );
+
+    if (rows.length > 0) {
+      const updatedCartItem = rows[0];
+      return updatedCartItem;
+    } else {
+      console.log('Cannot found updated item');
+    }
+  } else {
+    console.log('Nothing is updated');
+  }
 }
 
 export async function remove(cart_id, product_id) {
