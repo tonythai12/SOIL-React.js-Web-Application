@@ -18,9 +18,9 @@ export async function addToCart(req, res) {
   try {
     const result = await cartRepository.addProduct(user_id, product);
     // if result is successfully done, get cartProducts from DB for client and return it.
-    if (result.message) {
+    if (result?.message) {
       const carts = cartRepository.getAll(user_id);
-      res.status(201).json(carts);
+      res.status(201).json({ carts, message: result?.message });
     } else {
       res.status(404).json({ message: 'Cart product is not added' });
     }
@@ -30,11 +30,15 @@ export async function addToCart(req, res) {
 }
 
 export function updatedCartQuantity(req, res) {
-  const { cart_id, product_id, quantity } = req.body;
+  const { cart_id, product_id, delta } = req.body;
 
-  const carts = cartRepository.update(cart_id, product_id, quantity);
+  const updatedCartProduct = cartRepository.updateProductQuantity(
+    cart_id,
+    product_id,
+    delta
+  );
   if (carts) {
-    res.status(200).json(carts);
+    res.status(200).json(updatedCartProduct);
   } else {
     res.status(404).json({ message: 'Cart quantity is not updated' });
   }

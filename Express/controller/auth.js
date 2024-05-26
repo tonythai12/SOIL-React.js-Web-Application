@@ -8,6 +8,7 @@ export async function signUp(req, res) {
   const { username, email, password, address, imgUrl } = req.body;
   const dupUserName = await userRepository.findByUsername(username);
   const dupUserEmail = await userRepository.findByUseremail(email);
+
   if (dupUserName) {
     return res.status(409).json({ message: `${username} already exists` });
   }
@@ -17,9 +18,8 @@ export async function signUp(req, res) {
   const password_hash = await bcrypt.hash(password, config.bcrypt.saltRounds);
   const userId = await userRepository.createUser({
     username,
-    password_hash,
-    username,
     email,
+    password_hash,
     address,
     imgUrl,
   });
@@ -40,15 +40,12 @@ export async function login(req, res) {
   }
 
   // if user email and password is passed, get dietplan, preference info and return all user info as an object.
-  if (isValidPassword) {
+  if (user && isValidPassword) {
     const dietplans = dietPlanRepository.getAll() || [];
     const preference = SpecialSaleRepository.get(user_id) || '';
 
     const token = createJwtToken(user.user_id);
-    // res.status(200).json({ token, username });
-    if (res.status === 200) {
-      return { ...result, dietplans, preference, token };
-    }
+    res.status(200).json({ ...result, dietplans, preference, token });
   }
 }
 
@@ -89,16 +86,14 @@ export async function me(req, res, next) {
   if (!user) {
     return res.status(404).json({ message: 'User not found' });
   }
-  res
-    .status(200)
-    .json({
-      token: req.token,
-      username: user.username,
-      email: user.email,
-      address: user.address,
-      imgUrl: user.imgUrl,
-      created_at: user.created_at,
-      dietplans,
-      preference,
-    });
+  res.status(200).json({
+    // token: req.token,
+    username: user.username,
+    email: user.email,
+    address: user.address,
+    imgUrl: user.imgUrl,
+    created_at: user.created_at,
+    dietplans,
+    preference,
+  });
 }
