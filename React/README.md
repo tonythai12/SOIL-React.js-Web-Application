@@ -11,6 +11,7 @@
 - "tailwindcss"
 - "yup"
 - "formik"
+- "axios"
 - "dayjs"
 
 ### routes.js

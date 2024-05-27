@@ -4,7 +4,8 @@ import * as dietController from '../controller/dietplan.js';
 
 const router = express.Router();
 
-router.get('/', dietController.getDietPlan);
+router.get('/', dietController.getDietPlanList);
+router.get('/:user_id', dietController.getDietPlan);
 router.post('/:user_id', dietController.updateDietPlan);
 
 export default router;
