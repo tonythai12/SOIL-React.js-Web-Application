@@ -9,10 +9,22 @@ export async function getAll() {
   }
 }
 
+export async function getByUserId(user_id) {
+  const [rows] = await db.execute(
+    'SELECT * FROM DietPlan WHERE user_id=? VALUES(?)',
+    [user_id]
+  );
+  if (rows.length === 0) {
+    return null;
+  } else {
+    return rows[0];
+  }
+}
+
 export async function create(user_id, eatingHabit, healthGoal) {
   // 1. get all dietplanlist
   const [dietPlan] = await db.execute('SELECT * FROM DietPlanList');
-  if (rows.length === 0) {
+  if (dietPlan.length === 0) {
     return 'Cannot get dietplanlist';
   }
 
@@ -45,6 +57,7 @@ export async function create(user_id, eatingHabit, healthGoal) {
 
   // get dietplanlist id
   const dietPlanListIds = updatedDietPlan.map((plan) => plan.dietplanlist_id);
+  const created_at = new Date(Date.now()).toISOString().split('T')[0];
 
   // Function to save a single dietPlan to the database
   const saveDietPlan = async (user_id, dietplanlist_id, created_at) => {
@@ -54,9 +67,6 @@ export async function create(user_id, eatingHabit, healthGoal) {
     );
     return result[0];
   };
-
-  // Get current date
-  const created_at = new Date(Date.now()).toISOString().split('T')[0];
 
   // Array of promises for each insert operation
   const savePromises = dietPlanListIds.map((dietplanlist_id) =>
@@ -68,11 +78,11 @@ export async function create(user_id, eatingHabit, healthGoal) {
     .then((results) => {
       // Log results or handle as needed
       console.log(results);
-      // Optionally, return the updated diet plan to show in Client
+      // return the updated diet plan to show in Client
+      // or get dietplan from db
       return updatedDietPlan;
     })
     .catch((error) => {
-      // Handle any errors that occurred during the insert operations
       console.error('Error inserting diet plans:', error);
     });
 }

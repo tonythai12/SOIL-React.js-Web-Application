@@ -1,31 +1,35 @@
+import axios from 'axios';
+
 export default class HttpClient {
   constructor(baseURL) {
-    this.baseURL = baseURL;
-  }
-
-  async fetch(url, options) {
-    const res = await fetch(`${this.baseURL}${url}`, {
-      ...options,
+    this.client = axios.create({
+      baseURL: baseURL,
       headers: {
         'Content-Type': 'application/json',
-        ...options.headers,
       },
     });
-    let data;
-    try {
-      data = await res.json();
-    } catch (error) {
-      console.error(error);
-    }
+  }
 
-    if (res.status > 299 || res.status < 200) {
+  async fetch(url, options = {}) {
+    try {
+      const response = await this.client.request({
+        url,
+        ...options,
+      });
+
+      return { status: response.status, data: response.data };
+    } catch (error) {
+      const status = error.response ? error.response.status : 500;
       const message =
-        data && data.message ? data.message : 'Something went wrong! 🤪';
-      const type = data && data.type ? data.type : null;
-      // throw new Error(message);
-      return { status: res.status, message, type };
-    } else {
-      return { status: res.status, data };
+        error.response && error.response.data && error.response.data.message
+          ? error.response.data.message
+          : 'Something went wrong! 🤪';
+      const type =
+        error.response && error.response.data && error.response.data.type
+          ? error.response.data.type
+          : null;
+
+      return { status, message, type };
     }
   }
 }
