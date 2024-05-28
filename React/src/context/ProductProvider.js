@@ -17,6 +17,7 @@ export const ProductProvider = ({ children }) => {
     if (res.status === 200) {
       setProducts(res.data);
     } else if (res.status === 404) {
+      setProducts([]);
       console.error(res.message);
     }
   }, []);

@@ -5,20 +5,20 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children, httpClient, tokenStorage }) => {
   const [userData, setUserData] = useState(null); // a user who is logined.
 
-  useEffect(() => {
-    // get user info using token whenever refreshed.
-    const token = tokenStorage.getToken();
-    const user = httpClient.fetch('/soil/auth/me', {
-      method: 'GET',
-      headers: { Authorization: `Bearer ${token}` },
-    });
+  // useEffect(() => {
+  //   // get user info using token whenever refreshed.
+  //   const token = tokenStorage.getToken();
+  //   const user = httpClient.fetch('/soil/auth/me', {
+  //     method: 'GET',
+  //     headers: { Authorization: `Bearer ${token}` },
+  //   });
 
-    if (user.email) {
-      setUserData(user);
-    } else {
-      setUserData(null);
-    }
-  }, []);
+  //   if (user.email) {
+  //     setUserData(user);
+  //   } else {
+  //     setUserData(null);
+  //   }
+  // }, []);
 
   // Account deletion
   const handleDeleteUser = () => {

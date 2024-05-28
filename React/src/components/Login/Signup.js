@@ -11,7 +11,7 @@ export default function SignUp({ isLogin, toggleForm }) {
 
   // Yup Schema definition.
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required'),
+    username: Yup.string().required('Name is required'),
     email: Yup.string()
       .email('Invalid email address')
       .matches(
@@ -34,31 +34,39 @@ export default function SignUp({ isLogin, toggleForm }) {
       imgUrl: '',
     },
     validationSchema,
-
     onSubmit: async (values) => {
       const { username, email, password, imgUrl } = values;
+      console.log(values);
 
-      // only insert to db when user sign up
-      const res = await httpClient.fetch('/soil/auth/signup', {
-        method: 'POST',
-        body: JSON.stringify({
-          username,
-          email,
-          password,
-          imgUrl,
-          address: 'Spenser st, Melbourne, Australia',
-        }),
-      });
+      try {
+        const res = await httpClient.fetch('/soil/auth/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            username,
+            email,
+            password,
+            imgUrl,
+            address: 'Spenser st, Melbourne, Australia',
+          }),
+        });
 
-      if (res.status === 201) {
-        alert('Sign up successful');
-        // save token in localStorage.
-        tokenStorage.saveToken(res.data.token);
-        navigate('/');
-        // get token, username.
-        // return res.data;
-      } else {
-        setErrorMessage(res.message);
+        const data = await res.json();
+        console.log(data);
+
+        if (res.status === 201) {
+          alert('Sign up successful');
+          // save token in localStorage.
+          tokenStorage.saveToken(data.token);
+          navigate('/');
+        } else {
+          setErrorMessage(data.message);
+        }
+      } catch (error) {
+        console.error('Error during sign up:', error);
+        setErrorMessage('An unexpected error occurred. Please try again.');
       }
     },
   });
@@ -116,7 +124,7 @@ export default function SignUp({ isLogin, toggleForm }) {
         }}
       />
       <label htmlFor='imgUrlInput' className='cursor-pointer'>
-        <span className=' w-full h-10 px-3 mt-3 bg-gray-300 rounded-md flex items-center justify-center'>
+        <span className='w-full h-10 px-3 mt-3 bg-gray-300 rounded-md flex items-center justify-center'>
           {formik.values.imgUrl ? (
             <span className='text-gray-800'>{formik.values.imgUrl.name}</span>
           ) : (
@@ -139,6 +147,7 @@ export default function SignUp({ isLogin, toggleForm }) {
         value='Sign Up'
       />
       <button
+        type='button'
         className='w-full py-2 text-white bg-blue-600 rounded-md cursor-pointer'
         onClick={toggleForm}
       >
