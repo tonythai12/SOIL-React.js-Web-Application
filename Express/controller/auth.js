@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import * as dietPlanRepository from '../data/dietplan.js';
 import * as SpecialSaleRepository from '../data/specialsale.js';
+import { config } from '../config';
 
 export async function signUp(req, res) {
   const { username, email, password } = req.body;
