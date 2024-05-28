@@ -41,9 +41,6 @@ export default function SignUp({ isLogin, toggleForm }) {
       try {
         const res = await httpClient.fetch('/soil/auth/signup', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
           body: JSON.stringify({
             username,
             email,
