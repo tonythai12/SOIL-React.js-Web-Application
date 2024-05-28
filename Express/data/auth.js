@@ -23,7 +23,7 @@ export async function createUser(user) {
   const created_at = new Date().toISOString().split('T')[0];
   return db
     .execute(
-      'INSERT INTO Users (username, email, password_hash, created_at) VALUES (?,?,?,?,?,?)',
+      'INSERT INTO Users (username, email, password_hash, created_at) VALUES (?,?,?,?)',
       [username, email, password_hash, created_at]
     )
     .then((result) => result[0].insertId);
