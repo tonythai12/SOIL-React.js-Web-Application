@@ -59,7 +59,7 @@ export default function SignUp({ isLogin, toggleForm }) {
           tokenStorage.saveToken(res.data.token);
           navigate('/');
         } else {
-          setErrorMessage(res.data.message);
+          setErrorMessage(res.message);
         }
       } catch (error) {
         console.error('Error during sign up:', error);
