@@ -6,8 +6,8 @@ import * as SpecialSaleRepository from '../data/specialsale.js';
 
 export async function signUp(req, res) {
   const { username, email, password, address, imgUrl } = req.body;
-  const dupUserName = await userRepository.findByUsername(username);
-  const dupUserEmail = await userRepository.findByUseremail(email);
+  const dupUserName = await authRepository.findByUsername(username);
+  const dupUserEmail = await authRepository.findByUseremail(email);
 
   if (dupUserName) {
     return res.status(409).json({ message: `${username} already exists` });
@@ -16,7 +16,7 @@ export async function signUp(req, res) {
     return res.status(409).json({ message: `${email} already exists` });
   }
   const password_hash = await bcrypt.hash(password, config.bcrypt.saltRounds);
-  const userId = await userRepository.createUser({
+  const userId = await authRepository.createUser({
     username,
     email,
     password_hash,
@@ -30,7 +30,7 @@ export async function signUp(req, res) {
 
 export async function login(req, res) {
   const { email, password } = req.body;
-  const user = await userRepository.findByUseremail(email);
+  const user = await authRepository.findByUseremail(email);
   if (!user) {
     return res.status(401).json({ message: 'Invalid user or password' });
   }
@@ -83,7 +83,7 @@ export async function me(req, res) {
   // const { user_id } = req.params;
   // token이 맞으면 리턴해주는게 맞는데....
   console.log(req);
-  const user = await userRepository.findById(req.user_id);
+  const user = await authRepository.findById(req.user_id);
   const dietplans = dietPlanRepository.getByUserId(req.user_id) || [];
   const preference = SpecialSaleRepository.get(req.user_id) || '';
   if (!user) {
