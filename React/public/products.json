@@ -6,7 +6,8 @@
     "salePrice": 10.0,
     "quantity": 0,
     "imageUrl": "/img/apple.jpg",
-    "desc": "Tasty Apple. Fresh and delicious."
+    "desc": "Tasty Apple. Fresh and delicious.",
+    "isSale": false
   },
   {
     "id": 2,
@@ -15,7 +16,8 @@
     "salePrice": 18.0,
     "quantity": 0,
     "imageUrl": "/img/banana.jpg",
-    "desc": "Sweet Banana. Energize your day."
+    "desc": "Sweet Banana. Energize your day.",
+    "isSale": false
   },
   {
     "id": 3,
@@ -24,7 +26,8 @@
     "salePrice": 16.0,
     "quantity": 0,
     "imageUrl": "/img/carrot.jpg",
-    "desc": "Healthy Carrot. Rich in Vitamin A."
+    "desc": "Healthy Carrot. Rich in Vitamin A.",
+    "isSale": false
   },
   {
     "id": 4,
@@ -33,7 +36,8 @@
     "salePrice": 12.0,
     "quantity": 0,
     "imageUrl": "/img/blueberry.jpg",
-    "desc": "Fresh Blueberry. Rich in nutrients."
+    "desc": "Fresh Blueberry. Rich in nutrients.",
+    "isSale": false
   },
   {
     "id": 5,
@@ -42,7 +46,8 @@
     "salePrice": 8.0,
     "quantity": 0,
     "imageUrl": "/img/mushroom.jpg",
-    "desc": "Nutritious Mushroom. Great for dishes."
+    "desc": "Nutritious Mushroom. Great for dishes.",
+    "isSale": false
   },
   {
     "id": 6,
@@ -51,6 +56,117 @@
     "salePrice": 17.0,
     "quantity": 0,
     "imageUrl": "/img/pineapple.jpg",
-    "desc": "Refreshing Pineapple. Full of flavor."
+    "desc": "Refreshing Pineapple. Full of flavor.",
+    "isSale": false
+  },
+  {
+    "id": 7,
+    "name": "Organic Tomatoes",
+    "imageUrl": "/img/specialProducts/tomato.jpg",
+    "price": 3.99,
+    "salePrice": 2.99,
+    "quantity": 0,
+    "desc": "Organic Tomatoes",
+    "isSale": true
+  },
+  {
+    "id": 8,
+    "name": "Organic Tomato Seeds",
+    "imageUrl": "/img/specialProducts/tomatoseed.jpg",
+    "price": 1.99,
+    "salePrice": 1.49,
+    "quantity": 0,
+    "desc": "Organic Tomatoes Seeds",
+    "isSale": true
+  },
+  {
+    "id": 9,
+    "name": "Organic Lettuce",
+    "imageUrl": "/img/specialProducts/lettuce.jpg",
+    "price": 2.49,
+    "salePrice": 1.99,
+    "quantity": 0,
+    "isSale": true
+  },
+  {
+    "id": 10,
+    "name": "Organic Lettuce Mix Seeds",
+    "imageUrl": "/img/specialProducts/lettuceseed.jpg",
+    "price": 1.79,
+    "salePrice": 1.29,
+    "quantity": 0,
+    "isSale": true
+  },
+  {
+    "id": 11,
+    "name": "Organic Carrots",
+    "imageUrl": "/img/carrot.jpg",
+    "price": 2.29,
+    "salePrice": 1.79,
+    "quantity": 0,
+    "isSale": true
+  },
+  {
+    "id": 12,
+    "name": "Organic Carrot Seeds",
+    "imageUrl": "/img/specialProducts/carrotseed.jpg",
+    "price": 1.49,
+    "salePrice": 0.99,
+    "quantity": 0,
+    "isSale": true
+  },
+  {
+    "id": 13,
+    "name": "Organic Broccoli",
+    "imageUrl": "/img/specialProducts/broccoli.jpg",
+    "price": 2.99,
+    "salePrice": 2.49,
+    "quantity": 0,
+    "isSale": true
+  },
+  {
+    "id": 14,
+    "name": "Organic Broccoli Seeds",
+    "imageUrl": "/img/specialProducts/broccoliseed.jpeg",
+    "price": 1.79,
+    "salePrice": 1.29,
+    "quantity": 0,
+    "isSale": true
+  },
+  {
+    "id": 15,
+    "name": "Organic Spinach",
+    "imageUrl": "/img/specialProducts/spinach.jpg",
+    "price": 2.79,
+    "salePrice": 2.19,
+    "quantity": 0,
+    "isSale": true
+  },
+  {
+    "id": 16,
+    "name": "Organic Spinach Seeds",
+    "imageUrl": "/img/specialProducts/spinachseed.webp",
+    "price": 1.69,
+    "salePrice": 1.19,
+    "quantity": 0,
+    "isSale": true
+  },
+  {
+    "id": 17,
+    "name": "Organic Bell Peppers",
+    "imageUrl": "/img/specialProducts/bellpepper.jpg",
+    "price": 3.49,
+    "salePrice": 2.99,
+    "quantity": 0,
+    "isSale": true
+  },
+  {
+    "id": 18,
+    "name": "Organic Bell Pepper Seeds",
+    "imageUrl": "/img/specialProducts/bellpepperseed.jpg",
+    "price": 1.99,
+    "salePrice": 1.49,
+    "quantity": 0,
+    "isSale": true
   }
 ]
