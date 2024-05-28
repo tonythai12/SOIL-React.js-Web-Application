@@ -9,10 +9,9 @@ export default class HttpClient {
 
   async fetch(url, options = {}) {
     try {
-      const headers =
-        options.body instanceof FormData
-          ? {}
-          : { 'Content-Type': 'application/json' };
+      const headers = options.headers
+        ? options.headers
+        : { 'Content-Type': 'application/json' };
 
       const response = await this.client.request({
         url,

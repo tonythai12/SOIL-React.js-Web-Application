@@ -23,7 +23,7 @@ export const AuthProvider = ({ children, httpClient, tokenStorage }) => {
 
   useEffect(() => {
     getAuth();
-  }, [getAuth]);
+  }, []);
 
   // Account deletion
   const handleDeleteUser = () => {

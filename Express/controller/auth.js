@@ -92,7 +92,8 @@ export async function remove(req, res) {
 }
 
 export async function me(req, res) {
-  const user = await authRepository.findById(req.user_id);
+  const user = await authRepository.findById(req.userId);
+
   // const dietplans = dietPlanRepository.getByUserId(req.user_id) || [];
   // const preference = SpecialSaleRepository.get(req.user_id) || '';
   if (!user) {
