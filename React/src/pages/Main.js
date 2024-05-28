@@ -116,7 +116,7 @@ function Main() {
             className='flex items-center gap-2 text-xl font-semibold text-green-700 hover:text-white hover:bg-green-500 transition-colors duration-300 rounded-lg px-4 py-2'
           >
             <FaUser />
-            {`Hi ${userData?.name}! 🥰`}
+            {`Hi ${userData?.username}! 🥰`}
           </button>
         ) : (
           <button
