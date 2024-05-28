@@ -9,19 +9,23 @@ export const ProductProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   const [saleProducts, setSaleProducts] = useState({});
 
-  // get all products
-  useEffect(() => {
-    const res = httpClient.fetch('/soil/product', {
+  const getProducts = async () => {
+    const res = await httpClient.fetch('/soil/product', {
       method: 'GET',
     });
+    console.log(res.data);
     if (res.status === 200) {
       setProducts(res.data);
     } else if (res.status === 404) {
       setProducts([]);
       console.error(res.message);
     }
-  }, [httpClient]);
-
+  };
+  // get all products
+  useEffect(() => {
+    getProducts();
+  }, []);
+  console.log(products);
   // get all sales products
   useEffect(() => {
     const res = httpClient.fetch('/soil/sale', {
