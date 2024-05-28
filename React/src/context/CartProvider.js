@@ -4,53 +4,72 @@ import { useAuth } from './AuthProvider';
 // create Context
 const CartContext = createContext();
 
-export const CartProvider = ({ children }) => {
+export const CartProvider = ({ children, httpClient }) => {
   const { userData } = useAuth();
-  // get info
-  const userEmail = userData?.email;
-  const userCartStorage = userEmail ? localStorage.getItem(userEmail) : null;
-
   // state
-  const [cartProducts, setCartProducts] = useState(
-    userCartStorage ? { [userEmail]: JSON.parse(userCartStorage) } : {}
-  );
+  const [cartProducts, setCartProducts] = useState([]);
 
   // add products to cart.
-  const addToCart = (product) => {
-    const userEmail = userData.email;
-    const parsedCartStorage =
-      userEmail && userCartStorage ? JSON.parse(userCartStorage) : [];
-
-    let updatedCartProducts;
-
-    // Check if there is an existing product with the same ID
-    const existingProductIndex = parsedCartStorage.findIndex(
-      (item) => item.id === product.id
-    );
-
-    if (existingProductIndex !== -1) {
-      // If the same product exists, increase the quantity
-      updatedCartProducts = [...parsedCartStorage];
-      updatedCartProducts[existingProductIndex].quantity += 1;
-    } else {
-      // If the same product doesn't exist, add a new product
-      updatedCartProducts = [...parsedCartStorage, { ...product, quantity: 1 }];
-    }
-
-    setCartProducts((prevCartProducts) => {
-      localStorage.setItem(userEmail, JSON.stringify(updatedCartProducts));
-      return { ...prevCartProducts, [userEmail]: updatedCartProducts };
+  const addToCart = async (product) => {
+    const res = await httpClient.fetch(`/soil/cart/${userData.user_id}`, {
+      method: 'POST',
+      body: JSON.stringify({
+        product,
+      }),
     });
+    // Update dietPlan state
+    if (res.status === 201) {
+      setCartProducts(res.data.carts);
+      return res;
+    } else {
+      return alert(res.message);
+    }
   };
 
+  const updateQuantity = async (cart_id, product_id, delta) => {
+    const res = await httpClient.fetch('/soil/cart', {
+      method: 'POST',
+      body: JSON.stringify({
+        cart_id,
+        product_id,
+        delta,
+      }),
+    });
+
+    const index = cartProducts.findIndex(
+      (cart) => cart.cart._id === res.cart_id
+    );
+
+    if (index !== -1) {
+      // Copy the existing object and update the quantity
+      const updatedProduct = {
+        ...cartProducts[index],
+        quantity: res.data.quantity,
+      };
+
+      // Create a new array by updating the object in the original array
+      const updatedCartProducts = [
+        ...cartProducts.slice(0, index),
+        updatedProduct,
+        ...cartProducts.slice(index + 1),
+      ];
+
+      setCartProducts(updatedCartProducts);
+    }
+  };
+
+  const removeItem = (id) => {
+    setCartProducts(cartProducts.filter((item) => item.id !== id));
+  };
   return (
     // provide user info to children so that they can use userInfo whenever they want without prop drilling.
     <CartContext.Provider
       value={{
         cartProducts,
         setCartProducts,
-        userCartStorage,
         addToCart,
+        updateQuantity,
+        removeItem,
       }}
     >
       {children}

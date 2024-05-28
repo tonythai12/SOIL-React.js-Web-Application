@@ -6,12 +6,8 @@ import { useNavigate } from 'react-router-dom';
 
 function LoginAndSignUp() {
   const navigate = useNavigate();
-  const { userListData, logIn, signUp } = useAuth(); // get context value
+  const { logIn } = useAuth(); // get context value
   const [isLogin, setIsLogin] = useState(true); // check login or sign up UI
-
-  // make new Array for emailList and nameList from userListData
-  const userEmailLists = userListData.map((data) => data.email);
-  const userNameLists = userListData.map((data) => data.name);
 
   const toggleForm = () => {
     setIsLogin(!isLogin);
@@ -19,12 +15,10 @@ function LoginAndSignUp() {
 
   return (
     <div className='flex justify-center items-center min-h-screen'>
-      {/* background Img */}
       <div
         className='absolute inset-0 bg-cover bg-center z-0'
         style={{
           backgroundImage: `url('/img/bg.jpg')`,
-          // filter: 'blur(5px)',
         }}
       ></div>
       <div className='relative z-10 w-full max-w-md p-8 bg-white rounded-lg shadow-lg'>
@@ -33,24 +27,9 @@ function LoginAndSignUp() {
         </h1>
         <div className='space-y-4'>
           {/* Login Component */}
-          <LogIn
-            isLogin={isLogin}
-            toggleForm={toggleForm}
-            userListData={userListData}
-            userEmailLists={userEmailLists}
-            logIn={logIn}
-            isValidEmail={isValidEmail}
-          />
+          <LogIn isLogin={isLogin} toggleForm={toggleForm} logIn={logIn} />
           {/* Sign Up Component */}
-          <SignUp
-            isLogin={isLogin}
-            toggleForm={toggleForm}
-            userListData={userListData}
-            userEmailLists={userEmailLists}
-            userNameLists={userNameLists}
-            signUp={signUp}
-            isValidEmail={isValidEmail}
-          />
+          <SignUp isLogin={isLogin} toggleForm={toggleForm} />
         </div>
         <p className='mt-4 text-sm text-gray-600 text-center'>
           <button
@@ -64,10 +43,5 @@ function LoginAndSignUp() {
     </div>
   );
 }
-
-// Simple email validation
-const isValidEmail = (email) => {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-};
 
 export default LoginAndSignUp;

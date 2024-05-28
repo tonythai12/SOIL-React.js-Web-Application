@@ -31,14 +31,8 @@ const purchaseHistory = [
 ];
 
 const MyPage = () => {
-  const {
-    logOut,
-    userData,
-    userListData,
-    handleDeleteUser,
-    setUserData,
-    setUserListData,
-  } = useAuth();
+  const { logOut, userData, setUserData, handleDeleteUser, httpClient } =
+    useAuth();
   const navigate = useNavigate();
   const [isEdit, setisEdit] = useState(false); // when click edit icon, user can edit info
   const [userEditInfo, setUserEditInfo] = useState({
@@ -66,8 +60,6 @@ const MyPage = () => {
       : null,
   };
 
-  const userNameLists = userListData.map((data) => data.name);
-
   const handleEditProfile = () => {
     setisEdit(true);
   };
@@ -80,7 +72,7 @@ const MyPage = () => {
     });
   };
 
-  const handleEditComplete = () => {
+  const handleEditComplete = async () => {
     if (errorMessage) {
       setErrorMessage('');
     }
@@ -90,40 +82,41 @@ const MyPage = () => {
     } else if (userEditInfo.password.length < 8) {
       // check the password length
       setErrorMessage('Password must be at least 8 characters long.');
-    } // check Email duplication
-    else if (userNameLists.includes(userEditInfo?.name)) {
-      alert('This name is already in use.');
     } else {
-      // update edited user data to setUserData (a user logged in now)
-      setUserData({
-        ...userData,
-        name: userEditInfo.name,
-        // email: userEditInfo.email,
-        address: userEditInfo.address,
-        password: userEditInfo.password,
+      // Users db update
+      const response = await fetch('/soil/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: userEditInfo.name,
+          email: userEditInfo.email,
+          password: userEditInfo.password,
+          imgUrl: userEditInfo.imgUrl,
+        }),
       });
 
-      // update edited user data to localStorage.
-      localStorage.setItem('loginName', userEditInfo.name);
-      // localStorage.setItem('loginEmail', userEditInfo.email);
-      localStorage.setItem('address', userEditInfo.address);
-      localStorage.setItem('loginPW', userEditInfo.password);
+      const data = await response.json();
+      if (response.ok) {
+        // update edited user data to setUserData (a user logged in now)
+        setUserData({
+          ...userData,
+          name: userEditInfo.name,
+          // email: userEditInfo.email,
+          address: userEditInfo.address,
+          password: userEditInfo.password,
+        });
 
-      // updated edited user data to userListData(All user data list).
-      const updated = userListData.map((data) => {
-        if (data.email === userData.email) {
-          return {
-            ...data,
-            name: userData.name,
-            address: userData.address,
-            password: userData.password,
-          };
-        } else {
-          return data;
-        }
-      });
-      setUserListData([...updated]);
-      alert('Successfully modified!');
+        // update edited user data to localStorage.
+        localStorage.setItem('loginName', userEditInfo.name);
+        // localStorage.setItem('loginEmail', userEditInfo.email);
+        localStorage.setItem('address', userEditInfo.address);
+        localStorage.setItem('loginPW', userEditInfo.password);
+      } else {
+        setErrorMessage(data.message);
+      }
+
       // back to uneditable state
       setisEdit(false);
     }
@@ -141,6 +134,25 @@ const MyPage = () => {
   const handleLogout = () => {
     logOut();
     navigate('/');
+  };
+
+  // Account deletion
+  const handleDelete = async (userId) => {
+    try {
+      const res = await httpClient.fetch(`/soil/auth/mypage/${userId}`, {
+        method: 'DELETE',
+      });
+
+      if (res.status === 204) {
+        handleDeleteUser();
+        navigate('/');
+      } else {
+        throw new Error(res.message || 'Failed to delete user');
+      }
+    } catch (error) {
+      console.error('An error occurred while deleting the user:', error);
+      throw error;
+    }
   };
 
   return (
@@ -239,7 +251,7 @@ const MyPage = () => {
                   </button>
                   <button
                     className='mt-5 text-sm border border-green-700 rounded-md px-4 py-2 bg-red-700 text-white transition-colors duration-300 hover:opacity-90'
-                    onClick={() => handleDeleteUser(userData)}
+                    onClick={() => handleDelete(userData.user_id)}
                   >
                     Delete User
                   </button>

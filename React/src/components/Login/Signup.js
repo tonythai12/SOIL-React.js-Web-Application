@@ -2,17 +2,12 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { useAuth } from '../../context/AuthProvider';
 
-export default function SignUp({
-  isLogin,
-  toggleForm,
-  userEmailLists,
-  userNameLists,
-  signUp,
-  isValidEmail,
-}) {
+export default function SignUp({ isLogin, toggleForm }) {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
+  const { httpClient, tokenStorage } = useAuth();
 
   // Yup Schema definition.
   const validationSchema = Yup.object().shape({
@@ -33,7 +28,7 @@ export default function SignUp({
   // Validation using formik
   const formik = useFormik({
     initialValues: {
-      name: '',
+      username: '',
       email: '',
       password: '',
       imgUrl: '',
@@ -41,25 +36,30 @@ export default function SignUp({
     validationSchema,
 
     onSubmit: async (values) => {
-      const currentTimeInMillis = Date.now();
-      const currentDate = new Date(currentTimeInMillis);
+      const { username, email, password, imgUrl } = values;
 
-      // Check Email duplication
-      if (userEmailLists.includes(values.email)) {
-        setErrorMessage('This email is already in use.');
-        return;
+      // only insert to db when user sign up
+      const res = await httpClient.fetch('/soil/auth/signup', {
+        method: 'POST',
+        body: JSON.stringify({
+          username,
+          email,
+          password,
+          imgUrl,
+          address: 'Spenser st, Melbourne, Australia',
+        }),
+      });
+
+      if (res.status === 201) {
+        alert('Sign up successful');
+        // save token in localStorage.
+        tokenStorage.saveToken(res.data.token);
+        navigate('/');
+        // get token, username.
+        // return res.data;
+      } else {
+        setErrorMessage(res.message);
       }
-
-      // Check Name duplication
-      if (userNameLists.includes(values.name)) {
-        setErrorMessage('This name is already in use.');
-        return;
-      }
-
-      // Proceed with sign up if all fields are valid
-      signUp({ ...values, date: currentDate.toISOString().split('T')[0] });
-      alert('Sign up successful');
-      navigate('/');
     },
   });
 
@@ -70,15 +70,15 @@ export default function SignUp({
     >
       <input
         type='text'
-        name='name'
+        name='username'
         placeholder='Name'
         className='w-full h-10 px-3 bg-gray-200 rounded-md'
-        value={formik.values.name}
+        value={formik.values.username}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
       />
-      {formik.touched.name && formik.errors.name && (
-        <p className='text-red-500'>{formik.errors.name}</p>
+      {formik.touched.username && formik.errors.username && (
+        <p className='text-red-500'>{formik.errors.username}</p>
       )}
       <input
         type='email'

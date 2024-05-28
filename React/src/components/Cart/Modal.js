@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Modal({ isOpen2, setIsOpen2, selectedProduct }) {
+function Modal({ isOpen2, setIsOpen2, status, selectedProduct }) {
   if (!isOpen2) return null;
 
   return (
@@ -9,9 +9,15 @@ function Modal({ isOpen2, setIsOpen2, selectedProduct }) {
         <p className='text-xl text-center font-semibold pt-3 pr-2 pl-2'>
           {selectedProduct.name}
         </p>
-        <p className='text-xl text-center text-green-800 pb-3'>
-          has been added to the cart.🧺
-        </p>
+        {status === 201 ? (
+          <p className='text-xl text-center text-green-800 pb-3'>
+            has been added to the cart.🧺
+          </p>
+        ) : (
+          <p className='text-xl text-center text-green-800 pb-3'>
+            has not been added to the cart.😢
+          </p>
+        )}
         <button
           className='mt-4 w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600 transition duration-300'
           onClick={() => setIsOpen2(false)}

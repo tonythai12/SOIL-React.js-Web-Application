@@ -2,15 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { useAuth } from '../../context/AuthProvider';
 
-export default function LogIn({
-  isLogin,
-  toggleForm,
-  userListData,
-  userEmailLists,
-  logIn,
-  isValidEmail,
-}) {
+export default function LogIn({ isLogin, toggleForm, logIn }) {
+  const { httpClient, tokenStorage } = useAuth();
   const [rememberMe, setRememberMe] = useState(false); // State to remember login
   const navigate = useNavigate();
 
@@ -38,48 +33,50 @@ export default function LogIn({
   // Remember email & password if 'remember me' is checked after logout.
   useEffect(() => {
     const storedEmail = localStorage.getItem('emailForRememberMe');
-    const storedPassword = localStorage.getItem('pwForRememberMe');
-    if (storedEmail && storedPassword) {
+    // const storedPassword = localStorage.getItem('pwForRememberMe');
+    if (storedEmail) {
       setRememberMe(true);
-      formik.setValues({ email: storedEmail, password: storedPassword });
+      formik.setValues({ email: storedEmail });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleLogin = (values) => {
+  const handleLogin = async (values) => {
     const { email, password } = values;
-    const correctPassword = userListData.find(
-      (user) => user.email === email
-    )?.password;
 
-    if (!userEmailLists.includes(email)) {
-      formik.setFieldError('email', 'User does not exist');
-    } else if (correctPassword !== password) {
-      formik.setFieldError('password', 'Incorrect password');
+    const res = await httpClient.fetch('/soil/auth/login', {
+      method: 'GET',
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
+
+    if (res.status === 401) {
+      formik.setFieldError(res.type, res.message);
     } else {
+      // if email, password is passed.
       if (rememberMe) {
         localStorage.setItem('emailForRememberMe', email);
-        localStorage.setItem('pwForRememberMe', password);
+        // localStorage.setItem('pwForRememberMe', password);
       } else {
         localStorage.removeItem('emailForRememberMe');
-        localStorage.removeItem('pwForRememberMe');
+        // localStorage.removeItem('pwForRememberMe');
       }
 
-      const user = userListData.find((user) => user.email === email);
-      console.log(user);
       logIn({
-        name: user.name,
-        email: email,
-        password: password,
-        date: user.date,
-        preference: user?.preference ? user.preference : '',
-        dietProfile: user?.dietProfile ? user.dietProfile : {},
-        dietPlan: user?.dietPlan ? user?.dietPlan : [],
-        imgUrl: user?.imgUrl,
+        name: res.data.username,
+        email: res.data.email,
+        imgUrl: res.data?.imgUrl,
+        created_at: res.data.created_at,
+        preference: res.data.preference,
+        dietPlan: res.data.dietPlan,
       });
 
+      // save token in localStorage.
+      tokenStorage.saveToken(res.data.token);
       alert('Login successful');
-      navigate(`/soil/${email}`);
+      navigate(`/soil/${res.email}`);
     }
   };
 
