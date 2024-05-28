@@ -24,7 +24,7 @@ export async function signUp(req, res) {
     password_hash,
   });
   // create jwt token and return it to client when user sign up.
-  const token = createJwtToken(userId);
+  const token = createJwtToken(userId.insertId);
   res.status(201).json({ token, username });
 }
 
