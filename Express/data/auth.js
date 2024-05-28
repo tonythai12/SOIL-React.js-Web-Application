@@ -23,8 +23,8 @@ export async function createUser(user) {
   const created_at = new Date().toISOString().split('T')[0];
   return db
     .execute(
-      'INSERT INTO Users (username, email, password_hash, imgUrl, created_at) VALUES (?,?,?,?,?)',
-      [username, email, password_hash, imgUrl, created_at]
+      'INSERT INTO Users (username, email, password_hash, imgUrl, address, created_at) VALUES (?, ?, ?, ?, ?, ?)',
+      [username, email, password_hash, imgUrl, address, created_at]
     )
     .then((result) => result[0].insertId);
 }
@@ -32,7 +32,7 @@ export async function createUser(user) {
 // when user update user info
 export async function updateUser(user_id, name, email, password, address) {
   return db.execute(
-    'UPDATE Users SET username=? email=? password=? address=? WHERE user_id=?',
+    'UPDATE Users SET username=?, email=?, password=?, address=? WHERE user_id=?',
     [name, email, password, address, user_id]
   );
 }
