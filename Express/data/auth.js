@@ -15,7 +15,10 @@ export async function findByUsername(username) {
 export async function findByUseremail(email) {
   return db
     .execute('SELECT * FROM Users WHERE email=?', [email]) //
-    .then((result) => result[0][0]);
+    .then((result) => {
+      console.log(result);
+      return result[0][0];
+    });
 }
 
 export async function createUser(user) {
@@ -32,12 +35,12 @@ export async function createUser(user) {
 // when user update user info
 export async function updateUser(user_id, name, email, password) {
   return db.execute(
-    'UPDATE Users SET username=?, email=?, password=?, WHERE user_id=?',
+    'UPDATE Users SET username=?, email=?, password=? WHERE user_id=?',
     [name, email, password, user_id]
   );
 }
 
 // when user is deleted
 export async function deleteUser(user_id) {
-  return db.execute('DELETE Users WHERE user_id=?', [user_id]);
+  return db.execute('DELETE FROM Users WHERE user_id=?', [user_id]);
 }

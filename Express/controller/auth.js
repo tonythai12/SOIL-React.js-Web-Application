@@ -30,7 +30,9 @@ export async function signUp(req, res) {
 
 export async function login(req, res) {
   const { email, password } = req.body;
+  console.log(`email = ${email}`);
   const user = await authRepository.findByUseremail(email);
+  console.log(`user =>`, user);
   if (!user) {
     return res.status(401).json({ message: 'Invalid user or password' });
   }
@@ -41,16 +43,21 @@ export async function login(req, res) {
 
   // if user email and password is passed, get dietplan, preference info and return all user info as an object.
   if (user && isValidPassword) {
-    const dietplans = dietPlanRepository.getByUserId(user.user_id) || [];
-    const preference = SpecialSaleRepository.get(user.user_id) || '';
+    // const dietplans =
+    //   (await dietPlanRepository.getByUserId(user.user_id)) || [];
+    // const preference = (await SpecialSaleRepository.get(user.user_id)) || '';
 
+    // console.log(`dietplans => ${dietplans}`);
+    // console.log(`preference => ${preference}`);
     const token = createJwtToken(user.user_id);
     res.status(200).json({
-      token,
-      username: user.username,
-      email: user.email,
-      dietplans,
-      preference,
+      token: token,
+      user_id: user?.user_id,
+      username: user?.username,
+      email: user?.email,
+      // dietplans: dietplans.length > 0 ? dietplans : [],
+      // preference: preference ? preference : '',
+      created_at: user.created_at,
     });
   }
 }
@@ -73,25 +80,31 @@ export function modifyUserInfo(req, res) {
   }
 }
 
-export function remove(req, res) {
+export async function remove(req, res) {
   const { user_id } = req.params;
-  authRepository.deleteUser(user_id);
-  res.status(204);
+  console.log(user_id);
+  try {
+    await authRepository.deleteUser(user_id);
+    res.sendStatus(204);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to delete user' });
+  }
 }
 
 export async function me(req, res) {
   const user = await authRepository.findById(req.user_id);
-  const dietplans = dietPlanRepository.getByUserId(req.user_id) || [];
-  const preference = SpecialSaleRepository.get(req.user_id) || '';
+  // const dietplans = dietPlanRepository.getByUserId(req.user_id) || [];
+  // const preference = SpecialSaleRepository.get(req.user_id) || '';
   if (!user) {
     return res.status(404).json({ message: 'User not found' });
   }
   res.status(200).json({
     // token: req.token,
+    user_id: user.user_id,
     username: user.username,
     email: user.email,
     created_at: user.created_at,
-    dietplans,
-    preference,
+    // dietplans,
+    // preference,
   });
 }

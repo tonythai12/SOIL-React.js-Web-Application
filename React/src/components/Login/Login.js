@@ -43,9 +43,11 @@ export default function LogIn({ isLogin, toggleForm, logIn }) {
 
   const handleLogin = async (values) => {
     const { email, password } = values;
-
+    // const token = tokenStorage.getToken();
+    // console.log(`login token => ${token}`);
     const res = await httpClient.fetch('/soil/auth/login', {
-      method: 'GET',
+      method: 'POST',
+      // headers: { Authorization: `Bearer ${token}` },
       body: JSON.stringify({
         email,
         password,
@@ -53,7 +55,7 @@ export default function LogIn({ isLogin, toggleForm, logIn }) {
     });
 
     if (res.status === 401) {
-      formik.setFieldError(res.type, res.message);
+      return alert(res.message);
     } else {
       // if email, password is passed.
       if (rememberMe) {
@@ -63,9 +65,10 @@ export default function LogIn({ isLogin, toggleForm, logIn }) {
         localStorage.removeItem('emailForRememberMe');
         // localStorage.removeItem('pwForRememberMe');
       }
-
+      console.log(res);
       logIn({
-        name: res.data.username,
+        user_id: res.data?.user_id,
+        username: res.data?.username,
         email: res.data.email,
         created_at: res.data.created_at,
         preference: res.data.preference,
@@ -75,7 +78,7 @@ export default function LogIn({ isLogin, toggleForm, logIn }) {
       // save token in localStorage.
       tokenStorage.saveToken(res.data.token);
       alert('Login successful');
-      navigate(`/soil/${res.email}`);
+      navigate(`/soil/${res.data.email}`);
     }
   };
 

@@ -5,17 +5,25 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children, httpClient, tokenStorage }) => {
   const [userData, setUserData] = useState(null); // a user who is logined.
 
-  useEffect(() => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const getAuth = async () => {
     // get user info using token whenever refreshed.
     const token = tokenStorage.getToken();
-    httpClient
-      .fetch('/soil/auth/me', {
-        method: 'GET',
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then(setUserData)
-      .catch(console.error);
-  }, [httpClient, setUserData, tokenStorage]);
+    console.log(`token => ${token}`);
+    const res = await httpClient.fetch('/soil/auth/me', {
+      method: 'GET',
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (res.status === 200) {
+      setUserData(res.data);
+    } else {
+      console.error(res.message);
+    }
+  };
+
+  useEffect(() => {
+    getAuth();
+  }, [getAuth]);
 
   // Account deletion
   const handleDeleteUser = () => {

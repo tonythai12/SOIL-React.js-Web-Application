@@ -9,13 +9,13 @@ const router = express.Router();
 router.post('/signup', authController.signUp);
 
 // get user when user log in
-router.get('/login', authController.login);
+router.post('/login', authController.login);
 
 // modify user info
-router.post('/mypage/:id', authController.modifyUserInfo);
+router.post('/mypage/:user_id', authController.modifyUserInfo);
 
 // delete user
-router.delete('/mypage/:id', authController.remove);
+router.delete('/mypage/:user_id', authController.remove);
 
 // verify user token from server.
 router.get('/me', isAuth, authController.me);

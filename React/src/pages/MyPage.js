@@ -36,20 +36,22 @@ const MyPage = () => {
   const navigate = useNavigate();
   const [isEdit, setisEdit] = useState(false); // when click edit icon, user can edit info
   const [userEditInfo, setUserEditInfo] = useState({
-    name: userData?.username,
+    user_id: userData?.user_id,
+    username: userData?.username,
     email: userData?.email,
     password: userData?.password,
-    registration_date: userData?.created_at,
+    registration_date: userData?.created_at.split('T')[0],
   }); // user edit info
   const [errorMessage, setErrorMessage] = useState('');
 
   const userInfo = {
-    name: userData?.username,
+    user_id: userData?.user_id,
+    username: userData?.username,
     email: userData?.email,
     password: userData?.password,
-    registration_date: userData?.created_at,
+    registration_date: userData?.created_at.split('T')[0],
   };
-
+  console.log(userData);
   const handleEditProfile = () => {
     setisEdit(true);
   };
@@ -67,7 +69,7 @@ const MyPage = () => {
       setErrorMessage('');
     }
     // Check if name, email, and password are not empty
-    if (!userEditInfo?.name || !userEditInfo?.password) {
+    if (!userEditInfo?.username || !userEditInfo?.password) {
       setErrorMessage('Please fill in all fields.');
     } else if (userEditInfo.password.length < 8) {
       // check the password length
@@ -79,7 +81,7 @@ const MyPage = () => {
         {
           method: 'POST',
           body: JSON.stringify({
-            username: userEditInfo.name,
+            username: userEditInfo.username,
             email: userEditInfo.email,
             password: userEditInfo.password,
           }),
@@ -90,7 +92,7 @@ const MyPage = () => {
         // update edited user data to setUserData (a user logged in now)
         setUserData({
           ...userData,
-          username: userEditInfo.name,
+          username: userEditInfo.username,
           // email: userEditInfo.email,
           password: userEditInfo.password,
         });
@@ -119,6 +121,7 @@ const MyPage = () => {
 
   // Account deletion
   const handleDelete = async (userId) => {
+    console.log(userId);
     try {
       const res = await httpClient.fetch(`/soil/auth/mypage/${userId}`, {
         method: 'DELETE',
@@ -166,12 +169,12 @@ const MyPage = () => {
                     <input
                       className='text-center w-20'
                       name='username'
-                      value={userEditInfo.username}
+                      value={userEditInfo?.username}
                       onChange={handleInputChange}
                     />
                   </div>
                 ) : (
-                  userInfo.username
+                  userInfo?.username
                 )}
               </h2>
               <p className='mt-2 text-sm text-green-700'>
@@ -183,18 +186,18 @@ const MyPage = () => {
                 <span className='font-semibold mr-1'>Registration Date :</span>
                 {userInfo.registration_date}
               </p>
-              <p className='mt-2 text-sm text-green-700'>
-                <span className='font-semibold mr-1'>Password :</span>
-                {isEdit ? (
+
+              {isEdit && (
+                <p className='mt-2 text-sm text-green-700'>
+                  <span className='font-semibold mr-1'>Password :</span>
                   <input
                     name='password'
                     value={userEditInfo.password}
                     onChange={handleInputChange}
                   />
-                ) : (
-                  userInfo.password
-                )}
-              </p>
+                </p>
+              )}
+
               {isEdit ? (
                 <button
                   className='mt-5 mr-2 text-sm border border-green-700 rounded-md px-4 py-2 bg-green-700 text-white transition-colors duration-300 hover:opacity-90'
