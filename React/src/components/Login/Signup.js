@@ -53,16 +53,13 @@ export default function SignUp({ isLogin, toggleForm }) {
           }),
         });
 
-        const data = await res.json();
-        console.log(data);
-
         if (res.status === 201) {
           alert('Sign up successful');
           // save token in localStorage.
-          tokenStorage.saveToken(data.token);
+          tokenStorage.saveToken(res.data.token);
           navigate('/');
         } else {
-          setErrorMessage(data.message);
+          setErrorMessage(res.data.message);
         }
       } catch (error) {
         console.error('Error during sign up:', error);
