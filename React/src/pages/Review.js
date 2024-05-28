@@ -51,7 +51,7 @@ const Review = () => {
       setReviews([]);
       console.error(res.message);
     }
-  }, []);
+  }, [httpClient]);
 
   // when it has selected review index, it can move to view detail.
   const handleViewDetail = (index) => {

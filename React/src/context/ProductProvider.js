@@ -20,7 +20,7 @@ export const ProductProvider = ({ children }) => {
       setProducts([]);
       console.error(res.message);
     }
-  }, []);
+  }, [httpClient]);
 
   // get all sales products
   useEffect(() => {
@@ -32,7 +32,7 @@ export const ProductProvider = ({ children }) => {
     } else if (res.status === 404) {
       console.error(res.message);
     }
-  }, []);
+  }, [httpClient]);
 
   return (
     // provide user info to children so that they can use userInfo whenever they want without prop drilling.
