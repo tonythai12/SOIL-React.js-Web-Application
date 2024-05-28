@@ -36,28 +36,18 @@ const MyPage = () => {
   const navigate = useNavigate();
   const [isEdit, setisEdit] = useState(false); // when click edit icon, user can edit info
   const [userEditInfo, setUserEditInfo] = useState({
-    name: userData?.name,
+    name: userData?.username,
     email: userData?.email,
-    address: userData?.address,
     password: userData?.password,
-    registration_date: userData?.date,
+    registration_date: userData?.created_at,
   }); // user edit info
   const [errorMessage, setErrorMessage] = useState('');
 
   const userInfo = {
-    name: userData?.name,
+    name: userData?.username,
     email: userData?.email,
-    address:
-      userData?.address === 'undefined'
-        ? 'Spenser st, Melbourne, Australia'
-        : userData?.address,
     password: userData?.password,
-    registration_date: userData?.date,
-    imgUrl: userData?.imgUrl
-      ? URL.createObjectURL(
-          new Blob([userData.imgUrl], { type: userData.imgUrl.type })
-        )
-      : null,
+    registration_date: userData?.created_at,
   };
 
   const handleEditProfile = () => {
@@ -84,37 +74,28 @@ const MyPage = () => {
       setErrorMessage('Password must be at least 8 characters long.');
     } else {
       // Users db update
-      const response = await fetch('/soil/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: userEditInfo.name,
-          email: userEditInfo.email,
-          password: userEditInfo.password,
-          imgUrl: userEditInfo.imgUrl,
-        }),
-      });
+      const res = await httpClient.fetch(
+        `/soil/auth/mypage/${userData.user_id}`,
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            username: userEditInfo.name,
+            email: userEditInfo.email,
+            password: userEditInfo.password,
+          }),
+        }
+      );
 
-      const data = await response.json();
-      if (response.ok) {
+      if (res.status === 200) {
         // update edited user data to setUserData (a user logged in now)
         setUserData({
           ...userData,
-          name: userEditInfo.name,
+          username: userEditInfo.name,
           // email: userEditInfo.email,
-          address: userEditInfo.address,
           password: userEditInfo.password,
         });
-
-        // update edited user data to localStorage.
-        localStorage.setItem('loginName', userEditInfo.name);
-        // localStorage.setItem('loginEmail', userEditInfo.email);
-        localStorage.setItem('address', userEditInfo.address);
-        localStorage.setItem('loginPW', userEditInfo.password);
       } else {
-        setErrorMessage(data.message);
+        setErrorMessage(res.message);
       }
 
       // back to uneditable state
@@ -173,11 +154,7 @@ const MyPage = () => {
             <div className='flex items-center justify-center'>
               <img
                 className='w-36 h-36 object-cover rounded-full border-4 border-green-600'
-                src={
-                  userInfo.imgUrl
-                    ? userInfo.imgUrl
-                    : '/img/user_default_icon.png'
-                }
+                src='/img/user_default_icon.png'
                 alt='profile'
               />
             </div>
@@ -188,36 +165,20 @@ const MyPage = () => {
                     <span className='font-semibold mr-1'>Name :</span>
                     <input
                       className='text-center w-20'
-                      name='name'
-                      value={userEditInfo.name}
+                      name='username'
+                      value={userEditInfo.username}
                       onChange={handleInputChange}
                     />
                   </div>
                 ) : (
-                  userInfo.name
+                  userInfo.username
                 )}
               </h2>
               <p className='mt-2 text-sm text-green-700'>
                 <span className='font-semibold mr-1'>Email :</span>
                 {userInfo?.email}
               </p>
-              <p className='mt-2 text-sm text-green-700'>
-                {' '}
-                <span className='font-semibold mr-1'>Address :</span>
-                {isEdit ? (
-                  <input
-                    name='address'
-                    value={
-                      !userEditInfo.address
-                        ? 'Spenser st, Melbourne, Australia'
-                        : userEditInfo.address
-                    }
-                    onChange={handleInputChange}
-                  />
-                ) : (
-                  userInfo?.address || 'Spenser st, Melbourne, Australia'
-                )}
-              </p>
+
               <p className='mt-2 text-sm text-green-700'>
                 <span className='font-semibold mr-1'>Registration Date :</span>
                 {userInfo.registration_date}

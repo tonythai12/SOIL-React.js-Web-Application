@@ -19,21 +19,21 @@ export async function findByUseremail(email) {
 }
 
 export async function createUser(user) {
-  const { username, password_hash, email, address, imgUrl } = user;
+  const { username, password_hash, email } = user;
   const created_at = new Date().toISOString().split('T')[0];
   return db
     .execute(
-      'INSERT INTO Users (username, email, password_hash, address, imgUrl, created_at) VALUES (?,?,?,?,?,?)',
-      [username, email, password_hash, address, imgUrl, created_at]
+      'INSERT INTO Users (username, email, password_hash, created_at) VALUES (?,?,?,?,?,?)',
+      [username, email, password_hash, created_at]
     )
     .then((result) => result[0].insertId);
 }
 
 // when user update user info
-export async function updateUser(user_id, name, email, password, address) {
+export async function updateUser(user_id, name, email, password) {
   return db.execute(
-    'UPDATE Users SET username=?, email=?, password=?, address=? WHERE user_id=?',
-    [name, email, password, address, user_id]
+    'UPDATE Users SET username=?, email=?, password=?, WHERE user_id=?',
+    [name, email, password, user_id]
   );
 }
 

@@ -5,7 +5,8 @@ import * as dietPlanRepository from '../data/dietplan.js';
 import * as SpecialSaleRepository from '../data/specialsale.js';
 
 export async function signUp(req, res) {
-  const { username, email, password, address, imgUrl } = req.body;
+  const { username, email, password } = req.body;
+
   const dupUserName = await authRepository.findByUsername(username);
   const dupUserEmail = await authRepository.findByUseremail(email);
 
@@ -20,8 +21,6 @@ export async function signUp(req, res) {
     username,
     email,
     password_hash,
-    address,
-    imgUrl,
   });
   // create jwt token and return it to client when user sign up.
   const token = createJwtToken(userId);
@@ -57,15 +56,9 @@ function createJwtToken(id) {
 
 export function modifyUserInfo(req, res) {
   const { user_id } = req.params;
-  const { username, email, password, address } = req.body;
+  const { username, email, password } = req.body;
 
-  const user = authRepository.updateUser(
-    user_id,
-    username,
-    email,
-    password,
-    address
-  );
+  const user = authRepository.updateUser(user_id, username, email, password);
   if (user) {
     res.status(200).json(user);
   } else {
@@ -80,9 +73,6 @@ export function remove(req, res) {
 }
 
 export async function me(req, res) {
-  // const { user_id } = req.params;
-  // token이 맞으면 리턴해주는게 맞는데....
-  console.log(req);
   const user = await authRepository.findById(req.user_id);
   const dietplans = dietPlanRepository.getByUserId(req.user_id) || [];
   const preference = SpecialSaleRepository.get(req.user_id) || '';
@@ -93,8 +83,6 @@ export async function me(req, res) {
     // token: req.token,
     username: user.username,
     email: user.email,
-    address: user.address,
-    imgUrl: user.imgUrl,
     created_at: user.created_at,
     dietplans,
     preference,

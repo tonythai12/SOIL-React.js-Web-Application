@@ -67,7 +67,6 @@ export default function LogIn({ isLogin, toggleForm, logIn }) {
       logIn({
         name: res.data.username,
         email: res.data.email,
-        imgUrl: res.data?.imgUrl,
         created_at: res.data.created_at,
         preference: res.data.preference,
         dietPlan: res.data.dietPlan,

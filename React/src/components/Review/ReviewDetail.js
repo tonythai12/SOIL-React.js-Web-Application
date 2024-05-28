@@ -38,9 +38,6 @@ const ReviewDetail = ({
   };
 
   const handleCreate = (userEmail) => {
-    const userImage = userData?.imgUrl
-      ? userData?.imgUrl
-      : '/img/user_default_icon.png';
     const userName = userData?.name;
     const createdAt = dayjs()
       .utcOffset('+10:00')
@@ -48,7 +45,6 @@ const ReviewDetail = ({
     onCreate({
       user_id: userEmail,
       ...editedReview,
-      userImage,
       userName,
       createdAt,
     });
