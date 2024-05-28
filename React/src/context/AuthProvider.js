@@ -8,17 +8,14 @@ export const AuthProvider = ({ children, httpClient, tokenStorage }) => {
   useEffect(() => {
     // get user info using token whenever refreshed.
     const token = tokenStorage.getToken();
-    const user = httpClient.fetch('/soil/auth/me', {
-      method: 'GET',
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    if (user.email) {
-      setUserData(user);
-    } else {
-      setUserData(null);
-    }
-  }, []);
+    httpClient
+      .fetch('/soil/auth/me', {
+        method: 'GET',
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then(setUserData)
+      .catch(console.error);
+  }, [httpClient, setUserData, tokenStorage]);
 
   // Account deletion
   const handleDeleteUser = () => {
