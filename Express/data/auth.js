@@ -33,10 +33,10 @@ export async function createUser(user) {
 }
 
 // when user update user info
-export async function updateUser(user_id, name, email, password) {
+export async function updateUser(user_id, username, email, password_hash) {
   return db.execute(
-    'UPDATE Users SET username=?, email=?, password=? WHERE user_id=?',
-    [name, email, password, user_id]
+    'UPDATE Users SET username=?, email=?, password_hash=? WHERE user_id=?',
+    [username, email, password_hash, user_id]
   );
 }
 

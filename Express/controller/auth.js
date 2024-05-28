@@ -30,9 +30,8 @@ export async function signUp(req, res) {
 
 export async function login(req, res) {
   const { email, password } = req.body;
-  console.log(`email = ${email}`);
   const user = await authRepository.findByUseremail(email);
-  console.log(`user =>`, user);
+
   if (!user) {
     return res.status(401).json({ message: 'Invalid user or password' });
   }
@@ -68,11 +67,30 @@ function createJwtToken(id) {
   });
 }
 
-export function modifyUserInfo(req, res) {
+export async function modifyUserInfo(req, res) {
   const { user_id } = req.params;
   const { username, email, password } = req.body;
 
-  const user = authRepository.updateUser(user_id, username, email, password);
+  // check duplication when user modify user's info
+  const dupUserName = await authRepository.findByUsername(username);
+  const dupUserEmail = await authRepository.findByUseremail(email);
+
+  if (dupUserName) {
+    return res.status(409).json({ message: `${username} already exists` });
+  }
+  if (dupUserEmail) {
+    return res.status(409).json({ message: `${email} already exists` });
+  }
+
+  // make password hash when user change password in Mypage.
+  const password_hash = await bcrypt.hash(password, config.bcrypt.saltRounds);
+  const user = await authRepository.updateUser(
+    user_id,
+    username,
+    email,
+    password_hash
+  );
+
   if (user) {
     res.status(200).json(user);
   } else {

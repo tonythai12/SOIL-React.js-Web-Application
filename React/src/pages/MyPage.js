@@ -98,6 +98,7 @@ const MyPage = () => {
         });
       } else {
         setErrorMessage(res.message);
+        setUserData(userData);
       }
 
       // back to uneditable state
@@ -177,10 +178,21 @@ const MyPage = () => {
                   userInfo?.username
                 )}
               </h2>
-              <p className='mt-2 text-sm text-green-700'>
-                <span className='font-semibold mr-1'>Email :</span>
-                {userInfo?.email}
-              </p>
+              {isEdit ? (
+                <div className='text-center'>
+                  <span className='font-semibold mt-2 text-sm text-green-700'>
+                    Email :
+                  </span>
+                  <input
+                    className='text-center w-20'
+                    name='email'
+                    value={userEditInfo?.email}
+                    onChange={handleInputChange}
+                  />
+                </div>
+              ) : (
+                <p className='mt-2 text-sm text-green-700'>{userInfo?.email}</p>
+              )}
 
               <p className='mt-2 text-sm text-green-700'>
                 <span className='font-semibold mr-1'>Registration Date :</span>
