@@ -40,18 +40,22 @@ const Review = () => {
   const [selectedReviewIndex, setSelectedReviewIndex] = useState(null); // go to view detail.
   const [isCreate, setIsCreate] = useState(false); // go to create review.
 
-  useEffect(() => {
-    const res = httpClient.fetch('/soil/review', {
+  const getReviews = async () => {
+    const res = await httpClient.fetch('/soil/review', {
       method: 'GET',
     });
-
+    console.log(res.data);
     if (res.status === 200) {
       setReviews(res.data);
     } else {
       setReviews([]);
       console.error(res.message);
     }
-  }, [httpClient]);
+  };
+
+  useEffect(() => {
+    getReviews();
+  }, []);
 
   // when it has selected review index, it can move to view detail.
   const handleViewDetail = (index) => {

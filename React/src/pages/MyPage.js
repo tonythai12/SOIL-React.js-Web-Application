@@ -122,7 +122,6 @@ const MyPage = () => {
 
   // Account deletion
   const handleDelete = async (userId) => {
-    console.log(userId);
     try {
       const res = await httpClient.fetch(`/soil/auth/mypage/${userId}`, {
         method: 'DELETE',
