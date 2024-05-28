@@ -1,49 +1,42 @@
 import db from '../db/database.js';
 
 export async function getAll() {
-  // get SpecialSale
-  const [saleProducts] = db.execute('SELECT * FROM SpecialSale');
+  try {
+    // get SpecialSale
+    const [saleProducts] = await db.execute('SELECT * FROM SpecialSale');
 
-  if (saleProducts.length > 0) {
-    // get products
-    const productIds = saleProducts.map((res) => res.product.id);
-    const products = productIds.map((ids) => {
-      const res = db.execute(
-        'SELECT * FROM Products WHERE product_id=? VALUES (?)',
-        [ids]
-      );
-      return res[0];
-    });
-
-    // const resultArr = saleProducts[0].map((sale) => {
-    //   const specialArr = products.filter((product) =>
-    //     sale.product_name.includes(product.name)
-    //   );
-
-    //   return {
-    //     [sale.product_name]: {
-    //       tips: sale.tip,
-    //       specials: specialArr,
-    //       imageUrl: sale.imageUrl,
-    //     },
-    //   };
-    // });
-
-    const resultObject = saleProducts[0].reduce((acc, sale) => {
-      const specialArr = products.filter((product) =>
-        sale.product_name.includes(product.name)
+    if (saleProducts.length > 0) {
+      // get products
+      const productIds = saleProducts.map((res) => res.product.id);
+      const products = await Promise.all(
+        productIds.map(async (id) => {
+          const [res] = await db.execute(
+            'SELECT * FROM Products WHERE product_id=?',
+            [id]
+          );
+          return res[0];
+        })
       );
 
-      acc[sale.product_name] = {
-        tips: sale.tip,
-        specials: specialArr,
-        imageUrl: sale.imageUrl,
-      };
+      const resultObject = saleProducts.reduce((acc, sale) => {
+        const specialArr = products.filter((product) =>
+          sale.product_name.includes(product.name)
+        );
 
-      return acc;
-    }, {});
+        acc[sale.product_name] = {
+          tips: sale.tip,
+          specials: specialArr,
+          imageUrl: sale.imageUrl,
+        };
 
-    return resultObject;
+        return acc;
+      }, {});
+
+      return resultObject;
+    }
+  } catch (error) {
+    console.error('Error fetching special sales and products:', error);
+    throw error;
   }
 }
 
