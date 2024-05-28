@@ -170,7 +170,7 @@ const MyPage = () => {
                     <input
                       className='text-center w-20'
                       name='username'
-                      value={userEditInfo?.username}
+                      value={userEditInfo?.username || userData?.username}
                       onChange={handleInputChange}
                     />
                   </div>
@@ -186,7 +186,7 @@ const MyPage = () => {
                   <input
                     className='text-center w-20'
                     name='email'
-                    value={userEditInfo?.email}
+                    value={userEditInfo?.email || userData.email}
                     onChange={handleInputChange}
                   />
                 </div>
@@ -203,8 +203,9 @@ const MyPage = () => {
                 <p className='mt-2 text-sm text-green-700'>
                   <span className='font-semibold mr-1'>Password :</span>
                   <input
+                    type='password'
                     name='password'
-                    value={userEditInfo.password}
+                    value={userEditInfo?.password}
                     onChange={handleInputChange}
                   />
                 </p>
