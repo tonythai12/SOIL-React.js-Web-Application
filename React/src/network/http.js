@@ -10,8 +10,8 @@ export default class HttpClient {
   async fetch(url, options = {}) {
     try {
       const headers = options.body instanceof FormData 
-        ? {} // FormData일 경우 빈 객체
-        : { 'Content-Type': 'application/json' }; // 그 외엔 json
+        ? {} 
+        : { 'Content-Type': 'application/json' }; 
       
       const response = await this.client.request({
         url,
