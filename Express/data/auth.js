@@ -19,12 +19,12 @@ export async function findByUseremail(email) {
 }
 
 export async function createUser(user) {
-  const { username, password_hash, email, imgUrl } = user;
+  const { username, password_hash, email, address, imgUrl } = user;
   const created_at = new Date().toISOString().split('T')[0];
   return db
     .execute(
-      'INSERT INTO Users (username, email, password_hash, imgUrl, address, created_at) VALUES (?, ?, ?, ?, ?, ?)',
-      [username, email, password_hash, imgUrl, address, created_at]
+      'INSERT INTO Users (username, email, password_hash, address, imgUrl, created_at) VALUES (?,?,?,?,?,?)',
+      [username, email, password_hash, address, imgUrl, created_at]
     )
     .then((result) => result[0].insertId);
 }
