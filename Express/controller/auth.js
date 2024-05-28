@@ -45,7 +45,13 @@ export async function login(req, res) {
     const preference = SpecialSaleRepository.get(user.user_id) || '';
 
     const token = createJwtToken(user.user_id);
-    res.status(200).json({ ...result, dietplans, preference, token });
+    res.status(200).json({
+      token,
+      username: user.username,
+      email: user.email,
+      dietplans,
+      preference,
+    });
   }
 }
 
