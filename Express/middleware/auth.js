@@ -6,13 +6,11 @@ const AUTH_ERROR = { message: 'Authentication Error' };
 
 export const isAuth = async (req, res, next) => {
   const authHeader = req.headers.authorization;
-  console.log(`authHeader => ${authHeader}`);
   if (!authHeader.startsWith('Bearer ')) {
     return res.status(401).json(AUTH_ERROR);
   }
-
   const token = authHeader && authHeader.split('Bearer ')[1];
-  console.log(`token =>`, token);
+
   jwt.verify(token, config.jwt.secretKey, async (error, decoded) => {
     console.log(`decoded => `, decoded);
     if (error) {

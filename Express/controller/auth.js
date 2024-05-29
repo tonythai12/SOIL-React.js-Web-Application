@@ -100,11 +100,12 @@ export async function modifyUserInfo(req, res) {
 
 export async function remove(req, res) {
   const { user_id } = req.params;
-  console.log(user_id);
   try {
-    const res = await authRepository.deleteUser(user_id);
-    console.log(`res => `, res);
-    res.sendStatus(204).json(res);
+    // console.log(`userId =>`, user_id);
+    const deleteResult = await authRepository.deleteUser(user_id);
+    console.log(`deleteResult =>`, deleteResult);
+
+    res.status(204).json(deleteResult);
   } catch (error) {
     res.status(500).json({ message: 'Failed to delete user' });
   }
