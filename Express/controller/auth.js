@@ -102,8 +102,9 @@ export async function remove(req, res) {
   const { user_id } = req.params;
   console.log(user_id);
   try {
-    await authRepository.deleteUser(user_id);
-    res.sendStatus(204);
+    const res = await authRepository.deleteUser(user_id);
+    console.log(`res => `, res);
+    res.sendStatus(204).json(res);
   } catch (error) {
     res.status(500).json({ message: 'Failed to delete user' });
   }

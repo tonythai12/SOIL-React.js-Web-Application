@@ -8,7 +8,7 @@ export default function ReviewInfo({
   setIsEditing,
   onDelete,
 }) {
-  const isUserReview = userData.user_id === review.user_id ? true : false;
+  const isUserReview = userData?.user_id === review?.user_id ? true : false;
 
   return (
     <div className='h-900 text-white flex flex-col justify-center items-center'>
@@ -28,7 +28,7 @@ export default function ReviewInfo({
           </button>
           <button
             className='bg-red-500 text-white px-4 py-2 mt-2 rounded ml-2'
-            onClick={() => onDelete(review.review_id)}
+            onClick={() => onDelete(review?.review_id)}
           >
             Delete
           </button>
