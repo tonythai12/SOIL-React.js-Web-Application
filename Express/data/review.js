@@ -22,12 +22,14 @@ export async function getAll() {
         productResult.length > 0 ? productResult[0].imageUrl : null;
 
       const data = {
+        review_id: li.review_id,
         user_id: li.user_id,
         title: li.title,
         content: li.content,
         userImage: li.userImage,
         userName,
         rating: li.rating,
+        product_id: li.product_id,
         product: { name: productName, imgUrl: productImg },
       };
 
@@ -39,18 +41,11 @@ export async function getAll() {
   }
 }
 
-// 테스트 실행
-getAll()
-  .then((reviews) => console.log('Reviews:', reviews))
-  .catch((error) => console.error('Error:', error));
-
 export async function create(user_id, title, product_id, rating, content) {
-  const created_at = new Date(Date.now()).toISOString().split('T')[0];
-
   return db
     .execute(
-      'INSERT INTO Reviews (user_id, title, product_id, rating, content,created_at) VALUES (?,?,?,?,?,?)',
-      [user_id, title, product_id, rating, content, created_at]
+      'INSERT INTO Reviews (user_id, title, product_id, rating, content) VALUES (?,?,?,?,?)',
+      [user_id, title, product_id, rating, content]
     )
     .then((result) => {
       console.log(result[0]);
@@ -76,5 +71,25 @@ export async function edit(review_id, title, product_id, rating, content) {
 }
 
 export async function remove(review_id) {
-  return db.execute('DELETE Reviews WHERE review_id=?', [review_id]);
+  try {
+    const result = await db.execute('DELETE FROM Reviews WHERE review_id=?', [
+      review_id,
+    ]);
+    return result;
+  } catch (error) {
+    console.error('Error deleting reviews:', error);
+    throw error;
+  }
+}
+
+export async function removeByUserId(user_id) {
+  try {
+    const result = await db.execute('DELETE FROM Reviews WHERE user_id=?', [
+      user_id,
+    ]);
+    return result;
+  } catch (error) {
+    console.error('Error deleting reviews:', error);
+    throw error;
+  }
 }

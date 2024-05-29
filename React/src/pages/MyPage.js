@@ -227,7 +227,7 @@ const MyPage = () => {
                   </button>
                   <button
                     className='mt-5 text-sm border border-green-700 rounded-md px-4 py-2 bg-red-700 text-white transition-colors duration-300 hover:opacity-90'
-                    onClick={() => handleDelete(userData.user_id)}
+                    onClick={() => handleDelete(userData?.user_id)}
                   >
                     Delete User
                   </button>

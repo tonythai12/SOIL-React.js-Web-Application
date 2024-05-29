@@ -21,33 +21,32 @@ export default function ReviewInput({
         className='border p-2 mb-2 w-full h-10 resize-none'
         value={editedReview.title}
         onChange={(e) =>
-          setEditedReview({ ...editedReview, title: e.target.value })
+          setEditedReview({
+            ...editedReview,
+            title: e.target.value,
+          })
         }
       ></textarea>
       <select
         className='border p-2 mb-2 w-full'
         value={selectedProduct}
         onChange={(e) => {
+          const selectedProduct = products.find(
+            (product) => product.name === e.target.value
+          );
           return (
-            setSelectedProduct(e.target.value),
+            setSelectedProduct(selectedProduct.name),
             setEditedReview({
               ...editedReview,
-              product: {
-                ...editedReview.product,
-                name: e.target.value,
-                imgUrl: products.filter(
-                  (product) => product.name === e.target.value
-                )[0]?.imageUrl,
-              },
+              product_id: selectedProduct.product_id,
             })
           );
         }}
       >
         <option>Select a product</option>
         {products.map((product) => (
-          <option key={product.id} value={product.name}>
+          <option key={product.id} value={product.id}>
             {product.name}
-            <img src={product.imageUrl} alt='' />
           </option>
         ))}
       </select>
@@ -58,7 +57,10 @@ export default function ReviewInput({
         onChange={(e) => {
           return (
             setSelectedRating(e.target.value),
-            setEditedReview({ ...editedReview, rating: e.target.value })
+            setEditedReview({
+              ...editedReview,
+              rating: e.target.value,
+            })
           );
         }}
       >
@@ -74,13 +76,16 @@ export default function ReviewInput({
         value={editedReview.content}
         maxlength='100'
         onChange={(e) =>
-          setEditedReview({ ...editedReview, content: e.target.value })
+          setEditedReview({
+            ...editedReview,
+            content: e.target.value,
+          })
         }
       ></textarea>
       <div className='flex justify-end'>
         <button
           className='bg-green-500 text-white px-4 py-2 rounded mr-2'
-          onClick={() => handleSave(userData?.email)}
+          onClick={handleSave}
         >
           Save
         </button>

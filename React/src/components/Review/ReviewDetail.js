@@ -29,23 +29,19 @@ const ReviewDetail = ({
     isCreate ? null : rating ? rating : null
   );
 
-  const handleSave = (userEmail) => {
-    const changedAt = dayjs()
-      .utcOffset('+10:00')
-      .format('ddd,D MMM,YYYY h:mm A');
-    onEdit({ ...editedReview, user_id: userEmail, changedAt });
+  const handleSave = () => {
+    const { userName, product, ...newEditedReview } = editedReview;
+    onEdit(newEditedReview); // Pass the new object excluding userName and product
     setIsEditing(false);
   };
 
-  const handleCreate = (userEmail) => {
-    const userName = userData?.name;
+  const handleCreate = () => {
     const createdAt = dayjs()
       .utcOffset('+10:00')
       .format('ddd,D MMM,YYYY h:mm A');
     onCreate({
-      user_id: userEmail,
+      user_id: userData?.user_id,
       ...editedReview,
-      userName,
       createdAt,
     });
   };

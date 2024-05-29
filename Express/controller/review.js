@@ -28,7 +28,7 @@ export function createReviews(req, res) {
 
 export function editReviews(req, res) {
   const { review_id } = req.params;
-  const { title, product_id, rating, content } = res.body;
+  const { title, product_id, rating, content } = req.body;
   const review = reviewRepository.edit(
     review_id,
     title,
@@ -41,6 +41,6 @@ export function editReviews(req, res) {
 
 export function deleteReviews(req, res) {
   const { review_id } = req.params;
-  reviewRepository.remove(review_id);
-  res.status(204);
+  const deleted = reviewRepository.remove(review_id);
+  res.status(204).json(deleted);
 }
