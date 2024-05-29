@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthProvider';
 import AddCartBtn from '../components/Cart/AddCartBtn';
 import { useCart } from '../context/CartProvider';
 import Modal from '../components/Cart/Modal';
+import { useProduct } from '../context/ProductProvider';
 
 // Component displaying helpful information for growing small vegetables.
 function SmallVegetableInfo({ tip, imageUrl }) {
@@ -90,25 +91,13 @@ function SpecialSale({ specials, userData }) {
 }
 
 export default function GardenInfoAndSale() {
-  const { userData, savePreference } = useAuth();
+  const { userData, setUserData, httpClient } = useAuth();
+  const { saleProducts } = useProduct();
   const [selectedVegetable, setSelectedVegetable] = useState(
     userData?.preference ? userData?.preference : 'Tomatoes'
   );
-  const [vegetablesInfo, setVegetablesInfo] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [selectedPreference, setSelectedPreference] = useState('');
-
-  useEffect(() => {
-    // get products list from product.json
-    fetch('/specialSaleInfo.json')
-      .then((response) => response.json())
-      .then((data) => {
-        setVegetablesInfo(data);
-      })
-      .catch((error) =>
-        console.error('An error occurred while loading the data.', error)
-      );
-  }, []);
 
   // make re-rendering whenever preference is changed.
   useEffect(() => {
@@ -129,10 +118,17 @@ export default function GardenInfoAndSale() {
     setShowModal(true);
   };
 
-  const handlePreferenceSelect = (preference) => {
+  const handlePreferenceSelect = async (preference) => {
     setSelectedPreference(preference);
-    savePreference(preference, userData?.email);
 
+    await httpClient.fetch(`/soil/sale/${userData.user_id}`, {
+      method: 'POST',
+      body: JSON.stringify({
+        product_name: preference,
+      }),
+    });
+
+    setUserData({ ...userData, preference: preference });
     setShowModal(false);
   };
 
@@ -166,7 +162,7 @@ export default function GardenInfoAndSale() {
           </div>
           <div className='mt-6 relative'>
             <div className='grid grid-cols-3 gap-4'>
-              {Object.keys(vegetablesInfo).map((vegetable, index) => (
+              {Object.keys(saleProducts).map((vegetable, index) => (
                 <button
                   key={index}
                   onClick={() => handleVegetableSelect(vegetable)}
@@ -189,14 +185,14 @@ export default function GardenInfoAndSale() {
           </div>
         </div>
       </div>
-      {selectedVegetable && vegetablesInfo[selectedVegetable] && (
+      {selectedVegetable && saleProducts[selectedVegetable] && (
         <>
           <SmallVegetableInfo
-            tip={vegetablesInfo[selectedVegetable]?.tip}
-            imageUrl={vegetablesInfo[selectedVegetable]?.imageUrl}
+            tip={saleProducts[selectedVegetable]?.tip}
+            imageUrl={saleProducts[selectedVegetable]?.imageUrl}
           />
           <SpecialSale
-            specials={vegetablesInfo[selectedVegetable]?.specials}
+            specials={saleProducts[selectedVegetable]?.specials}
             userData={userData}
           />
         </>
@@ -228,7 +224,7 @@ export default function GardenInfoAndSale() {
               Choose Your Preference
             </h2>
             <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
-              {Object.keys(vegetablesInfo).map((vegetable, index) => (
+              {Object.keys(saleProducts).map((vegetable, index) => (
                 <button
                   key={index}
                   onClick={() => handlePreferenceSelect(vegetable)}

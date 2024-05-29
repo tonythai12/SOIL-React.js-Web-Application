@@ -34,7 +34,7 @@ export default function ReviewList({
               <div className='mr-4 w-20 flex flex-col justify-center items-center'>
                 <img
                   className=' w-15 h-15 rounded-full'
-                  src={review?.userImage}
+                  src='/img/user_default_icon.png'
                   alt={review?.userName}
                 />
                 <p className='text-gray-200 mt-1'>{review?.userName}</p>

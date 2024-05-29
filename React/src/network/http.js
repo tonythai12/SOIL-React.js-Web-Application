@@ -4,20 +4,26 @@ export default class HttpClient {
   constructor(baseURL) {
     this.client = axios.create({
       baseURL: baseURL,
-      headers: {
-        'Content-Type': 'application/json',
-      },
     });
   }
 
   async fetch(url, options = {}) {
     try {
+      const headers = options.headers
+        ? options.headers
+        : { 'Content-Type': 'application/json' };
+
       const response = await this.client.request({
         url,
         ...options,
+        headers,
+        data: options.body,
       });
 
-      return { status: response.status, data: response.data };
+      return {
+        status: response.status,
+        data: response.data,
+      };
     } catch (error) {
       const status = error.response ? error.response.status : 500;
       const message =
@@ -29,7 +35,11 @@ export default class HttpClient {
           ? error.response.data.type
           : null;
 
-      return { status, message, type };
+      return {
+        status,
+        message,
+        type,
+      };
     }
   }
 }

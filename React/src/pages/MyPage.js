@@ -31,43 +31,27 @@ const purchaseHistory = [
 ];
 
 const MyPage = () => {
-  const {
-    logOut,
-    userData,
-    userListData,
-    handleDeleteUser,
-    setUserData,
-    setUserListData,
-  } = useAuth();
+  const { logOut, userData, setUserData, handleDeleteUser, httpClient } =
+    useAuth();
   const navigate = useNavigate();
   const [isEdit, setisEdit] = useState(false); // when click edit icon, user can edit info
   const [userEditInfo, setUserEditInfo] = useState({
-    name: userData?.name,
+    user_id: userData?.user_id,
+    username: userData?.username,
     email: userData?.email,
-    address: userData?.address,
     password: userData?.password,
-    registration_date: userData?.date,
+    registration_date: userData?.created_at.split('T')[0],
   }); // user edit info
   const [errorMessage, setErrorMessage] = useState('');
 
   const userInfo = {
-    name: userData?.name,
+    user_id: userData?.user_id,
+    username: userData?.username,
     email: userData?.email,
-    address:
-      userData?.address === 'undefined'
-        ? 'Spenser st, Melbourne, Australia'
-        : userData?.address,
     password: userData?.password,
-    registration_date: userData?.date,
-    imgUrl: userData?.imgUrl
-      ? URL.createObjectURL(
-          new Blob([userData.imgUrl], { type: userData.imgUrl.type })
-        )
-      : null,
+    registration_date: userData?.created_at.split('T')[0],
   };
-
-  const userNameLists = userListData.map((data) => data.name);
-
+  console.log(userData);
   const handleEditProfile = () => {
     setisEdit(true);
   };
@@ -80,50 +64,43 @@ const MyPage = () => {
     });
   };
 
-  const handleEditComplete = () => {
+  const handleEditComplete = async () => {
     if (errorMessage) {
       setErrorMessage('');
     }
     // Check if name, email, and password are not empty
-    if (!userEditInfo?.name || !userEditInfo?.password) {
+    if (!userEditInfo?.username || !userEditInfo?.password) {
       setErrorMessage('Please fill in all fields.');
     } else if (userEditInfo.password.length < 8) {
       // check the password length
       setErrorMessage('Password must be at least 8 characters long.');
-    } // check Email duplication
-    else if (userNameLists.includes(userEditInfo?.name)) {
-      alert('This name is already in use.');
     } else {
-      // update edited user data to setUserData (a user logged in now)
-      setUserData({
-        ...userData,
-        name: userEditInfo.name,
-        // email: userEditInfo.email,
-        address: userEditInfo.address,
-        password: userEditInfo.password,
-      });
-
-      // update edited user data to localStorage.
-      localStorage.setItem('loginName', userEditInfo.name);
-      // localStorage.setItem('loginEmail', userEditInfo.email);
-      localStorage.setItem('address', userEditInfo.address);
-      localStorage.setItem('loginPW', userEditInfo.password);
-
-      // updated edited user data to userListData(All user data list).
-      const updated = userListData.map((data) => {
-        if (data.email === userData.email) {
-          return {
-            ...data,
-            name: userData.name,
-            address: userData.address,
-            password: userData.password,
-          };
-        } else {
-          return data;
+      // Users db update
+      const res = await httpClient.fetch(
+        `/soil/auth/mypage/${userData.user_id}`,
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            username: userEditInfo.username,
+            email: userEditInfo.email,
+            password: userEditInfo.password,
+          }),
         }
-      });
-      setUserListData([...updated]);
-      alert('Successfully modified!');
+      );
+
+      if (res.status === 200) {
+        // update edited user data to setUserData (a user logged in now)
+        setUserData({
+          ...userData,
+          username: userEditInfo.username,
+          // email: userEditInfo.email,
+          password: userEditInfo.password,
+        });
+      } else {
+        setErrorMessage(res.message);
+        setUserData(userData);
+      }
+
       // back to uneditable state
       setisEdit(false);
     }
@@ -141,6 +118,25 @@ const MyPage = () => {
   const handleLogout = () => {
     logOut();
     navigate('/');
+  };
+
+  // Account deletion
+  const handleDelete = async (userId) => {
+    try {
+      const res = await httpClient.fetch(`/soil/auth/mypage/${userId}`, {
+        method: 'DELETE',
+      });
+
+      if (res.status === 204) {
+        handleDeleteUser();
+        navigate('/');
+      } else {
+        throw new Error(res.message || 'Failed to delete user');
+      }
+    } catch (error) {
+      console.error('An error occurred while deleting the user:', error);
+      throw error;
+    }
   };
 
   return (
@@ -161,11 +157,7 @@ const MyPage = () => {
             <div className='flex items-center justify-center'>
               <img
                 className='w-36 h-36 object-cover rounded-full border-4 border-green-600'
-                src={
-                  userInfo.imgUrl
-                    ? userInfo.imgUrl
-                    : '/img/user_default_icon.png'
-                }
+                src='/img/user_default_icon.png'
                 alt='profile'
               />
             </div>
@@ -176,52 +168,48 @@ const MyPage = () => {
                     <span className='font-semibold mr-1'>Name :</span>
                     <input
                       className='text-center w-20'
-                      name='name'
-                      value={userEditInfo.name}
+                      name='username'
+                      value={userEditInfo?.username}
                       onChange={handleInputChange}
                     />
                   </div>
                 ) : (
-                  userInfo.name
+                  userInfo?.username
                 )}
               </h2>
-              <p className='mt-2 text-sm text-green-700'>
-                <span className='font-semibold mr-1'>Email :</span>
-                {userInfo?.email}
-              </p>
-              <p className='mt-2 text-sm text-green-700'>
-                {' '}
-                <span className='font-semibold mr-1'>Address :</span>
-                {isEdit ? (
+              {isEdit ? (
+                <div className='text-center'>
+                  <span className='font-semibold mt-2 text-sm text-green-700'>
+                    Email :
+                  </span>
                   <input
-                    name='address'
-                    value={
-                      !userEditInfo.address
-                        ? 'Spenser st, Melbourne, Australia'
-                        : userEditInfo.address
-                    }
+                    className='text-center w-20'
+                    name='email'
+                    value={userEditInfo?.email}
                     onChange={handleInputChange}
                   />
-                ) : (
-                  userInfo?.address || 'Spenser st, Melbourne, Australia'
-                )}
-              </p>
+                </div>
+              ) : (
+                <p className='mt-2 text-sm text-green-700'>{userInfo?.email}</p>
+              )}
+
               <p className='mt-2 text-sm text-green-700'>
                 <span className='font-semibold mr-1'>Registration Date :</span>
                 {userInfo.registration_date}
               </p>
-              <p className='mt-2 text-sm text-green-700'>
-                <span className='font-semibold mr-1'>Password :</span>
-                {isEdit ? (
+
+              {isEdit && (
+                <p className='mt-2 text-sm text-green-700'>
+                  <span className='font-semibold mr-1'>Password :</span>
                   <input
+                    type='password'
                     name='password'
-                    value={userEditInfo.password}
+                    value={userEditInfo?.password}
                     onChange={handleInputChange}
                   />
-                ) : (
-                  userInfo.password
-                )}
-              </p>
+                </p>
+              )}
+
               {isEdit ? (
                 <button
                   className='mt-5 mr-2 text-sm border border-green-700 rounded-md px-4 py-2 bg-green-700 text-white transition-colors duration-300 hover:opacity-90'
@@ -239,7 +227,7 @@ const MyPage = () => {
                   </button>
                   <button
                     className='mt-5 text-sm border border-green-700 rounded-md px-4 py-2 bg-red-700 text-white transition-colors duration-300 hover:opacity-90'
-                    onClick={() => handleDeleteUser(userData)}
+                    onClick={() => handleDelete(userData.user_id)}
                   >
                     Delete User
                   </button>

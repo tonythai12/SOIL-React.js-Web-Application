@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   FaSeedling,
   FaDumbbell,
@@ -56,25 +56,13 @@ const iconComponents = {
 };
 
 export default function DietPlan() {
-  const { userData, saveDietProfile } = useAuth();
+  const { userData, setUserData, httpClient } = useAuth();
   const [showProfileForm, setShowProfileForm] = useState(false);
-  const [dietPlan, setDietPlan] = useState([]);
-
-  useEffect(() => {
-    // get products list from product.json
-    fetch('/dietplan.json')
-      .then((response) => response.json())
-      .then((data) =>
-        setDietPlan(
-          userData?.dietPlan && userData?.dietPlan.length > 0
-            ? userData?.dietPlan
-            : data
-        )
-      )
-      .catch((error) =>
-        console.error('An error occurred while loading the data.', error)
-      );
-  }, [userData?.dietPlan]);
+  const [dietPlan, setDietPlan] = useState(
+    userData?.dietPlan && userData?.dietPlan.length > 0
+      ? userData?.dietPlan
+      : []
+  );
 
   const handleProfileFormOpen = () => {
     if (!userData?.email) {
@@ -95,43 +83,31 @@ export default function DietPlan() {
     }
   };
 
-  const onSubmit = (profileData) => {
+  const onSubmit = async (profileData) => {
     profileData && alert('Your profile information has been saved.');
     setShowProfileForm(false);
 
     // Compare profileData with dietPlan to find related diet plans
     const { healthGoal, eatingHabit } = profileData;
-    const relatedPlans = dietPlan.filter((plan) => {
-      // Convert title and healthGoal to lowercase for comparison
-      const lowerCaseTitle = plan.title.toLowerCase();
-      return (
-        lowerCaseTitle.includes(healthGoal.toLowerCase()) ||
-        lowerCaseTitle.includes(eatingHabit.toLowerCase())
-      );
+
+    const res = await httpClient.fetch(`/soil/dietplan/${userData.user_id}`, {
+      method: 'POST',
+      body: JSON.stringify({
+        healthGoal,
+        eatingHabit,
+      }),
     });
 
-    // Set the found diet plan(s) to userData if available
-    let updatedDietPlan;
-    if (relatedPlans.length > 0 && relatedPlans.length < 2) {
-      // When multiple related plans are found, set the first plan along with the first two default diet plans
-      updatedDietPlan = [relatedPlans[0], ...dietPlan.slice(0, 2)];
-    } else if (relatedPlans.length > 1) {
-      // When more than one related plan is found, set the first two plans along with the first default diet plan
-      updatedDietPlan = [
-        relatedPlans[0],
-        relatedPlans[1],
-        ...dietPlan.slice(0, 1),
-      ];
-    } else {
-      // When no related plans are found, set the first three default diet plans
-      updatedDietPlan = dietPlan.slice(0, 3);
-    }
-
     // Update dietPlan state
-    setDietPlan(updatedDietPlan);
-
-    // Save profile data along with updated dietPlan
-    saveDietProfile(profileData, userData?.email, updatedDietPlan);
+    if (res.status === 201) {
+      setDietPlan(res.data);
+      setUserData({
+        ...userData,
+        dietPlan: [...dietPlan],
+      });
+    } else if (res.status === 404) {
+      alert(res.message);
+    }
   };
 
   return (

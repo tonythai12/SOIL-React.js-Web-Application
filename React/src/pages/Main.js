@@ -53,7 +53,7 @@ function Main() {
 
   // get Auth Context
   const { userData } = useAuth();
-  const { userCartStorage } = useCart();
+  const { cartProducts } = useCart();
 
   // change selected tab color
   const [selectedTab, setSelectedTab] = useState();
@@ -104,9 +104,7 @@ function Main() {
             {tab.label}
             {tab.value === 'cart' && (
               <span className='absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 border text-white bg-orange-400 rounded-full w-7 h-7 text-md'>
-                {JSON.parse(userCartStorage)?.length > 0
-                  ? JSON.parse(userCartStorage)?.length
-                  : 0}
+                {cartProducts?.length > 0 ? cartProducts?.length : 0}
               </span>
             )}
           </button>
@@ -118,7 +116,7 @@ function Main() {
             className='flex items-center gap-2 text-xl font-semibold text-green-700 hover:text-white hover:bg-green-500 transition-colors duration-300 rounded-lg px-4 py-2'
           >
             <FaUser />
-            {`Hi ${userData?.name}! 🥰`}
+            {`Hi ${userData?.username}! 🥰`}
           </button>
         ) : (
           <button

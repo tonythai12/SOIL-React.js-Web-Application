@@ -13,7 +13,7 @@ export default function Products() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isOpen, setIsOpen] = useState(false); // show product detail modal
   const [isOpen2, setIsOpen2] = useState(false); // show confirmation modal to check product which is added to cart
-
+  const [status, setStatus] = useState();
   // calculate discount percentage and add to product as a property
   products.forEach((product) => {
     const discountPercentage =
@@ -21,24 +21,26 @@ export default function Products() {
     product.percentage = discountPercentage.toFixed(0);
   });
 
-  const handleCloseModal = () => {
-    setSelectedProduct(null);
-    setIsOpen(false);
-  };
-
-  const handleAddToCart = (product) => {
+  const handleAddToCart = async (product) => {
     if (!userData?.email) {
       return alert(
         `We need a login feature.\nAfter logging in, you can add items to your shopping cart.`
       );
     } else {
       setSelectedProduct(product);
-      addToCart(product);
+      const res = await addToCart(product);
+      setStatus(res.status);
       setIsOpen2(true);
       setTimeout(() => {
         setIsOpen2(false);
+        setStatus(null);
       }, 3000);
     }
+  };
+
+  const handleCloseDetail = () => {
+    setSelectedProduct(null);
+    setIsOpen(false);
   };
 
   return (
@@ -113,7 +115,7 @@ export default function Products() {
               </div>
               <div className='px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse'>
                 <button
-                  onClick={handleCloseModal}
+                  onClick={handleCloseDetail}
                   className='w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-500 text-base font-medium text-white hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm'
                 >
                   Close
@@ -123,10 +125,12 @@ export default function Products() {
           </div>
         </div>
       )}
+      {/* confirm products when user add product to cart */}
       {isOpen2 && (
         <Modal
           isOpen2={isOpen2}
           setIsOpen2={setIsOpen2}
+          status={status}
           selectedProduct={selectedProduct}
         />
       )}

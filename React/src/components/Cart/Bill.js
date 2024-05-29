@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Bill({ setIsCheckout, cartItems, totalCost, handleCheckOut }) {
+function Bill({ setIsCheckout, cartItems, totalCost, setCartProducts }) {
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center overflow-y-auto'>
       <div className='fixed inset-0 bg-black opacity-75'></div>
@@ -56,7 +56,7 @@ function Bill({ setIsCheckout, cartItems, totalCost, handleCheckOut }) {
             onClick={() => {
               alert('Payment Successful!');
               setIsCheckout(false);
-              handleCheckOut();
+              setCartProducts({});
             }}
             className='w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600 transition duration-300'
           >

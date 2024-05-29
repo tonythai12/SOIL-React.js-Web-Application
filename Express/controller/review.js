@@ -1,8 +1,9 @@
 import * as reviewRepository from '../data/review.js';
 
-export function getReviews(req, res) {
-  const reviews = reviewRepository.getAll();
-  if (reviews) {
+export async function getReviews(req, res) {
+  const reviews = await reviewRepository.getAll();
+  console.log(reviews);
+  if (reviews.length > 0) {
     res.status(200).json(reviews);
   } else {
     res.status(404).json({ message: 'Cannot get reviews' });
