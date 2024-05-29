@@ -4,6 +4,35 @@ import ReviewList from '../components/Review/ReviewList';
 import { useAuth } from '../context/AuthProvider';
 import { useProduct } from '../context/ProductProvider';
 
+const defaultReviews = [
+  {
+    user_id: '0000',
+    title: 'A Fresh Carrot',
+    content:
+      'I bought fresh carrots from the grocery store. They were delicious and perfectly ripe, making for a satisfying snack or addition to any meal. Highly recommended!',
+    userImage: '/img/user_default_icon.png',
+    userName: 'Wonbin',
+    rating: 3,
+    product: {
+      name: 'Healthy and Vitamin-Rich Carrot',
+      imgUrl: '/img/carrot.jpg',
+    },
+  },
+  {
+    user_id: '1111',
+    title: 'So Sweet Blueberry',
+    content:
+      'I purchased some fresh blueberries from the store and they were fantastic! Juicy, sweet, and bursting with flavor. They were perfect for snacking on their own, adding to yogurt, or baking into muffins. Definitely a must-buy!',
+    userImage: '/img/user_default_icon.png',
+    userName: 'Emma',
+    rating: 2,
+    product: {
+      name: 'Fresh and Nutritious Blueberry',
+      imgUrl: '/img/blueberry.jpg',
+    },
+  },
+];
+
 const Review = () => {
   const { userData, httpClient } = useAuth();
   const { products } = useProduct();
@@ -19,7 +48,7 @@ const Review = () => {
     if (res.status === 200) {
       setReviews(res.data);
     } else {
-      setReviews([]);
+      setReviews(defaultReviews);
       console.error(res.message);
     }
   };

@@ -14,7 +14,9 @@ const purchaseHistory = [
   { icon: <MdHome size={45} />, title: 'Back to Home', route: '/' },
   {
     icon: <FaReceipt size={45} />,
-    title: 'Payment History',
+    title: 'Review',
+    route: '/soil/review',
+    selectedTab: 'review',
   },
   {
     icon: <FaShoppingBasket size={45} />,
