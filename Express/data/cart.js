@@ -21,6 +21,7 @@ export async function getAll(user_id) {
     const cartItems = rows.map((row) => ({
       quantity: row.quantity,
       product_id: row.product_id,
+      image_url: row.imageUrl,
       name: row.name,
       price: row.price,
       description: row.description,

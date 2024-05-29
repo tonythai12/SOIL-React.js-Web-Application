@@ -29,7 +29,8 @@ export default function Products() {
     } else {
       setSelectedProduct(product);
       const res = await addToCart(product);
-      setStatus(res.status);
+      console.log(res);
+      setStatus(res?.status);
       setIsOpen2(true);
       setTimeout(() => {
         setIsOpen2(false);
