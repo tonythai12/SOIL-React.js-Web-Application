@@ -1,17 +1,36 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useAuth } from './AuthProvider';
 
 // create Context
 const CartContext = createContext();
 
-export const CartProvider = ({ children, httpClient }) => {
-  const { userData } = useAuth();
+export const CartProvider = ({ children }) => {
+  const { userData, httpClient } = useAuth();
   // state
   const [cartProducts, setCartProducts] = useState([]);
 
+  const getCarts = async () => {
+    if (userData) {
+      const res = await httpClient.fetch(`/soil/cart/${userData?.user_id}`, {
+        method: 'GET',
+      });
+      if (res.status === 200) {
+        setCartProducts(res.data);
+      } else if (res.status === 404) {
+        setCartProducts([]);
+        console.error(res.message);
+      }
+    }
+  };
+
+  useEffect(() => {
+    getCarts();
+  }, []);
+
   // add products to cart.
   const addToCart = async (product) => {
-    const res = await httpClient.fetch(`/soil/cart/${userData.user_id}`, {
+    console.log(product);
+    const res = await httpClient.fetch(`/soil/cart/${userData?.user_id}`, {
       method: 'POST',
       body: JSON.stringify({
         product,
@@ -19,8 +38,8 @@ export const CartProvider = ({ children, httpClient }) => {
     });
     // Update dietPlan state
     if (res.status === 201) {
+      console.log(res.data.carts);
       setCartProducts(res.data.carts);
-      return res;
     } else {
       return alert(res.message);
     }
