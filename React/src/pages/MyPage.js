@@ -169,7 +169,7 @@ const MyPage = () => {
                     <input
                       className='text-center w-20'
                       name='username'
-                      value={userEditInfo?.username || userData?.username}
+                      value={userEditInfo?.username}
                       onChange={handleInputChange}
                     />
                   </div>
@@ -185,7 +185,7 @@ const MyPage = () => {
                   <input
                     className='text-center w-20'
                     name='email'
-                    value={userEditInfo?.email || userData.email}
+                    value={userEditInfo?.email}
                     onChange={handleInputChange}
                   />
                 </div>
