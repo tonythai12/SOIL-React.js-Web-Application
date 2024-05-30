@@ -39,7 +39,7 @@ export async function updatedCartQuantity(req, res) {
     product_id,
     delta
   );
-  if (carts) {
+  if (updatedCartProduct) {
     res.status(200).json(updatedCartProduct);
   } else {
     res.status(404).json({ message: 'Cart quantity is not updated' });

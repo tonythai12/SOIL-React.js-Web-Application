@@ -35,12 +35,30 @@ export const CartProvider = ({ children }) => {
 
     if (res.status !== 204) {
       return alert(res.message);
+    } else {
+      getCarts();
+    }
+  };
+
+  const updateQuantity = async (cart_id, product_id, delta) => {
+    const res = await httpClient.fetch('/soil/cart', {
+      method: 'POST',
+      body: JSON.stringify({
+        cart_id,
+        product_id,
+        delta,
+      }),
+    });
+    if (res.status !== 200) {
+      return alert(res.message);
+    } else {
+      getCarts();
     }
   };
 
   useEffect(() => {
     getCarts();
-  }, [userData, removeItem]);
+  }, [userData]);
 
   // add products to cart.
   const addToCart = async (product) => {
@@ -57,38 +75,6 @@ export const CartProvider = ({ children }) => {
       return res;
     } else {
       return alert(res.message);
-    }
-  };
-
-  const updateQuantity = async (cart_id, product_id, delta) => {
-    const res = await httpClient.fetch('/soil/cart', {
-      method: 'POST',
-      body: JSON.stringify({
-        cart_id,
-        product_id,
-        delta,
-      }),
-    });
-
-    const index = cartProducts.findIndex(
-      (cart) => cart.cart._id === res.cart_id
-    );
-
-    if (index !== -1) {
-      // Copy the existing object and update the quantity
-      const updatedProduct = {
-        ...cartProducts[index],
-        quantity: res.data.quantity,
-      };
-
-      // Create a new array by updating the object in the original array
-      const updatedCartProducts = [
-        ...cartProducts.slice(0, index),
-        updatedProduct,
-        ...cartProducts.slice(index + 1),
-      ];
-
-      setCartProducts(updatedCartProducts);
     }
   };
 
