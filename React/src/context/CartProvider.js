@@ -24,6 +24,7 @@ export const CartProvider = ({ children }) => {
     }
   };
 
+  // Unit Test ✅ : remove cart item from Cart
   const removeItem = async (cart_id, product_id) => {
     const res = await httpClient.fetch(`/soil/cart`, {
       method: 'DELETE',
@@ -40,7 +41,9 @@ export const CartProvider = ({ children }) => {
     }
   };
 
+  // Unit Test ✅ : updateQuantity
   const updateQuantity = async (cart_id, product_id, delta) => {
+    // Send a request to update the quantity of a product in the cart
     const res = await httpClient.fetch('/soil/cart', {
       method: 'POST',
       body: JSON.stringify({
@@ -49,9 +52,12 @@ export const CartProvider = ({ children }) => {
         delta,
       }),
     });
+
+    // If the response status is not 200 (OK), display an alert with the error message
     if (res.status !== 200) {
       return alert(res.message);
     } else {
+      // If the update is successful (status 200), trigger a function to update the displayed carts
       getCarts();
     }
   };
@@ -60,7 +66,7 @@ export const CartProvider = ({ children }) => {
     getCarts();
   }, [userData]);
 
-  // add products to cart.
+  // Unit Test ✅ : add products to cart.
   const addToCart = async (product) => {
     const res = await httpClient.fetch(`/soil/cart/${userData?.user_id}`, {
       method: 'POST',

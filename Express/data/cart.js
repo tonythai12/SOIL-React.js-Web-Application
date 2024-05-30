@@ -35,9 +35,10 @@ export async function getAll(user_id) {
   }
 }
 
+// Unit Test ✅ :
 export async function addProduct(user_id, product) {
   try {
-    // 1. ShoppingCart에 해당 user_id가 있는지 확인
+    // 1. Check if the user_id exists in the ShoppingCart
     const [cartRows] = await db.execute(
       'SELECT cart_id FROM ShoppingCart WHERE user_id = ?',
       [user_id]
@@ -46,7 +47,7 @@ export async function addProduct(user_id, product) {
     let cart_id;
     const created_at = new Date(Date.now()).toISOString().split('T')[0];
     if (cartRows.length === 0) {
-      // 2. user_id가 없는 경우 새로운 ShoppingCart 생성
+      // 2. If the user_id does not exist, create a new ShoppingCart
       const [result] = await db.execute(
         'INSERT INTO ShoppingCart (user_id, created_at) VALUES (?, ?)',
         [user_id, created_at]
@@ -56,7 +57,7 @@ export async function addProduct(user_id, product) {
       cart_id = cartRows[0].cart_id;
     }
 
-    // 3. CartItems에 product_id와 cart_id로 새로운 항목 추가 또는 수량 업데이트
+    // 3. Add a new item to CartItems with product_id and cart_id, or update the quantity
     const { product_id } = product;
     const [cartItemRows] = await db.execute(
       'SELECT quantity FROM CartItems WHERE cart_id = ? AND product_id = ?',
@@ -64,7 +65,7 @@ export async function addProduct(user_id, product) {
     );
 
     if (cartItemRows.length > 0) {
-      // product_id가 이미 존재하면 quantity 업데이트
+      // If the product_id already exists, update the quantity
       await db.execute(
         'UPDATE CartItems SET quantity = quantity + ? WHERE cart_id = ? AND product_id = ?',
         [1, cart_id, product_id]
@@ -76,7 +77,7 @@ export async function addProduct(user_id, product) {
         quantity: cartItemRows[0].quantity + 1,
       };
     } else {
-      // product_id가 존재하지 않으면 새로운 항목 추가
+      // If the product_id does not exist, add a new item
       await db.execute(
         'INSERT INTO CartItems (cart_id, product_id, quantity) VALUES (?, ?, ?)',
         [cart_id, product_id, 1]
@@ -94,6 +95,7 @@ export async function addProduct(user_id, product) {
   }
 }
 
+// Unit Test ✅ :
 export async function updateProductQuantity(cart_id, product_id, delta) {
   // Check if the cart item exists
   const [rows] = await db.execute(
@@ -101,6 +103,7 @@ export async function updateProductQuantity(cart_id, product_id, delta) {
     [cart_id, product_id]
   );
 
+  // If the cart item does not exist, return null
   if (rows.length === 0) {
     return null;
   }
@@ -108,11 +111,13 @@ export async function updateProductQuantity(cart_id, product_id, delta) {
   // Update the quantity of the existing cart item.
   const quantity = Math.max(1, rows[0].quantity + delta);
 
+  // Execute SQL query to update the quantity of the cart item
   const [result] = await db.execute(
     'UPDATE CartItems SET quantity=? WHERE cart_id=? AND product_id=?',
     [quantity, cart_id, product_id]
   );
 
+  // If the update query affected rows, fetch the updated cart item
   if (result.affectedRows > 0) {
     const [rows] = await db.execute(
       `SELECT p.*, ci.quantity
@@ -122,13 +127,16 @@ export async function updateProductQuantity(cart_id, product_id, delta) {
       [cart_id, product_id]
     );
 
+    // If the updated cart item is found, return it
     if (rows.length > 0) {
       const updatedCartItem = rows[0];
       return updatedCartItem;
     } else {
+      // Log an error message if the updated item is not found
       console.log('Cannot found updated item');
     }
   } else {
+    // Log a message if nothing is updated
     console.log('Nothing is updated');
   }
 }
@@ -137,6 +145,7 @@ export async function removeAll(user_id) {
   return db.execute('DELETE FROM ShoppingCart WHERE user_id=?', [user_id]);
 }
 
+// Unit Test ✅ :
 export async function remove(cart_id, product_id) {
   return db.execute('DELETE FROM CartItems WHERE cart_id=? AND product_id=?', [
     cart_id,
