@@ -6,4 +6,4 @@
 
 ### Tools to be installed:
 
-- "tailwindcss"
+- @mui/material @emotion/react @emotion/styled
