@@ -29,17 +29,24 @@ function SpecialSale({ specials, userData }) {
   const { addToCart } = useCart();
   const [selectedProduct, setSelectedProduct] = useState();
   const [isOpen, setIsOpen] = useState(false);
+  const [status, setStatus] = useState();
 
-  const handleAddToCart = (productId) => {
-    const product = specials.filter((special) => special.id === productId)[0];
+  const handleAddToCart = async (productId) => {
+    const product = specials.filter(
+      (special) => special.product_id === productId
+    )[0];
 
+    console.log(productId);
+    console.log(product);
     if (!userData?.email) {
       return alert(
         `We need a login feature.\nAfter logging in, you can add items to your shopping cart.`
       );
     } else {
       setSelectedProduct(product);
-      addToCart(product);
+      const res = await addToCart(product);
+
+      setStatus(res?.status);
       setIsOpen(true);
       setTimeout(() => {
         setIsOpen(false);
@@ -74,7 +81,7 @@ function SpecialSale({ specials, userData }) {
                 </div>
               </div>
 
-              <AddCartBtn onClick={() => handleAddToCart(item.id)} />
+              <AddCartBtn onClick={() => handleAddToCart(item.product_id)} />
             </div>
           ))}
         </div>
@@ -83,6 +90,7 @@ function SpecialSale({ specials, userData }) {
         <Modal
           isOpen2={isOpen}
           setIsOpen2={setIsOpen}
+          status={status}
           selectedProduct={selectedProduct}
         />
       )}
@@ -98,14 +106,14 @@ export default function GardenInfoAndSale() {
   );
   const [showModal, setShowModal] = useState(false);
   const [selectedPreference, setSelectedPreference] = useState('');
+  const [vegetablesInfo, setVegetablesInfo] = useState({});
 
-  // make re-rendering whenever preference is changed.
   useEffect(() => {
-    setSelectedVegetable(
-      userData?.preference ? userData?.preference : 'Tomatoes'
-    );
-  }, [userData?.preference]);
-
+    if (saleProducts) {
+      setVegetablesInfo(saleProducts);
+    }
+  }, [saleProducts]);
+  console.log(saleProducts);
   const handleVegetableSelect = (vegetable) => {
     setSelectedVegetable(vegetable);
     setShowModal(false);
@@ -131,7 +139,6 @@ export default function GardenInfoAndSale() {
     setUserData({ ...userData, preference: preference });
     setShowModal(false);
   };
-
   return (
     <div>
       <div className='py-12 bg-blue-50'>
@@ -162,7 +169,7 @@ export default function GardenInfoAndSale() {
           </div>
           <div className='mt-6 relative'>
             <div className='grid grid-cols-3 gap-4'>
-              {Object.keys(saleProducts).map((vegetable, index) => (
+              {Object.keys(vegetablesInfo).map((vegetable, index) => (
                 <button
                   key={index}
                   onClick={() => handleVegetableSelect(vegetable)}
@@ -185,14 +192,34 @@ export default function GardenInfoAndSale() {
           </div>
         </div>
       </div>
-      {selectedVegetable && saleProducts[selectedVegetable] && (
+      {!selectedVegetable && (
+        <div className='py-12 bg-green-200'>
+          <div className='max-w-2xl mx-auto px-4 sm:px-6 lg:max-w-7xl lg:px-8'>
+            <h2 className='text-2xl font-extrabold tracking-tight text-gray-900'>
+              🌱 Want to Grow Organic Vegetables? 🌱
+            </h2>
+            <div className='mt-6'>
+              <p className='text-lg text-gray-700'>
+                Start your organic vegetable garden journey with Soil! 🌿
+              </p>
+              <a
+                href='https://www.soil.com'
+                className='mt-4 inline-flex items-center px-4 py-3 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-300 ease-in-out'
+              >
+                Learn More
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+      {selectedVegetable && vegetablesInfo[selectedVegetable] && (
         <>
           <SmallVegetableInfo
-            tip={saleProducts[selectedVegetable]?.tip}
-            imageUrl={saleProducts[selectedVegetable]?.imageUrl}
+            tip={vegetablesInfo[selectedVegetable]?.tip}
+            imageUrl={vegetablesInfo[selectedVegetable]?.imageUrl}
           />
           <SpecialSale
-            specials={saleProducts[selectedVegetable]?.specials}
+            specials={vegetablesInfo[selectedVegetable]?.specials}
             userData={userData}
           />
         </>
@@ -224,7 +251,7 @@ export default function GardenInfoAndSale() {
               Choose Your Preference
             </h2>
             <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
-              {Object.keys(saleProducts).map((vegetable, index) => (
+              {Object.keys(vegetablesInfo).map((vegetable, index) => (
                 <button
                   key={index}
                   onClick={() => handlePreferenceSelect(vegetable)}

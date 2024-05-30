@@ -1,19 +1,22 @@
 import * as SpecialSaleRepository from '../data/specialsale.js';
 
-export function getSaleProducts(req, res) {
-  const saleProducts = SpecialSaleRepository.getAll();
+export async function getSaleProducts(req, res) {
+  const saleProducts = await SpecialSaleRepository.getAll();
   res.status(201).json(saleProducts);
 }
 
-export function getPreference(req, res) {
+export async function getPreference(req, res) {
   const { user_id } = req.params;
-  const preference = SpecialSaleRepository.get(user_id);
+  const preference = await SpecialSaleRepository.get(user_id);
   res.status(201).json(preference);
 }
 
-export function updatePreference(req, res) {
+export async function updatePreference(req, res) {
   const { product_name } = req.body;
   const { user_id } = req.query;
-  const updatedPreference = SpecialSaleRepository.create(user_id, product_name);
+  const updatedPreference = await SpecialSaleRepository.create(
+    user_id,
+    product_name
+  );
   res.status(201).json(updatedPreference);
 }
