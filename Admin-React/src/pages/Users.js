@@ -52,6 +52,34 @@ const initialUsers = [
     created_at: '2022-05-31',
     blocked: false,
   },
+  {
+    id: 7,
+    username: 'user7',
+    email: 'user7@example.com',
+    created_at: '2022-05-31',
+    blocked: false,
+  },
+  {
+    id: 8,
+    username: 'user8',
+    email: 'user8@example.com',
+    created_at: '2022-05-31',
+    blocked: false,
+  },
+  {
+    id: 9,
+    username: 'user9',
+    email: 'user9@example.com',
+    created_at: '2022-05-31',
+    blocked: false,
+  },
+  {
+    id: 10,
+    username: 'user10',
+    email: 'user10@example.com',
+    created_at: '2022-05-31',
+    blocked: false,
+  },
 ];
 
 export default function Users() {
@@ -71,27 +99,56 @@ export default function Users() {
       flexDirection='row'
       justifyContent='center'
       alignItems='center'
+      sx={{ textAlign: 'center' }}
     >
       <Stack sx={{ mt: 5, width: '80%' }}>
-        <TableContainer component={Paper}>
+        <TableContainer
+          component={Paper}
+          sx={{ maxHeight: 700, overflow: 'auto' }}
+        >
           <Table>
             <TableHead sx={{ bgcolor: '#f5f5f5' }}>
               <TableRow>
-                <TableCell>Number</TableCell>
-                <TableCell>Username</TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell>Created At</TableCell>
-                <TableCell>Actions</TableCell>
+                <TableCell
+                  align='center'
+                  sx={{ fontWeight: 400, fontSize: '17px' }}
+                >
+                  Number
+                </TableCell>
+                <TableCell
+                  align='center'
+                  sx={{ fontWeight: 400, fontSize: '17px' }}
+                >
+                  Username
+                </TableCell>
+                <TableCell
+                  align='center'
+                  sx={{ fontWeight: 400, fontSize: '17px' }}
+                >
+                  Email
+                </TableCell>
+                <TableCell
+                  align='center'
+                  sx={{ fontWeight: 400, fontSize: '17px' }}
+                >
+                  Created At
+                </TableCell>
+                <TableCell
+                  align='center'
+                  sx={{ fontWeight: 400, fontSize: '17px' }}
+                >
+                  Actions
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {users.map((user, index) => (
                 <TableRow key={user.id}>
-                  <TableCell>{index + 1}</TableCell>
-                  <TableCell>{user.username}</TableCell>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell>{user.created_at}</TableCell>
-                  <TableCell>
+                  <TableCell align='center'>{index + 1}</TableCell>
+                  <TableCell align='center'>{user.username}</TableCell>
+                  <TableCell align='center'>{user.email}</TableCell>
+                  <TableCell align='center'>{user.created_at}</TableCell>
+                  <TableCell align='center'>
                     <Button
                       variant='contained'
                       color={user.blocked ? 'secondary' : 'primary'}
