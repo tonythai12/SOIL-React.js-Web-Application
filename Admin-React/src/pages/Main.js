@@ -9,11 +9,17 @@ import { Stack } from '@mui/material';
 export default function MainPage() {
   const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState('user');
-
+  const appBarBgColor =
+    selectedTab === 'product'
+      ? '	#46BD7B'
+      : selectedTab === 'review'
+      ? '#FF9364'
+      : '#1478CD';
   const handleNavigate = (pathName) => {
     setSelectedTab(pathName);
     navigate(`/admin/${pathName}`);
   };
+  console.log(selectedTab);
   return (
     <Stack
       sx={{
@@ -21,7 +27,7 @@ export default function MainPage() {
         width: '`100%',
       }}
     >
-      <AppBar position='static'>
+      <AppBar position='static' sx={{ bgcolor: appBarBgColor }}>
         <Toolbar>
           <h1 style={{ flexGrow: 1 }}>SOIL</h1>
           <Tabs value={selectedTab}>
@@ -34,6 +40,7 @@ export default function MainPage() {
                 color: '#000',
                 fontWeight: 600,
                 fontSize: 20,
+                borderRadius: '10px',
               }}
             />
             <Tab
@@ -41,10 +48,11 @@ export default function MainPage() {
               onClick={() => handleNavigate('product')}
               sx={{
                 backgroundColor:
-                  selectedTab === 'product' ? '#2196f3' : 'transparent',
+                  selectedTab === 'product' ? '	#82F9B7' : 'transparent',
                 color: '#000',
                 fontWeight: 600,
                 fontSize: 20,
+                borderRadius: '10px',
               }}
             />
             <Tab
@@ -52,10 +60,11 @@ export default function MainPage() {
               onClick={() => handleNavigate('review')}
               sx={{
                 backgroundColor:
-                  selectedTab === 'review' ? '#2196f3' : 'transparent',
+                  selectedTab === 'review' ? '#FFCA9B' : 'transparent',
                 color: '#000',
                 fontWeight: 600,
                 fontSize: 20,
+                borderRadius: '10px',
               }}
             />
           </Tabs>
