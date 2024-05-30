@@ -24,9 +24,23 @@ export const CartProvider = ({ children }) => {
     }
   };
 
+  const removeItem = async (cart_id, product_id) => {
+    const res = await httpClient.fetch(`/soil/cart`, {
+      method: 'DELETE',
+      body: JSON.stringify({
+        cart_id,
+        product_id,
+      }),
+    });
+
+    if (res.status !== 204) {
+      return alert(res.message);
+    }
+  };
+
   useEffect(() => {
     getCarts();
-  }, [userData]);
+  }, [userData, removeItem]);
 
   // add products to cart.
   const addToCart = async (product) => {
@@ -78,9 +92,6 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-  const removeItem = (id) => {
-    setCartProducts(cartProducts.filter((item) => item.id !== id));
-  };
   return (
     // provide user info to children so that they can use userInfo whenever they want without prop drilling.
     <CartContext.Provider

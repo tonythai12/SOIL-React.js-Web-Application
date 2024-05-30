@@ -64,7 +64,7 @@ export default function Cart() {
                       <FaPlus />
                     </button>
                     <button
-                      onClick={() => removeItem(item.id)}
+                      onClick={() => removeItem(item.cart_id, item.product_id)}
                       className='text-red-500 hover:text-red-700'
                     >
                       <FaTrashAlt />
