@@ -1,19 +1,20 @@
 import React from 'react';
 import Main from './pages/Main';
+import Users from './pages/Users';
+import Products from './pages/Products';
+import Reviews from './pages/Reviews';
 
 const routes = [
   { path: '/', element: <Main /> },
 
   {
-    path: '/',
+    path: '/admin',
     element: <Main />,
-    // children: [
-    //   { path: 'product', element: <Products /> },
-    //   { path: 'sale', element: <GardenInfoAndSale /> },
-    //   { path: 'dietplan', element: <DietPlan /> },
-    //   { path: 'cart', element: <Cart /> },
-    //   { path: 'review', element: <Review /> },
-    // ],
+    children: [
+      { path: 'user', element: <Users /> },
+      { path: 'product', element: <Products /> },
+      { path: 'review', element: <Reviews /> },
+    ],
   },
 ];
 
