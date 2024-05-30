@@ -31,10 +31,10 @@ export async function addToCart(req, res) {
   }
 }
 
-export function updatedCartQuantity(req, res) {
+export async function updatedCartQuantity(req, res) {
   const { cart_id, product_id, delta } = req.body;
 
-  const updatedCartProduct = cartRepository.updateProductQuantity(
+  const updatedCartProduct = await cartRepository.updateProductQuantity(
     cart_id,
     product_id,
     delta
@@ -46,8 +46,13 @@ export function updatedCartQuantity(req, res) {
   }
 }
 
-export function deleteCart(req, res) {
+export async function deleteCart(req, res) {
   const { cart_id, product_id } = req.body;
-  cartRepository.remove(cart_id, product_id);
-  res.status(204);
+  const removed = await cartRepository.remove(cart_id, product_id);
+
+  if (removed) {
+    res.status(204).json(removed);
+  } else {
+    res.status(404).json({ message: 'Cart is not successfully removed' });
+  }
 }
