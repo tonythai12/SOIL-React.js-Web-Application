@@ -105,7 +105,6 @@ export default function GardenInfoAndSale() {
     userData?.preference ? userData?.preference : 'Tomatoes'
   );
   const [showModal, setShowModal] = useState(false);
-  const [selectedPreference, setSelectedPreference] = useState('');
   const [vegetablesInfo, setVegetablesInfo] = useState({});
 
   useEffect(() => {
@@ -113,8 +112,8 @@ export default function GardenInfoAndSale() {
       setVegetablesInfo(saleProducts);
     }
   }, [saleProducts]);
-  console.log(saleProducts);
-  const handleVegetableSelect = (vegetable) => {
+
+  const handleVegetableSelect = async (vegetable) => {
     setSelectedVegetable(vegetable);
     setShowModal(false);
   };
@@ -127,17 +126,18 @@ export default function GardenInfoAndSale() {
   };
 
   const handlePreferenceSelect = async (preference) => {
-    setSelectedPreference(preference);
-
-    await httpClient.fetch(`/soil/sale/${userData.user_id}`, {
+    console.log(preference);
+    const res = await httpClient.fetch(`/soil/sale/${userData.user_id}`, {
       method: 'POST',
       body: JSON.stringify({
         product_name: preference,
       }),
     });
-
-    setUserData({ ...userData, preference: preference });
-    setShowModal(false);
+    if (res.status === 201) {
+      setSelectedVegetable(preference);
+      setUserData({ ...userData, preference: preference });
+      setShowModal(false);
+    }
   };
   return (
     <div>
@@ -256,7 +256,7 @@ export default function GardenInfoAndSale() {
                   key={index}
                   onClick={() => handlePreferenceSelect(vegetable)}
                   className={`flex items-center justify-center px-4 py-3 border border-green-600 rounded-md shadow-sm text-lg font-medium text-green-600 bg-white hover:bg-green-200 ${
-                    vegetable === selectedPreference
+                    vegetable === selectedVegetable
                       ? 'bg-green-200'
                       : 'bg-white'
                   }`}

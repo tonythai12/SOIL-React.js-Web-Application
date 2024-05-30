@@ -12,8 +12,13 @@ export async function getPreference(req, res) {
 }
 
 export async function updatePreference(req, res) {
+  const { user_id } = req.params;
   const { product_name } = req.body;
-  const { user_id } = req.query;
+
+  const preference = await SpecialSaleRepository.get(user_id);
+  if (preference) {
+    const removed = await SpecialSaleRepository.remove(user_id);
+  }
   const updatedPreference = await SpecialSaleRepository.create(
     user_id,
     product_name

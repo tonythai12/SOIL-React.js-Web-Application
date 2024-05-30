@@ -17,15 +17,10 @@ export async function getAll() {
           return res[0];
         })
       );
-      console.log(`saleProducts =>`, saleProducts);
-      console.log(`products =>`, products);
       const resultObject = saleProducts.reduce((acc, sale) => {
         const specialArr = products.filter((product) =>
           product.name.includes(sale.product_name)
         );
-
-        console.log(`Special products for ${sale.product_name}:`, specialArr); // Debugging line
-
         acc[sale.product_name] = {
           tips: sale.tip,
           specials: specialArr,
@@ -33,7 +28,7 @@ export async function getAll() {
         };
         return acc;
       }, {});
-      console.log(JSON.stringify(resultObject, null, 2));
+
       return JSON.stringify(resultObject, null, 2);
     }
   } catch (error) {
@@ -44,23 +39,32 @@ export async function getAll() {
 
 export async function get(user_id) {
   return db
-    .execute('SELECT * FROM Preference WHERE user_id=? VALUES (?)', [user_id])
+    .execute('SELECT * FROM Preference WHERE user_id=?', [user_id])
+    .then((result) => {
+      return result[0];
+    });
+}
+
+export async function create(user_id, product_name) {
+  return db
+    .execute('INSERT INTO Preference (user_id, product_name) VALUES (?,?)', [
+      user_id,
+      product_name,
+    ])
     .then((result) => {
       console.log(result[0]);
       return result[0];
     });
 }
 
-export async function create(user_id, product_name) {
-  const created_at = new Date(Date.now()).toISOString().split('T')[0];
-
-  return db
-    .execute(
-      'INSERT INTO Preference (user_id, product_name ,created_at) VALUES (?,?,?)',
-      [user_id, product_name, created_at]
-    )
-    .then((result) => {
-      console.log(result[0]);
-      return result[0];
-    });
+export async function remove(user_id) {
+  try {
+    const result = await db.execute('DELETE FROM Preference WHERE user_id=?', [
+      user_id,
+    ]);
+    return result;
+  } catch (error) {
+    console.error('Faile to change preference:', error);
+    throw error;
+  }
 }

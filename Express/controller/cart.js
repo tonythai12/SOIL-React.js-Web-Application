@@ -2,7 +2,7 @@ import * as cartRepository from '../data/cart.js';
 
 export async function getCarts(req, res) {
   const { user_id } = req.params;
-  console.log(`userId =>`, user_id);
+
   const carts = await cartRepository.getAll(user_id);
   if (carts) {
     res.status(200).json(carts);
@@ -21,7 +21,6 @@ export async function addToCart(req, res) {
     // if result is successfully done, get cartProducts from DB for client and return it.
     if (result?.message) {
       const carts = await cartRepository.getAll(user_id);
-      console.log(`carts =>`, carts);
       res.status(201).json({ carts, message: result?.message });
     } else {
       res.status(404).json({ message: 'Cart product is not added' });
@@ -39,7 +38,7 @@ export async function updatedCartQuantity(req, res) {
     product_id,
     delta
   );
-  if (carts) {
+  if (updatedCartProduct) {
     res.status(200).json(updatedCartProduct);
   } else {
     res.status(404).json({ message: 'Cart quantity is not updated' });
