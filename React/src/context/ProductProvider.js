@@ -21,6 +21,18 @@ export const ProductProvider = ({ children }) => {
       console.error(res.message);
     }
   };
+
+  const getSpecialSale = async () => {
+    const res = await httpClient.fetch('/soil/sale', {
+      method: 'GET',
+    });
+    console.log(`special =>`, res);
+    if (res.status === 201) {
+      setSaleProducts(JSON.parse(res.data));
+    } else if (res.status === 404) {
+      console.error(res.message);
+    }
+  };
   // get all products
   useEffect(() => {
     getProducts();
@@ -28,15 +40,8 @@ export const ProductProvider = ({ children }) => {
 
   // get all sales products
   useEffect(() => {
-    const res = httpClient.fetch('/soil/sale', {
-      method: 'GET',
-    });
-    if (res.status === 200) {
-      setSaleProducts(res.data);
-    } else if (res.status === 404) {
-      console.error(res.message);
-    }
-  }, [httpClient]);
+    getSpecialSale();
+  }, []);
 
   return (
     // provide user info to children so that they can use userInfo whenever they want without prop drilling.

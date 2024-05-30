@@ -8,14 +8,13 @@ export const CartProvider = ({ children }) => {
   const { userData, httpClient } = useAuth();
   // state
   const [cartProducts, setCartProducts] = useState([]);
-  console.log(cartProducts);
+
   const getCarts = async () => {
-    console.log('get cart!!');
     if (userData) {
       const res = await httpClient.fetch(`/soil/cart/${userData?.user_id}`, {
         method: 'GET',
       });
-      console.log(res);
+
       if (res.status === 200) {
         setCartProducts(res.data);
       } else if (res.status === 404) {
@@ -27,11 +26,10 @@ export const CartProvider = ({ children }) => {
 
   useEffect(() => {
     getCarts();
-  }, []);
+  }, [userData]);
 
   // add products to cart.
   const addToCart = async (product) => {
-    console.log(product);
     const res = await httpClient.fetch(`/soil/cart/${userData?.user_id}`, {
       method: 'POST',
       body: JSON.stringify({
@@ -39,8 +37,8 @@ export const CartProvider = ({ children }) => {
       }),
     });
     // Update dietPlan state
+
     if (res.status === 201) {
-      console.log(res.data.carts);
       setCartProducts(res.data.carts);
       return res;
     } else {
