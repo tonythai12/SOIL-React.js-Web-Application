@@ -6,6 +6,7 @@
 
 ### Tools to be installed:
 
+- "@testing-library/jest-dom"
 - "@fortawesome/free-solid-svg-icons"
 - "@fortawesome/react-fontawesome"
 - "tailwindcss"
