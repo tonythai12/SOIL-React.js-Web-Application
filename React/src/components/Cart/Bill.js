@@ -56,7 +56,7 @@ function Bill({ setIsCheckout, cartItems, totalCost, setCartProducts }) {
             onClick={() => {
               alert('Payment Successful!');
               setIsCheckout(false);
-              setCartProducts({});
+              setCartProducts([]);
             }}
             className='w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600 transition duration-300'
           >
