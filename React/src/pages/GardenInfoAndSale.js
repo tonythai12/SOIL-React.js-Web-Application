@@ -36,8 +36,6 @@ function SpecialSale({ specials, userData }) {
       (special) => special.product_id === productId
     )[0];
 
-    console.log(productId);
-    console.log(product);
     if (!userData?.email) {
       return alert(
         `We need a login feature.\nAfter logging in, you can add items to your shopping cart.`
@@ -126,7 +124,6 @@ export default function GardenInfoAndSale() {
   };
 
   const handlePreferenceSelect = async (preference) => {
-    console.log(preference);
     const res = await httpClient.fetch(`/soil/sale/${userData.user_id}`, {
       method: 'POST',
       body: JSON.stringify({
