@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   FaSeedling,
   FaDumbbell,
@@ -58,12 +58,22 @@ const iconComponents = {
 export default function DietPlan() {
   const { userData, setUserData, httpClient } = useAuth();
   const [showProfileForm, setShowProfileForm] = useState(false);
-  const [dietPlan, setDietPlan] = useState(
-    userData?.dietPlan && userData?.dietPlan.length > 0
-      ? userData?.dietPlan
-      : []
-  );
+  const [dietPlan, setDietPlan] = useState([]);
 
+  const getDietPlan = async () => {
+    const res = await httpClient.fetch(`/soil/dietplan/${userData?.user_id}`, {
+      method: 'GET',
+    });
+
+    if (res.status === 200) {
+      setDietPlan(res.data);
+    } else {
+      setDietPlan([]);
+    }
+  };
+  useEffect(() => {
+    getDietPlan();
+  }, [userData]);
   const handleProfileFormOpen = () => {
     if (!userData?.email) {
       return alert(
@@ -103,21 +113,20 @@ export default function DietPlan() {
       setDietPlan(res.data);
       setUserData({
         ...userData,
-        dietPlan: [...dietPlan],
+        dietPlan: res.data,
       });
     } else if (res.status === 404) {
       alert(res.message);
     }
   };
-
   return (
     <div className='py-5 bg-gray-50'>
       <div className=' max-w-6xl mx-auto px-4 sm:px-6 lg:px-8'>
         {/* Custom Diet Plan recommended for User */}
-        {userData?.dietPlan && userData?.dietPlan.length > 0 && (
+        {dietPlan && dietPlan.length > 0 && (
           <div>
             <h2 className='text-3xl font-extrabold text-center text-gray-800 mb-6 py-5'>
-              {userData?.name}'s Custom Diet Plan!
+              {userData?.username}'s Custom Diet Plan!
             </h2>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-1'>
               {dietPlan &&
@@ -144,7 +153,7 @@ export default function DietPlan() {
         )}
 
         {/* When user is not logged in */}
-        {userData?.email && !userData?.dietPlan && (
+        {userData?.email && dietPlan.length === 0 && (
           <div className='flex justify-center flex-col'>
             <button
               onClick={handleProfileFormOpen}

@@ -10,14 +10,29 @@ export async function getAll() {
 }
 
 export async function getByUserId(user_id) {
-  const [rows] = await db.execute(
-    'SELECT * FROM DietPlan WHERE user_id=? VALUES(?)',
-    [user_id]
-  );
+  const [rows] = await db.execute('SELECT * FROM DietPlan WHERE user_id=?', [
+    user_id,
+  ]);
+
   if (rows.length === 0) {
     return null;
   } else {
-    return rows[0];
+    // Array of promises for each dietPlan retrieval
+    const userDietPlanPromises = rows.map(async (row) => {
+      const [dietPlanRows] = await db.execute(
+        'SELECT * FROM DietPlanList WHERE dietplanlist_id=?',
+        [row.dietplanlist_id]
+      );
+      let dietPlan = dietPlanRows[0]; // Assuming there is only one result per dietplanlist_id
+      // Parse products field from JSON string to array
+      dietPlan.products = JSON.parse(dietPlan.products);
+      return dietPlan;
+    });
+
+    // Wait for all promises to resolve
+    const userDietPlanList = await Promise.all(userDietPlanPromises);
+
+    return userDietPlanList;
   }
 }
 
@@ -74,15 +89,14 @@ export async function create(user_id, eatingHabit, healthGoal) {
   );
 
   // Execute all promises
-  Promise.all(savePromises)
-    .then((results) => {
-      // Log results or handle as needed
-      console.log(results);
-      // return the updated diet plan to show in Client
-      // or get dietplan from db
-      return updatedDietPlan;
-    })
-    .catch((error) => {
-      console.error('Error inserting diet plans:', error);
-    });
+  try {
+    const results = await Promise.all(savePromises);
+    if (results.length > 0) {
+      const userDietPlan = await getByUserId(user_id);
+      return userDietPlan;
+    }
+  } catch (error) {
+    console.error('Error inserting diet plans:', error);
+    throw error;
+  }
 }
