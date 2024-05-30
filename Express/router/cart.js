@@ -10,7 +10,9 @@ router.get('/:user_id', cartController.getCarts);
 router.post('/:user_id', cartController.addToCart);
 // update cart quantity
 router.post('/', cartController.updatedCartQuantity);
+
+router.delete('/:user_id', cartController.deleteShoppingCart);
 // delete cart items
-router.delete('/', cartController.deleteCart);
+router.delete('/', cartController.deleteCartItem);
 
 export default router;

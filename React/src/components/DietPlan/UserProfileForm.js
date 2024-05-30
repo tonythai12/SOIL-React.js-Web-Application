@@ -140,6 +140,9 @@ function UserProfileForm({ onSubmit, onClose }) {
             className='appearance-none bg-white border-2 border-purple-400 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-purple-100'
             required
           />
+          <p className='text-xs text-gray-500 mt-1'>
+            ex: Loss Weight, Muscle, Diet, Low Carb, High Protein..
+          </p>
         </div>
         <button
           type='submit'

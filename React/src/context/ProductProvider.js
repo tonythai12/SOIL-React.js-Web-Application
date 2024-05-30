@@ -26,8 +26,7 @@ export const ProductProvider = ({ children }) => {
     const res = await httpClient.fetch('/soil/sale', {
       method: 'GET',
     });
-    console.log(`special =>`, res);
-    if (res.status === 201) {
+    if (res.status === 200) {
       setSaleProducts(JSON.parse(res.data));
     } else if (res.status === 404) {
       console.error(res.message);

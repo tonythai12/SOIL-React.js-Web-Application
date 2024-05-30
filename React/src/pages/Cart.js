@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthProvider';
 import { useCart } from '../context/CartProvider';
 
 export default function Cart() {
-  const { userData } = useAuth();
+  const { userData, httpClient } = useAuth();
   const { cartProducts, setCartProducts, updateQuantity, removeItem } =
     useCart();
   const [isCheckout, setIsCheckout] = useState(false);
@@ -87,6 +87,8 @@ export default function Cart() {
           </div>
           {isCheckout && (
             <Bill
+              userId={userData?.user_id}
+              httpClient={httpClient}
               setIsCheckout={setIsCheckout}
               cartItems={cartProducts}
               totalCost={totalCost}

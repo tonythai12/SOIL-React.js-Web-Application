@@ -130,10 +130,10 @@ export default function DietPlan() {
             </h2>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-1'>
               {dietPlan &&
-                dietPlan.map((plan) => (
+                dietPlan.map((plan, index) => (
                   <div
-                    key={plan.id}
-                    className={`rounded-lg shadow-lg p-6  bg-purple-200
+                    key={index}
+                    className={`rounded-lg shadow-lg p-6  bg-${plan.bgColor}-200
                     `}
                   >
                     <div className='flex items-center space-x-4 mb-4'>

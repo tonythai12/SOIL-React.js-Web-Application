@@ -9,7 +9,6 @@ export const AuthProvider = ({ children, httpClient, tokenStorage }) => {
   const getAuth = async () => {
     // get user info using token whenever refreshed.
     const token = tokenStorage.getToken();
-    console.log(`token => ${token}`);
     const res = await httpClient.fetch('/soil/auth/me', {
       method: 'GET',
       headers: { Authorization: `Bearer ${token}` },

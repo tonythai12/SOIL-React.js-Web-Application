@@ -99,17 +99,28 @@ function SpecialSale({ specials, userData }) {
 export default function GardenInfoAndSale() {
   const { userData, setUserData, httpClient } = useAuth();
   const { saleProducts } = useProduct();
-  const [selectedVegetable, setSelectedVegetable] = useState(
-    userData?.preference ? userData?.preference : 'Tomatoes'
-  );
+  const [selectedVegetable, setSelectedVegetable] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [vegetablesInfo, setVegetablesInfo] = useState({});
+
+  const getPreference = async () => {
+    const res = await httpClient.fetch(`/soil/sale/${userData?.user_id}`, {
+      method: 'GET',
+    });
+    if (res.status === 200) {
+      setSelectedVegetable(res.data[0]?.product_name);
+    } else {
+      setSelectedVegetable('Tomatoes');
+    }
+  };
 
   useEffect(() => {
     if (saleProducts) {
       setVegetablesInfo(saleProducts);
     }
-  }, [saleProducts]);
+
+    getPreference();
+  }, [saleProducts, userData]);
 
   const handleVegetableSelect = async (vegetable) => {
     setSelectedVegetable(vegetable);
@@ -177,7 +188,7 @@ export default function GardenInfoAndSale() {
                   }`}
                 >
                   {vegetable}
-                  {vegetable === userData?.preference && (
+                  {vegetable === selectedVegetable && (
                     <FontAwesomeIcon
                       icon={faCheckCircle}
                       className='ml-2 text-green-500'

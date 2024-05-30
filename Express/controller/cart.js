@@ -45,7 +45,18 @@ export async function updatedCartQuantity(req, res) {
   }
 }
 
-export async function deleteCart(req, res) {
+export async function deleteShoppingCart(req, res) {
+  const { user_id } = req.params;
+  const removed = await cartRepository.removeAll(user_id);
+
+  if (removed) {
+    res.status(204).json(removed);
+  } else {
+    res.status(404).json({ message: 'Cart is not successfully removed' });
+  }
+}
+
+export async function deleteCartItem(req, res) {
   const { cart_id, product_id } = req.body;
   const removed = await cartRepository.remove(cart_id, product_id);
 

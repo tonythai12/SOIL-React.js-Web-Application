@@ -133,6 +133,10 @@ export async function updateProductQuantity(cart_id, product_id, delta) {
   }
 }
 
+export async function removeAll(user_id) {
+  return db.execute('DELETE FROM ShoppingCart WHERE user_id=?', [user_id]);
+}
+
 export async function remove(cart_id, product_id) {
   return db.execute('DELETE FROM CartItems WHERE cart_id=? AND product_id=?', [
     cart_id,
