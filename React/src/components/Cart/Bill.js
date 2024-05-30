@@ -1,6 +1,23 @@
 import React from 'react';
 
-function Bill({ setIsCheckout, cartItems, totalCost, setCartProducts }) {
+function Bill({
+  userId,
+  httpClient,
+  setIsCheckout,
+  cartItems,
+  totalCost,
+  setCartProducts,
+}) {
+  const handlePayment = async () => {
+    const res = await httpClient.fetch(`/soil/cart/${userId}`, {
+      method: 'DELETE',
+    });
+    if (res.status === 204) {
+      alert('Payment Successful!');
+      setIsCheckout(false);
+      setCartProducts([]);
+    }
+  };
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center overflow-y-auto'>
       <div className='fixed inset-0 bg-black opacity-75'></div>
@@ -53,11 +70,7 @@ function Bill({ setIsCheckout, cartItems, totalCost, setCartProducts }) {
         </div>
         <div className='flex justify-center'>
           <button
-            onClick={() => {
-              alert('Payment Successful!');
-              setIsCheckout(false);
-              setCartProducts([]);
-            }}
+            onClick={handlePayment}
             className='w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600 transition duration-300'
           >
             Pay Now

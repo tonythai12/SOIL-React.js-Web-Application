@@ -2,7 +2,6 @@ import * as reviewRepository from '../data/review.js';
 
 export async function getReviews(req, res) {
   const reviews = await reviewRepository.getAll();
-  console.log(reviews);
   if (reviews.length > 0) {
     res.status(200).json(reviews);
   } else {

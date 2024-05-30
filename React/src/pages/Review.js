@@ -39,7 +39,7 @@ const Review = () => {
   const [reviews, setReviews] = useState([]);
   const [selectedReviewIndex, setSelectedReviewIndex] = useState(null); // go to view detail.
   const [isCreate, setIsCreate] = useState(false); // go to create review.
-
+  console.log('review');
   const getReviews = async () => {
     const res = await httpClient.fetch('/soil/review', {
       method: 'GET',
@@ -55,7 +55,7 @@ const Review = () => {
 
   useEffect(() => {
     getReviews();
-  }, []);
+  }, [userData]);
 
   // when it has selected review index, it can move to view detail.
   const handleViewDetail = (index) => {
