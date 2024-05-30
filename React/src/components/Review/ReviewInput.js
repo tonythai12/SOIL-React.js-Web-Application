@@ -20,6 +20,7 @@ export default function ReviewInput({
       <textarea
         className='border p-2 mb-2 w-full h-10 resize-none'
         value={editedReview.title}
+        placeholder='Title'
         onChange={(e) =>
           setEditedReview({
             ...editedReview,
@@ -75,6 +76,7 @@ export default function ReviewInput({
         className='border p-2 mb-2 w-full h-48 resize-none'
         value={editedReview.content}
         maxlength='100'
+        placeholder='Write up to 100 characters...'
         onChange={(e) =>
           setEditedReview({
             ...editedReview,

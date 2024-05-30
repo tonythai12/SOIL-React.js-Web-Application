@@ -39,7 +39,7 @@ const Review = () => {
   const [reviews, setReviews] = useState([]);
   const [selectedReviewIndex, setSelectedReviewIndex] = useState(null); // go to view detail.
   const [isCreate, setIsCreate] = useState(false); // go to create review.
-  console.log('review');
+
   const getReviews = async () => {
     const res = await httpClient.fetch('/soil/review', {
       method: 'GET',
@@ -99,8 +99,16 @@ const Review = () => {
   };
 
   const handleCreateReview = async (createReview) => {
-    console.log(createReview);
     const { user_id, title, product_id, rating, content } = createReview;
+    if (!content) {
+      return alert('There is no written content.');
+    } else if (!title) {
+      return alert('Please enter a title.');
+    } else if (!product_id) {
+      return alert('Please select a product to review.');
+    } else if (!rating) {
+      return alert('Please rate the product.');
+    }
     const res = await httpClient.fetch(`/soil/review`, {
       method: 'POST',
       body: JSON.stringify({
