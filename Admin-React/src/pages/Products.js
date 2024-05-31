@@ -79,10 +79,10 @@ export default function Products() {
 
   const columns = [
     { field: 'name', headerName: 'Name', width: 150 },
-    { field: 'description', headerName: 'Description', width: 200 },
-    { field: 'price', headerName: 'Price', width: 100 },
-    { field: 'salePrice', headerName: 'Sale Price', width: 100 },
-    { field: 'imageUrl', headerName: 'Image URL', width: 200 },
+    { field: 'description', headerName: 'Description', width: 250 },
+    { field: 'price', headerName: 'Price', width: 120 },
+    { field: 'salePrice', headerName: 'Sale Price', width: 120 },
+    { field: 'imageUrl', headerName: 'Image URL', width: 230 },
     {
       field: 'isSale',
       headerName: 'Is Sale',
@@ -132,7 +132,20 @@ export default function Products() {
         </Button>
       </Stack>
       <div style={{ height: 400, width: '80%' }}>
-        <DataGrid rows={products} columns={columns} pageSize={5} />
+        <DataGrid
+          rows={products}
+          columns={columns}
+          pageSize={5}
+          componentsProps={{
+            columnHeaders: {
+              style: {
+                backgroundColor: '#f55',
+                color: '#000',
+                fontSize: '500px',
+              },
+            },
+          }}
+        />
       </div>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>
