@@ -8,7 +8,7 @@ import { Stack } from '@mui/material';
 
 export default function MainPage() {
   const navigate = useNavigate();
-  const [selectedTab, setSelectedTab] = useState('user');
+  const [selectedTab, setSelectedTab] = useState('');
   const appBarBgColor =
     selectedTab === 'product'
       ? '	#46BD7B'
@@ -29,7 +29,18 @@ export default function MainPage() {
     >
       <AppBar position='static' sx={{ bgcolor: appBarBgColor }}>
         <Toolbar>
-          <h1 style={{ flexGrow: 1 }}>SOIL</h1>
+          <h1 style={{ flexGrow: 1 }}>
+            <span
+              onClick={() => {
+                navigate('/');
+                setSelectedTab('');
+              }}
+              style={{ cursor: 'pointer' }}
+            >
+              {' '}
+              SOIL
+            </span>
+          </h1>
           <Tabs value={selectedTab}>
             <Tab
               label='Users'
