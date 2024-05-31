@@ -171,7 +171,9 @@ export default function Reviews() {
             </Table>
           </TableContainer>
           <Dialog open={openDialog} onClose={handleCloseDialog}>
-            <DialogTitle>Delete Review</DialogTitle>
+            <DialogTitle style={{ backgroundColor: '#FF9364', color: '#fff' }}>
+              Delete Review
+            </DialogTitle>
             <DialogContent>
               <Typography variant='body1'>
                 Are you sure you want to delete this review?
@@ -206,12 +208,27 @@ export default function Reviews() {
               )}
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleCloseDialog} color='primary'>
+              <Button
+                onClick={handleCloseDialog}
+                sx={{
+                  bgcolor: '#FF9330',
+                  color: '#fff',
+                  '&:hover': {
+                    bgcolor: '#FF9D6E', // 호버됐을 때의 배경색
+                  },
+                }}
+              >
                 Cancel
               </Button>
               <Button
                 onClick={() => handleDeleteReview(selectedReview.id)}
-                color='secondary'
+                sx={{
+                  bgcolor: '#f44336',
+                  color: '#fff',
+                  '&:hover': {
+                    bgcolor: '#FF5722', // 호버됐을 때의 배경색
+                  },
+                }}
               >
                 Delete
               </Button>
