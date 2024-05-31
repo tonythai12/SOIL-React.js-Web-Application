@@ -10,6 +10,9 @@ import {
   TextField,
   Checkbox,
   FormControlLabel,
+  Typography,
+  TableContainer,
+  Paper,
 } from '@mui/material';
 
 const initialProducts = [
@@ -104,49 +107,87 @@ export default function Products() {
 
   return (
     <Stack alignItems='center' sx={{ mt: 5 }}>
-      <Stack
-        direction='row'
-        justifyContent='flex-end'
-        sx={{ width: '80%', mb: 2 }}
-      >
-        <Button
-          variant='contained'
-          sx={{
-            backgroundColor: '#329632',
-            '&:hover': {
-              backgroundColor: '#4BAF4B',
-            },
-          }}
-          onClick={() =>
-            handleOpen({
-              name: '',
-              description: '',
-              price: '',
-              salePrice: '',
-              imageUrl: '',
-              isSale: false,
-            })
-          }
-        >
-          Add Product
-        </Button>
-      </Stack>
       <div style={{ height: 400, width: '80%' }}>
-        <DataGrid
-          rows={products}
-          columns={columns}
-          pageSize={5}
-          componentsProps={{
-            columnHeaders: {
-              style: {
-                backgroundColor: '#f55',
-                color: '#000',
-                fontSize: '500px',
+        <TableContainer component={Paper} sx={{ padding: 2 }}>
+          <Stack
+            direction='row'
+            justifyContent='space-between'
+            sx={{ width: '100%', mb: 2 }}
+          >
+            <Typography variant='h4' sx={{ marginBottom: 2 }}>
+              Products
+            </Typography>
+            <Button
+              variant='contained'
+              sx={{
+                mt: 2,
+                backgroundColor: '#329632',
+                '&:hover': {
+                  backgroundColor: '#4BAF4B',
+                },
+              }}
+              onClick={() =>
+                handleOpen({
+                  name: '',
+                  description: '',
+                  price: '',
+                  salePrice: '',
+                  imageUrl: '',
+                  isSale: false,
+                })
+              }
+            >
+              Add Product
+            </Button>
+          </Stack>
+          {/* <Stack
+          direction='row'
+          justifyContent='space-between'
+          sx={{ width: '100%', mb: 2 }}
+        >
+          <Typography variant='h4' sx={{ marginBottom: 2 }}>
+            Products
+          </Typography>
+          <Button
+            variant='contained'
+            sx={{
+              mt: 2,
+              backgroundColor: '#329632',
+              '&:hover': {
+                backgroundColor: '#4BAF4B',
               },
-            },
-          }}
-        />
+            }}
+            onClick={() =>
+              handleOpen({
+                name: '',
+                description: '',
+                price: '',
+                salePrice: '',
+                imageUrl: '',
+                isSale: false,
+              })
+            }
+          >
+            Add Product
+          </Button>
+        </Stack> */}
+          <DataGrid
+            rows={products}
+            columns={columns}
+            pageSize={5}
+            componentsProps={{
+              columnHeaders: {
+                style: {
+                  backgroundColor: '#f55',
+                  color: '#000',
+                  fontSize: '500px',
+                },
+              },
+            }}
+          />
+        </TableContainer>
       </div>
+
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>
           {editingProduct?.id ? 'Edit Product' : 'Add Product'}
