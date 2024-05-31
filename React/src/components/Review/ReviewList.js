@@ -48,9 +48,9 @@ export default function ReviewList({
   };
 
   return (
-    <div className='pb-7 '>
+    <div className='pb-7'>
       {reviews && reviews.length === 0 ? (
-        <div className='flex items-center justify-center mt-40'>
+        <div className='flex items-center justify-center mt-40 h-screen'>
           <p className='text-3xl text-gray-600 font-semibold'>
             No reviews have been written yet
           </p>
@@ -89,7 +89,7 @@ export default function ReviewList({
                       {review?.title}
                     </h2>
                     <p className='text-orange-300 mt-2 border rounded-md border-orange-300 p-1 pr-2 pl-2'>
-                      {review?.product.name}
+                      {review?.product?.name}
                     </p>
                     <p className='text-white mt-2'>{review?.content}</p>
                     <Rating rating={review?.rating} />
@@ -130,12 +130,14 @@ export default function ReviewList({
                 setOpenDialog={setOpenDialog}
               />
             )}
-            <button
-              className='w-40 bg-green-500 hover:bg-green-600 text-white mt-5 px-4 py-2 rounded-md transition duration-300 self-end justify-self-end'
-              onClick={handleCreate}
-            >
-              Create Review
-            </button>
+            {userData?.user_id && (
+              <button
+                className='w-40 bg-green-500 hover:bg-green-600 text-white mt-5 px-4 py-2 rounded-md transition duration-300 self-end justify-self-end'
+                onClick={handleCreate}
+              >
+                Create Review
+              </button>
+            )}
           </div>
         </div>
       )}

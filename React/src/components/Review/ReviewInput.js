@@ -2,7 +2,6 @@ import React from 'react';
 
 export default function ReviewInput({
   products,
-  userData,
   handleSave,
   selectedProduct,
   setSelectedProduct,
@@ -40,13 +39,17 @@ export default function ReviewInput({
             setEditedReview({
               ...editedReview,
               product_id: selectedProduct.product_id,
+              product: {
+                name: selectedProduct.name,
+                imgUrl: selectedProduct.imageUrl,
+              },
             })
           );
         }}
       >
         <option>Select a product</option>
-        {products.map((product) => (
-          <option key={product.id} value={product.id}>
+        {products.map((product, index) => (
+          <option key={index} value={product.id}>
             {product.name}
           </option>
         ))}
@@ -66,8 +69,8 @@ export default function ReviewInput({
         }}
       >
         <option value=''>Select a rating</option>
-        {[1, 2, 3, 4, 5].map((rating) => (
-          <option key={rating} value={rating}>
+        {[1, 2, 3, 4, 5].map((rating, index) => (
+          <option key={index} value={rating}>
             {Array(rating).fill('★').join('')}
           </option>
         ))}
