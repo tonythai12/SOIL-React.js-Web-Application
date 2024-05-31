@@ -9,6 +9,7 @@ import { useProduct } from '../context/ProductProvider';
 
 // Component displaying helpful information for growing small vegetables.
 function SmallVegetableInfo({ tip, imageUrl }) {
+  console.log(tip && tip);
   return (
     <div className='py-12 bg-gray-100'>
       <div className='max-w-2xl mx-auto px-4 sm:px-6 lg:max-w-7xl lg:px-8'>
@@ -99,7 +100,7 @@ function SpecialSale({ specials, userData }) {
 export default function GardenInfoAndSale() {
   const { userData, setUserData, httpClient } = useAuth();
   const { saleProducts } = useProduct();
-  const [selectedVegetable, setSelectedVegetable] = useState('');
+  const [selectedVegetable, setSelectedVegetable] = useState('Tomatoes');
   const [showModal, setShowModal] = useState(false);
   const [vegetablesInfo, setVegetablesInfo] = useState({});
 
@@ -107,8 +108,13 @@ export default function GardenInfoAndSale() {
     const res = await httpClient.fetch(`/soil/sale/${userData?.user_id}`, {
       method: 'GET',
     });
+    console.log(res.status);
     if (res.status === 200) {
-      setSelectedVegetable(res.data[0]?.product_name);
+      if (!res.data[0]?.product_name) {
+        setSelectedVegetable('Tomatoes');
+      } else {
+        setSelectedVegetable(res.data[0]?.product_name);
+      }
     } else {
       setSelectedVegetable('Tomatoes');
     }
@@ -118,7 +124,7 @@ export default function GardenInfoAndSale() {
     if (saleProducts) {
       setVegetablesInfo(saleProducts);
     }
-
+    console.log(selectedVegetable);
     getPreference();
   }, [saleProducts, userData]);
 
@@ -147,6 +153,8 @@ export default function GardenInfoAndSale() {
       setShowModal(false);
     }
   };
+
+  console.log(vegetablesInfo[selectedVegetable]);
   return (
     <div>
       <div className='py-12 bg-blue-50'>
@@ -200,30 +208,10 @@ export default function GardenInfoAndSale() {
           </div>
         </div>
       </div>
-      {!selectedVegetable && (
-        <div className='py-12 bg-green-200'>
-          <div className='max-w-2xl mx-auto px-4 sm:px-6 lg:max-w-7xl lg:px-8'>
-            <h2 className='text-2xl font-extrabold tracking-tight text-gray-900'>
-              🌱 Want to Grow Organic Vegetables? 🌱
-            </h2>
-            <div className='mt-6'>
-              <p className='text-lg text-gray-700'>
-                Start your organic vegetable garden journey with Soil! 🌿
-              </p>
-              <a
-                href='https://www.soil.com'
-                className='mt-4 inline-flex items-center px-4 py-3 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-300 ease-in-out'
-              >
-                Learn More
-              </a>
-            </div>
-          </div>
-        </div>
-      )}
       {selectedVegetable && vegetablesInfo[selectedVegetable] && (
         <>
           <SmallVegetableInfo
-            tip={vegetablesInfo[selectedVegetable]?.tip}
+            tip={vegetablesInfo[selectedVegetable]?.tips}
             imageUrl={vegetablesInfo[selectedVegetable]?.imageUrl}
           />
           <SpecialSale
