@@ -175,15 +175,25 @@ export default function Reviews() {
               Delete Review
             </DialogTitle>
             <DialogContent>
-              <Typography variant='body1'>
-                Are you sure you want to delete this review?
+              <Typography
+                variant='body1'
+                sx={{
+                  mt: 2,
+                  mb: 2,
+                  fontWeight: 600,
+                }}
+              >
+                ❗️Are you sure you want to{' '}
+                <span style={{ color: 'red' }}>delete this review?</span>
               </Typography>
               {selectedReview && (
-                <>
-                  <Typography
-                    variant='h6'
-                    sx={{ marginTop: 2, marginBottom: 1 }}
-                  >
+                <Stack
+                  sx={{
+                    border: '2px dashed #FF9364',
+                    padding: '10px',
+                  }}
+                >
+                  <Typography variant='h6' sx={{ marginBottom: 1 }}>
                     {selectedReview.title}
                   </Typography>
                   <Typography
@@ -204,7 +214,7 @@ export default function Reviews() {
                   <Typography variant='caption' sx={{ color: '#888' }}>
                     Created at: {selectedReview.created_at}
                   </Typography>
-                </>
+                </Stack>
               )}
             </DialogContent>
             <DialogActions>
