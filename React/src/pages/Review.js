@@ -46,13 +46,28 @@ const Review = () => {
     });
     console.log(res.data);
     if (res.status === 200) {
-      setReviews(res.data);
+      const newReviews = res.data.map((review) => {
+        if (review.followingUserInfos.length === 0) {
+          return { ...review, heart: false };
+        } else {
+          const checkFollowing = review.followingUserInfos.filter(
+            (info) => info.user_id === userData?.user_id
+          );
+          console.log(`checkFollowing =>`, checkFollowing);
+          return {
+            ...review,
+            heart: checkFollowing[0] ? true : false,
+          };
+        }
+      });
+
+      setReviews(newReviews);
     } else {
       setReviews(defaultReviews);
       console.error(res.message);
     }
   };
-
+  console.log(`reviews =>`, reviews);
   useEffect(() => {
     getReviews();
   }, [userData]);
@@ -137,6 +152,8 @@ const Review = () => {
         <ReviewList
           reviews={reviews}
           userData={userData}
+          httpClient={httpClient}
+          getReviews={getReviews}
           handleViewDetail={handleViewDetail}
           setIsCreate={setIsCreate}
         />
@@ -166,3 +183,7 @@ const Review = () => {
 };
 
 export default Review;
+
+// 1. Review를 가져올때  user_id에 해당하는 모든 Follow를 배열에 담아서 가져오고 그 개수와 유저의 이름들을 UI에 표기한다.
+// 2. 로그인한 유저가 follow를 하면 Follow db에 생성이되고, 언팔을 하면 삭제된다.
+// 3. 로그인한 유저의 id가 해당 유저의 follow 정보에 있으면 unfollow가 보여지고 없으면 follow가 보여진다 (하트로 리스트 겉에 두기 , 자기꺼는 하트모양 안나옴.)

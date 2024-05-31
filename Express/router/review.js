@@ -8,5 +8,6 @@ router.get('/', reviewController.getReviews);
 router.post('/', reviewController.createReviews);
 router.put('/:review_id', reviewController.editReviews);
 router.delete('/:review_id', reviewController.deleteReviews);
+router.post('/:user_id', reviewController.updateFollowings);
 
 export default router;
