@@ -118,7 +118,7 @@ const Review = () => {
     }
   };
   return (
-    <div className='bg-slate-800 h-screen'>
+    <div className='bg-slate-800'>
       {!selectedReviewIndex && selectedReviewIndex !== 0 && !isCreate ? (
         <ReviewList
           reviews={reviews}
