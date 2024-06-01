@@ -68,58 +68,73 @@ export default function ReviewList({
               reviews.map((review, index) => (
                 <div
                   key={index}
-                  className='p-4 rounded-lg shadow-md bg-white bg-opacity-20 hover:bg-opacity-10 cursor-pointer flex items-center'
+                  className={`relative p-4 rounded-lg shadow-md bg-white bg-opacity-20 hover:bg-opacity-10 cursor-pointer flex items-center`}
                 >
-                  <div
-                    onClick={() => {
-                      setOpenDialog(true);
-                      setSelectedReview(review);
-                    }}
-                    className='mr-4 w-20 flex flex-col justify-center items-center'
-                  >
-                    <img
-                      className='w-15 h-15 rounded-full'
-                      src='/img/user_default_icon.png'
-                      alt={review?.userName}
-                    />
-                    <p className='text-gray-200 mt-1'>{review?.userName}</p>
-                  </div>
-                  <div className='flex flex-col justify-center mt-3'>
-                    <h2 className='text-xl text-white font-semibold mb-2'>
-                      {review?.title}
-                    </h2>
-                    <p className='text-orange-300 mt-2 border rounded-md border-orange-300 p-1 pr-2 pl-2'>
-                      {review?.product?.name}
-                    </p>
-                    <p className='text-white mt-2'>{review?.content}</p>
-                    <Rating rating={review?.rating} />
-                    <div className='flex items-center mt-4'>
-                      <button
-                        className='bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-md transition duration-300 mr-2'
-                        onClick={() => handleViewDetail(index)}
-                      >
-                        View Detail
-                      </button>
-                      {review?.user_id !== userData?.user_id && (
+                  {/* When inappropriate review is removed by admin */}
+                  {review?.blocked && (
+                    <div className='absolute inset-0 flex justify-center items-center bg-black bg-opacity-50 text-white text-xl z-10'>
+                      <p>**** This review has been deleted by the admin ***</p>
+                    </div>
+                  )}
+
+                  <div className={`flex ${review?.blocked ? 'blur-sm' : ''}`}>
+                    {/* User image and name */}
+                    <div
+                      onClick={() => {
+                        if (!review.deleted) {
+                          setOpenDialog(true);
+                          setSelectedReview(review);
+                        }
+                      }}
+                      className='mr-4 w-20 flex flex-col justify-center items-center'
+                    >
+                      <img
+                        className='w-15 h-15 rounded-full'
+                        src='/img/user_default_icon.png'
+                        alt={review?.userName}
+                      />
+                      <p className='text-gray-200 mt-1'>{review?.userName}</p>
+                    </div>
+                    {/* Products reviews */}
+                    <div className='flex flex-col justify-center mt-3'>
+                      <h2 className='text-xl text-white font-semibold mb-2'>
+                        {review?.title}
+                      </h2>
+                      <p className='text-orange-300 mt-2 border rounded-md border-orange-300 p-1 pr-2 pl-2'>
+                        {review?.product?.name}
+                      </p>
+                      <p className='text-white mt-2'>{review?.content}</p>
+                      <Rating rating={review?.rating} />
+                      <div className='flex items-center mt-4'>
                         <button
-                          className='focus:outline-none transition duration-300 text-red-500'
-                          onClick={() =>
-                            toggleFollow(review?.userName, review?.user_id)
-                          }
+                          className='bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-md transition duration-300 mr-2'
+                          onClick={() => handleViewDetail(index)}
+                          disabled={review.deleted}
                         >
-                          <svg
-                            xmlns='http://www.w3.org/2000/svg'
-                            fill={review?.heart ? 'currentColor' : 'none'}
-                            viewBox='0 0 24 24'
-                            stroke='currentColor'
-                            strokeWidth='2'
-                            width='24'
-                            height='24'
-                          >
-                            <path d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z' />
-                          </svg>
+                          View Detail
                         </button>
-                      )}
+                        {review?.user_id !== userData?.user_id && (
+                          <button
+                            className='focus:outline-none transition duration-300 text-red-500'
+                            onClick={() =>
+                              !review.deleted &&
+                              toggleFollow(review?.userName, review?.user_id)
+                            }
+                          >
+                            <svg
+                              xmlns='http://www.w3.org/2000/svg'
+                              fill={review?.heart ? 'currentColor' : 'none'}
+                              viewBox='0 0 24 24'
+                              stroke='currentColor'
+                              strokeWidth='2'
+                              width='24'
+                              height='24'
+                            >
+                              <path d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z' />
+                            </svg>
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
