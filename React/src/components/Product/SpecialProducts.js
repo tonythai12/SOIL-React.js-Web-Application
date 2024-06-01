@@ -3,7 +3,12 @@ import Modal from '../Cart/Modal';
 import AddCartBtn from '../Cart/AddCartBtn';
 
 // Component displaying special deals based on the selected vegetable
-export function SpecialProducts({ specialProducts, userData, addToCart }) {
+export function SpecialProducts({
+  specialProducts,
+  userData,
+  addToCart,
+  showReviewDetail,
+}) {
   const [selectedProduct, setSelectedProduct] = useState();
   const [isOpen, setIsOpen] = useState(false);
   const [status, setStatus] = useState();
@@ -44,10 +49,18 @@ export function SpecialProducts({ specialProducts, userData, addToCart }) {
                 <div className='mt-4 flex justify-between'>
                   <div>
                     <h3 className='text-sm text-gray-700'>{item.name}</h3>
-                    <p className='mt-1 text-sm text-gray-500 line-through'>
-                      {`$${item.price}`}
+                    <div className='flex'>
+                      <p className='mt-1  text-sm text-gray-500 line-through'>
+                        {`$${item.price}`}
+                      </p>
+                      <p className='mt-1 text-sm text-red-600 ml-2'>{`$${item.salePrice}`}</p>
+                    </div>
+                    <p
+                      onClick={() => showReviewDetail(item?.bestReviews)}
+                      className='text-yellow-700 cursor-pointer border border-yellow-300 bg-yellow-100 rounded-lg px-4 mb-3 mt-2 shadow-md hover:bg-yellow-200 transition duration-300 ease-in-out'
+                    >
+                      best reviews: {item?.bestReviews.length}
                     </p>
-                    <p className='mt-1 text-sm text-red-600'>{`$${item.salePrice}`}</p>
                   </div>
                 </div>
               </div>
