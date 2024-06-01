@@ -1,8 +1,6 @@
 import * as authRepository from '../data/auth.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import * as dietPlanRepository from '../data/dietplan.js';
-import * as SpecialSaleRepository from '../data/specialsale.js';
 import { config } from '../config.js';
 
 export async function signUp(req, res) {
@@ -40,22 +38,13 @@ export async function login(req, res) {
     return res.status(401).json({ message: 'Invalid user or password' });
   }
 
-  // if user email and password is passed, get dietplan, preference info and return all user info as an object.
   if (user && isValidPassword) {
-    // const dietplans =
-    //   (await dietPlanRepository.getByUserId(user.user_id)) || [];
-    // const preference = (await SpecialSaleRepository.get(user.user_id)) || '';
-
-    // console.log(`dietplans => ${dietplans}`);
-    // console.log(`preference => ${preference}`);
     const token = createJwtToken(user.user_id);
     res.status(200).json({
       token: token,
       user_id: user?.user_id,
       username: user?.username,
       email: user?.email,
-      // dietplans: dietplans.length > 0 ? dietplans : [],
-      // preference: preference ? preference : '',
       created_at: user.created_at,
     });
   }
