@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthProvider';
 import { useCart } from '../context/CartProvider';
 import AddCartBtn from '../components/Cart/AddCartBtn';
 import { SpecialProducts } from '../components/Product/SpecialProducts';
+import BestReviews from '../components/Product/BestReviews';
 
 export default function Products() {
   const { userData } = useAuth();
@@ -14,6 +15,7 @@ export default function Products() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isOpen, setIsOpen] = useState(false); // show product detail modal
   const [isOpen2, setIsOpen2] = useState(false); // show confirmation modal to check product which is added to cart
+  const [showBestRevies, setShowBestReivews] = useState(false);
   const [status, setStatus] = useState();
   // calculate discount percentage and add to product as a property
   products.forEach((product) => {
@@ -30,7 +32,6 @@ export default function Products() {
     } else {
       setSelectedProduct(product);
       const res = await addToCart(product);
-      console.log(res);
       setStatus(res?.status);
       setIsOpen2(true);
       setTimeout(() => {
@@ -45,6 +46,16 @@ export default function Products() {
     setIsOpen(false);
   };
 
+  const showReviewDetail = (product) => {
+    // if no bestReviews are
+    if (product.bestReviews && product.bestReviews.length === 0) {
+      return alert("This products doesn't have best reviews");
+    }
+
+    // if it has best review, show review detail
+    setSelectedProduct(product);
+    setShowBestReivews(true);
+  };
   return (
     <div className='container mx-auto px-4 py-8'>
       <h2 className='text-2xl font-extrabold tracking-tight text-gray-900 mb-5'>
@@ -74,6 +85,12 @@ export default function Products() {
                   %{product?.percentage}
                 </span>
                 <p className='text-gray-700  mb-2 ml-3'>${product.price}</p>
+                <p
+                  onClick={() => showReviewDetail(product)}
+                  className='text-yellow-700 cursor-pointer border border-yellow-300 bg-yellow-100 rounded-lg px-4 mb-3 ml-4 shadow-md hover:bg-yellow-200 transition duration-300 ease-in-out'
+                >
+                  best reviews: {product?.bestReviews.length}
+                </p>
               </div>
               <AddCartBtn onClick={() => handleAddToCart(product)} />
             </div>
@@ -130,9 +147,13 @@ export default function Products() {
           </div>
         </div>
       )}
+      {showBestRevies && (
+        <BestReviews bestReviews={selectedProduct?.bestReviews} />
+      )}
       {/* Special Products */}
       <SpecialProducts
         specialProducts={specialProducts}
+        showReviewDetail={showReviewDetail}
         userData={userData}
         addToCart={addToCart}
       />

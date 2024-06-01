@@ -1,5 +1,6 @@
 import db from '../db/database.js';
 import * as authRepository from './auth.js';
+
 export async function getAll() {
   const res = await db.execute('SELECT * FROM Reviews');
   let reviewArr = [];
@@ -52,6 +53,28 @@ export async function getAll() {
     return reviewArr;
   } else {
     return reviewArr;
+  }
+}
+
+export async function geAllByRating(productId) {
+  try {
+    const [results] = await db.execute(
+      `
+      SELECT 
+      Reviews.*, 
+      Users.username
+  FROM Reviews
+  JOIN Users ON Reviews.user_id = Users.user_id
+  WHERE Reviews.rating = 5 
+      AND Reviews.product_id = ? 
+      AND Reviews.product_id IN (SELECT product_id FROM Products);
+    `,
+      [productId]
+    );
+    return results;
+  } catch (error) {
+    console.error('Error executing query:', error);
+    throw error; // 에러 발생 시 예외를 던져 호출자가 이를 처리할 수 있도록 합니다.
   }
 }
 
