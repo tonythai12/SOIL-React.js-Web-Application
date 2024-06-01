@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useQuery, useMutation, gql } from '@apollo/client';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -7,90 +8,76 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
-import { Stack } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 
-const initialUsers = [
-  {
-    id: 1,
-    username: 'user1',
-    email: 'user1@example.com',
-    created_at: '2022-05-30',
-    blocked: false,
-  },
-  {
-    id: 2,
-    username: 'user2',
-    email: 'user2@example.com',
-    created_at: '2022-05-31',
-    blocked: false,
-  },
-  {
-    id: 3,
-    username: 'user3',
-    email: 'user3@example.com',
-    created_at: '2022-05-31',
-    blocked: false,
-  },
-  {
-    id: 4,
-    username: 'user4',
-    email: 'user4@example.com',
-    created_at: '2022-05-31',
-    blocked: false,
-  },
-  {
-    id: 5,
-    username: 'user5',
-    email: 'user5@example.com',
-    created_at: '2022-05-31',
-    blocked: false,
-  },
-  {
-    id: 6,
-    username: 'user6',
-    email: 'user6@example.com',
-    created_at: '2022-05-31',
-    blocked: false,
-  },
-  {
-    id: 7,
-    username: 'user7',
-    email: 'user7@example.com',
-    created_at: '2022-05-31',
-    blocked: false,
-  },
-  {
-    id: 8,
-    username: 'user8',
-    email: 'user8@example.com',
-    created_at: '2022-05-31',
-    blocked: false,
-  },
-  {
-    id: 9,
-    username: 'user9',
-    email: 'user9@example.com',
-    created_at: '2022-05-31',
-    blocked: false,
-  },
-  {
-    id: 10,
-    username: 'user10',
-    email: 'user10@example.com',
-    created_at: '2022-05-31',
-    blocked: false,
-  },
-];
+const GET_USERS = gql`
+  query {
+    users {
+      user_id
+      username
+      email
+      created_at
+      blocked
+    }
+  }
+`;
+
+const BLOCK_USER = gql`
+  mutation BlockUser($userId: ID!) {
+    blockUser(user_id: $userId) {
+      user_id
+      blocked
+    }
+  }
+`;
+
+const UNBLOCK_USER = gql`
+  mutation UnblockUser($userId: ID!) {
+    unblockUser(user_id: $userId) {
+      user_id
+      blocked
+    }
+  }
+`;
 
 export default function Users() {
-  const [users, setUsers] = useState(initialUsers);
+  const { loading, error, data } = useQuery(GET_USERS);
+  const [blockUser] = useMutation(BLOCK_USER, {
+    update(cache, { data: { blockUser } }) {
+      const { users } = cache.readQuery({ query: GET_USERS });
+      const updatedUsers = users.map((user) =>
+        user.user_id === blockUser.user_id ? { ...user, blocked: true } : user
+      );
+      cache.writeQuery({
+        query: GET_USERS,
+        data: { users: updatedUsers },
+      });
+    },
+  });
 
-  const toggleBlockUser = (id) => {
-    setUsers((prevUsers) =>
-      prevUsers.map((user) =>
-        user.id === id ? { ...user, blocked: !user.blocked } : user
-      )
-    );
+  const [unblockUser] = useMutation(UNBLOCK_USER, {
+    update(cache, { data: { unblockUser } }) {
+      const { users } = cache.readQuery({ query: GET_USERS });
+      const updatedUsers = users.map((user) =>
+        user.user_id === unblockUser.user_id ? { ...user, blocked: false } : user
+      );
+      cache.writeQuery({
+        query: GET_USERS,
+        data: { users: updatedUsers },
+      });
+    },
+  });
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+
+  const toggleBlockUser = (userId) => {
+    const user = data.users.find((user) => user.user_id === userId);
+    if (user.blocked) {
+      unblockUser({ variables: { userId } });
+    } else {
+      blockUser({ variables: { userId } });
+    }
   };
 
   return (
@@ -102,6 +89,11 @@ export default function Users() {
       sx={{ textAlign: 'center' }}
     >
       <Stack sx={{ mt: 5, width: '80%' }}>
+        <Stack>
+          <Typography variant='h4' sx={{ margin: 2, textAlign: 'left' }}>
+            Users : {initialUsers.length}
+          </Typography>
+        </Stack>
         <TableContainer
           component={Paper}
           sx={{ maxHeight: 700, overflow: 'auto' }}
@@ -142,24 +134,29 @@ export default function Users() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {users.map((user, index) => (
-                <TableRow key={user.id}>
-                  <TableCell align='center'>{index + 1}</TableCell>
-                  <TableCell align='center'>{user.username}</TableCell>
-                  <TableCell align='center'>{user.email}</TableCell>
-                  <TableCell align='center'>{user.created_at}</TableCell>
-                  <TableCell align='center'>
-                    <Button
-                      variant='contained'
-                      color={user.blocked ? 'secondary' : 'primary'}
-                      onClick={() => toggleBlockUser(user.id)}
-                    >
-                      {user.blocked ? 'Unblock' : 'Block'}
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
+  {data.users.map((user, index) => {
+    const createdAtTimestamp = parseInt(user.created_at);
+    const createdAtDate = new Date(createdAtTimestamp);
+    const createdAt = createdAtDate.toLocaleDateString();
+    return (
+      <TableRow key={user.user_id}>
+        <TableCell align='center'>{index + 1}</TableCell>
+        <TableCell align='center'>{user.username}</TableCell>
+        <TableCell align='center'>{user.email}</TableCell>
+        <TableCell align='center'>{createdAt}</TableCell>
+        <TableCell align='center'>
+          <Button
+            variant='contained'
+            color={user.blocked ? 'secondary' : 'primary'}
+            onClick={() => toggleBlockUser(user.user_id)}
+          >
+            {user.blocked ? 'Unblock' : 'Block'}
+          </Button>
+        </TableCell>
+      </TableRow>
+    );
+  })}
+</TableBody>
           </Table>
         </TableContainer>
       </Stack>

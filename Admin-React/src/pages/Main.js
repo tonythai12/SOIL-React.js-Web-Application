@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Tabs from '@mui/material/Tabs';
@@ -8,7 +8,8 @@ import { Stack } from '@mui/material';
 
 export default function MainPage() {
   const navigate = useNavigate();
-  const [selectedTab, setSelectedTab] = useState('user');
+  const [selectedTab, setSelectedTab] = useState('');
+  const pathName = window.location.pathname.split('/')[2];
   const appBarBgColor =
     selectedTab === 'product'
       ? '	#46BD7B'
@@ -19,7 +20,11 @@ export default function MainPage() {
     setSelectedTab(pathName);
     navigate(`/admin/${pathName}`);
   };
-  console.log(selectedTab);
+
+  console.log(pathName);
+  useEffect(() => {
+    setSelectedTab(pathName);
+  }, [pathName]);
   return (
     <Stack
       sx={{
@@ -29,7 +34,18 @@ export default function MainPage() {
     >
       <AppBar position='static' sx={{ bgcolor: appBarBgColor }}>
         <Toolbar>
-          <h1 style={{ flexGrow: 1 }}>SOIL</h1>
+          <h1 style={{ flexGrow: 1 }}>
+            <span
+              onClick={() => {
+                navigate('/');
+                setSelectedTab('');
+              }}
+              style={{ cursor: 'pointer' }}
+            >
+              {' '}
+              SOIL
+            </span>
+          </h1>
           <Tabs value={selectedTab}>
             <Tab
               label='Users'

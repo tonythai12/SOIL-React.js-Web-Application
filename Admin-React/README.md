@@ -7,3 +7,4 @@
 ### Tools to be installed:
 
 - @mui/material @emotion/react @emotion/styled
+- @mui/x-data-grid
