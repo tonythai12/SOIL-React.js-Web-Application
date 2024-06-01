@@ -41,6 +41,7 @@ const ReviewDetail = ({
       .format('ddd,D MMM,YYYY h:mm A');
     onCreate({
       user_id: userData?.user_id,
+      userName: userData?.username,
       ...editedReview,
       createdAt,
     });

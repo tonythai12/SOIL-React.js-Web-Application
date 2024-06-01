@@ -43,3 +43,10 @@ export function deleteReviews(req, res) {
   const deleted = reviewRepository.remove(review_id);
   res.status(204).json(deleted);
 }
+
+export function updateFollowings(req, res) {
+  const { user_id } = req.params;
+  const { follower_id } = req.body;
+  const updated = reviewRepository.update(user_id, follower_id);
+  res.status(201).json(updated);
+}
