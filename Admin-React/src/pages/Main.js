@@ -5,12 +5,40 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { Stack, Box, Typography } from '@mui/material';
-import { useSubscription, useQuery, gql } from '@apollo/client';
+import { useQuery, gql } from '@apollo/client';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from '@mui/material';
 
 const NEW_REVIEW_SUBSCRIPTION = gql`
   subscription {
     newReview {
+      review_id
+      user {
+        username
+      }
+      title
+      product {
+        name
+      }
+      rating
+      content
+      userImage
+      created_at
+    }
+  }
+`;
+
+const RECENT_REVIEWS_QUERY = gql`
+  query {
+    reviews(limit: 3, order: "created_at_DESC") {
       review_id
       user {
         username
@@ -36,32 +64,77 @@ const GET_REVIEW_METRICS = gql`
 `;
 
 const RecentReviews = () => {
-  const { data: newReviewData, loading: subscriptionLoading } = useSubscription(NEW_REVIEW_SUBSCRIPTION);
-
-  const [recentReviews, setRecentReviews] = useState([]);
+  const { data: recentReviewsData, loading, error, subscribeToMore } = useQuery(RECENT_REVIEWS_QUERY);
 
   useEffect(() => {
-    if (!subscriptionLoading && newReviewData) {
-      setRecentReviews((prevReviews) => [
-        newReviewData.newReview,
-        ...prevReviews.slice(0, 1),
-      ]);
-    }
-  }, [newReviewData, subscriptionLoading]);
+    const unsubscribe = subscribeToMore({
+      document: NEW_REVIEW_SUBSCRIPTION,
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData.data) return prev;
+        const newReview = subscriptionData.data.newReview;
+        const updatedReviews = [newReview, ...prev.reviews.slice(0, 2)];
+        return {
+          ...prev,
+          reviews: updatedReviews,
+        };
+      },
+    });
+
+    return () => unsubscribe();
+  }, [subscribeToMore]);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+
+  const recentReviews = recentReviewsData?.reviews.slice(0, 3) || [];
 
   return (
-    <div>
-      <h3>Recent Reviews</h3>
-      {recentReviews.map((review) => (
-        <div key={review.review_id}>
-          <p>Title: {review.title}</p>
-          <p>User: {review.user.username}</p>
-          <p>Product: {review.product.name}</p>
-          <p>Rating: {review.rating}</p>
-          <p>Content: {review.content}</p>
-        </div>
-      ))}
-    </div>
+    <Stack alignItems='center' sx={{ mt: 5 }}>
+      <Stack
+        direction='row'
+        justifyContent='flex-end'
+        sx={{ width: '80%', mb: 2 }}
+      >
+        <TableContainer component={Paper} sx={{ padding: 2 }}>
+          <Typography variant='h4' sx={{ marginBottom: 2 }}>
+            Recent Reviews
+          </Typography>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Title</TableCell>
+                <TableCell>Username</TableCell>
+                <TableCell>Product Name</TableCell>
+                <TableCell>Rating</TableCell>
+                <TableCell>Content</TableCell>
+                <TableCell>Created At</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {recentReviews.map((review) => (
+                <TableRow
+                  key={review.review_id}
+                  sx={
+                    review.title.toLowerCase().includes('disappointed') ||
+                    review.content.toLowerCase().includes('poor quality') ||
+                    review.content.toLowerCase().includes('fuck')
+                      ? { backgroundColor: '#ffcccc' }
+                      : {}
+                  }
+                >
+                  <TableCell>{review.title}</TableCell>
+                  <TableCell>{review.user.username}</TableCell>
+                  <TableCell>{review.product.name}</TableCell>
+                  <TableCell>{review.rating}</TableCell>
+                  <TableCell>{review.content}</TableCell>
+                  <TableCell>{new Date(parseInt(review.created_at)).toLocaleDateString()}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Stack>
+    </Stack>
   );
 };
 

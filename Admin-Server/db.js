@@ -60,20 +60,18 @@ async function getReviewById(reviewId) {
   return review[0];
 }
 
-async function createReview(
-  userId,
-  title,
-  productId,
-  rating,
-  content,
-  userImage
-) {
-  const [result] = await pool.query(
-    'INSERT INTO Reviews (user_id, title, product_id, rating, content, userImage) VALUES (?, ?, ?, ?, ?, ?)',
-    [userId, title, productId, rating, content, userImage]
-  );
-  const review = await getReviewById(result.insertId);
-  return review;
+async function createReview(userId, title, productId, rating, content, userImage, blocked) {
+  try {
+    const [result] = await pool.query(
+      'INSERT INTO Reviews (user_id, title, product_id, rating, content, userImage, blocked) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [userId, title, productId, rating, content, userImage, blocked]
+    );
+    const review = await getReviewById(result.insertId);
+    return review;
+  } catch (error) {
+    console.error('Error creating review:', error);
+    throw error;
+  }
 }
 
 async function updateReview(reviewId, title, rating, content, userImage) {
@@ -161,6 +159,22 @@ async function deleteProduct(productId) {
   return productId;
 }
 
+async function getReviews(limit = null, order = null) {
+  let query = 'SELECT * FROM Reviews';
+  
+  if (order === 'created_at_DESC') {
+    query += ' ORDER BY created_at DESC';
+  }
+  
+  if (limit !== null) {
+    query += ` LIMIT ${limit}`;
+  }
+  
+  const [reviews] = await pool.query(query);
+  return reviews;
+}
+
+
 module.exports = {
   getAllUsers,
   blockUser,
@@ -178,4 +192,5 @@ module.exports = {
   createProduct,
   updateProduct,
   deleteProduct,
+  getReviews,
 };
