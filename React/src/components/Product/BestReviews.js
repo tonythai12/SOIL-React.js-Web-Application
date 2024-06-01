@@ -1,12 +1,21 @@
 import React from 'react';
 import Rating from '../Review/Rating';
-export default function BestReviews({ bestReviews }) {
+
+export default function BestReviews({ bestReviews, onClose }) {
   return (
     <div className='fixed inset-0 flex items-center justify-center z-50'>
       <div className='bg-white rounded-lg shadow-lg w-full max-w-lg'>
-        <h2 className='text-2xl font-bold text-center py-4 bg-yellow-400 rounded-t-lg'>
-          ⭐️ Best Reviews ⭐️
-        </h2>
+        <div className='flex justify-between items-center bg-yellow-400 rounded-t-lg'>
+          <h2 className='text-2xl font-bold text-center py-4'>
+            ⭐️ Best Reviews ⭐️
+          </h2>
+          <button
+            onClick={onClose}
+            className='text-xl font-bold px-4 py-2 focus:outline-none'
+          >
+            x
+          </button>
+        </div>
         <div className='overflow-x-auto'>
           <table className='w-full'>
             <thead>

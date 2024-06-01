@@ -4,7 +4,6 @@ import {
   FaAddressBook,
   FaAppleAlt,
   FaCarrot,
-  FaSeedling,
   FaShoppingCart,
   FaUser,
 } from 'react-icons/fa';
@@ -19,12 +18,6 @@ const tabs = [
     value: 'product',
     route: '/soil/product',
   },
-  // {
-  //   label: 'Special Sale',
-  //   icon: <FaSeedling />,
-  //   value: 'sale',
-  //   route: '/soil/sale',
-  // },
   {
     label: 'Diet Plan',
     icon: <FaCarrot />,
