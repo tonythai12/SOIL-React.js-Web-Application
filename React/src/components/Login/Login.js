@@ -54,6 +54,8 @@ export default function LogIn({ isLogin, toggleForm, logIn }) {
 
     if (res.status === 401) {
       return alert(res.message);
+    } else if (res.status === 204) {
+      return alert('Your account has been blocked');
     } else {
       // if email, password is passed.
       if (rememberMe) {

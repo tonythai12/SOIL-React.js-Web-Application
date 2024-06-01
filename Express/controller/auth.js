@@ -38,7 +38,12 @@ export async function login(req, res) {
     return res.status(401).json({ message: 'Invalid user or password' });
   }
 
-  if (user && isValidPassword) {
+  if (user.blocked) {
+    res.status(204).json({
+      message:
+        'Your account has been blocked. Please contact support for further assistance.',
+    });
+  } else if (user && isValidPassword) {
     const token = createJwtToken(user.user_id);
     res.status(200).json({
       token: token,
