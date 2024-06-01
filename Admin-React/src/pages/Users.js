@@ -8,7 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
-import { Stack, Typography } from '@mui/material';
+import { Stack } from '@mui/material';
 
 const GET_USERS = gql`
   query {
@@ -89,11 +89,6 @@ export default function Users() {
       sx={{ textAlign: 'center' }}
     >
       <Stack sx={{ mt: 5, width: '80%' }}>
-        <Stack>
-          <Typography variant='h4' sx={{ margin: 2, textAlign: 'left' }}>
-            Users : {initialUsers.length}
-          </Typography>
-        </Stack>
         <TableContainer
           component={Paper}
           sx={{ maxHeight: 700, overflow: 'auto' }}
