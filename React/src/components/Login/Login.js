@@ -13,6 +13,7 @@ export default function LogIn({ isLogin, toggleForm, logIn }) {
     initialValues: {
       email: '',
       password: '',
+      password2: '',
     },
     validationSchema: Yup.object({
       email: Yup.string()
@@ -42,12 +43,17 @@ export default function LogIn({ isLogin, toggleForm, logIn }) {
   }, []);
 
   const handleLogin = async (values) => {
-    const { email, password } = values;
-    // const token = tokenStorage.getToken();
-    // console.log(`login token => ${token}`);
+    const { email, password, password2 } = values;
+
+    if (!password2) {
+      return alert('Please confirm your password');
+    }
+    if (password !== password2) {
+      return alert('Passwords do not match. Please try again');
+    }
+
     const res = await httpClient.fetch('/soil/auth/login', {
       method: 'POST',
-      // headers: { Authorization: `Bearer ${token}` },
       body: JSON.stringify({
         email,
         password,
@@ -60,12 +66,10 @@ export default function LogIn({ isLogin, toggleForm, logIn }) {
       // if email, password is passed.
       if (rememberMe) {
         localStorage.setItem('emailForRememberMe', email);
-        // localStorage.setItem('pwForRememberMe', password);
       } else {
         localStorage.removeItem('emailForRememberMe');
-        // localStorage.removeItem('pwForRememberMe');
       }
-      console.log(res);
+
       logIn({
         user_id: res.data?.user_id,
         username: res.data?.username,
@@ -115,6 +119,22 @@ export default function LogIn({ isLogin, toggleForm, logIn }) {
       />
       {formik.touched.password && formik.errors.password && (
         <p className='text-red-500'>{formik.errors.password}</p>
+      )}
+      <input
+        type='password'
+        name='password2'
+        placeholder='Confirm Password'
+        value={formik.values.password2}
+        onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
+        className={`w-full h-10 px-3 bg-gray-200 rounded-md ${
+          formik.touched.password2 &&
+          formik.errors.password2 &&
+          'border-red-500'
+        }`}
+      />
+      {formik.touched.password2 && formik.errors.password2 && (
+        <p className='text-red-500'>{formik.errors.password2}</p>
       )}
       <div className='flex items-center gap-2'>
         <input

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { MdEdit, MdHome } from 'react-icons/md';
 import {
   FaReceipt,
@@ -9,6 +9,7 @@ import {
 } from 'react-icons/fa';
 import { useAuth } from '../context/AuthProvider';
 import { useNavigate } from 'react-router-dom';
+import { useCart } from '../context/CartProvider';
 
 const purchaseHistory = [
   { icon: <MdHome size={45} />, title: 'Back to Home', route: '/' },
@@ -35,6 +36,7 @@ const purchaseHistory = [
 const MyPage = () => {
   const { logOut, userData, setUserData, handleDeleteUser, httpClient } =
     useAuth();
+  const { setCartProducts } = useCart();
   const navigate = useNavigate();
   const [isEdit, setisEdit] = useState(false); // when click edit icon, user can edit info
   const [userEditInfo, setUserEditInfo] = useState({
@@ -119,6 +121,7 @@ const MyPage = () => {
 
   const handleLogout = () => {
     logOut();
+    setCartProducts([]);
     navigate('/');
   };
 
