@@ -15,7 +15,7 @@ export default function Products() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isOpen, setIsOpen] = useState(false); // show product detail modal
   const [isOpen2, setIsOpen2] = useState(false); // show confirmation modal to check product which is added to cart
-  const [showBestRevies, setShowBestReivews] = useState(false);
+  const [showBestReviews, setShowBestReviews] = useState(false);
   const [status, setStatus] = useState();
   // calculate discount percentage and add to product as a property
   products.forEach((product) => {
@@ -54,7 +54,7 @@ export default function Products() {
 
     // if it has best review, show review detail
     setSelectedProduct(product);
-    setShowBestReivews(true);
+    setShowBestReviews(true);
   };
   return (
     <div className='container mx-auto px-4 py-8'>
@@ -147,8 +147,11 @@ export default function Products() {
           </div>
         </div>
       )}
-      {showBestRevies && (
-        <BestReviews bestReviews={selectedProduct?.bestReviews} />
+      {showBestReviews && (
+        <BestReviews
+          bestReviews={selectedProduct?.bestReviews}
+          onClose={() => setShowBestReviews(false)}
+        />
       )}
       {/* Special Products */}
       <SpecialProducts

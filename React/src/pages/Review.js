@@ -6,7 +6,7 @@ import { useProduct } from '../context/ProductProvider';
 
 const Review = () => {
   const { userData, httpClient } = useAuth();
-  const { products } = useProduct();
+  const { products, specialProducts } = useProduct();
   const [reviews, setReviews] = useState([]);
   const [selectedReviewIndex, setSelectedReviewIndex] = useState(null); // go to view detail.
   const [isCreate, setIsCreate] = useState(false); // go to create review.
@@ -85,6 +85,7 @@ const Review = () => {
   };
 
   const handleCreateReview = async (createReview) => {
+    console.log(createReview);
     const { user_id, title, product_id, rating, content } = createReview;
     if (!content) {
       return alert('There is no written content.');
@@ -139,6 +140,7 @@ const Review = () => {
                 reviews && reviews[selectedReviewIndex]?.product?.name
               }
               products={products}
+              specialProducts={specialProducts}
               onDelete={handleDeleteReview}
               onEdit={handleEditReview}
               onCreate={handleCreateReview}

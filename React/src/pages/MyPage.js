@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { MdEdit, MdHome } from 'react-icons/md';
 import {
   FaReceipt,

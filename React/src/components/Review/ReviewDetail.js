@@ -13,6 +13,7 @@ const ReviewDetail = ({
   rating,
   userData,
   products,
+  specialProducts,
   onDelete,
   onEdit,
   onCreate,
@@ -29,6 +30,7 @@ const ReviewDetail = ({
     isCreate ? null : rating ? rating : null
   );
 
+  const allProducts = [...products, ...specialProducts];
   const handleSave = () => {
     const { userName, product, ...newEditedReview } = editedReview;
     onEdit(newEditedReview); // Pass the new object excluding userName and product
@@ -67,7 +69,7 @@ const ReviewDetail = ({
         {isEditing ? (
           // edit review
           <ReviewInput
-            products={products}
+            products={allProducts}
             userData={userData}
             handleSave={handleSave}
             selectedProduct={selectedProduct}
@@ -84,7 +86,7 @@ const ReviewDetail = ({
         ) : isCreate ? (
           // create review
           <ReviewInput
-            products={products}
+            products={allProducts}
             userData={userData}
             handleSave={handleCreate}
             selectedProduct={selectedProduct}
