@@ -14,33 +14,70 @@ import {
   TableContainer,
   Paper,
 } from '@mui/material';
+import { useQuery, useMutation, gql } from '@apollo/client';
 
-const initialProducts = [
-  {
-    id: 1,
-    name: 'Product 1',
-    description: 'Description 1',
-    price: 100,
-    salePrice: 80,
-    imageUrl: 'http://example.com/image1.jpg',
-    isSale: true,
-  },
-  {
-    id: 2,
-    name: 'Product 2',
-    description: 'Description 2',
-    price: 200,
-    salePrice: 180,
-    imageUrl: 'http://example.com/image2.jpg',
-    isSale: false,
-  },
-  // Add more initial products if needed
-];
+const GET_PRODUCTS = gql`
+  query {
+    products {
+      product_id
+      name
+      description
+      price
+      salePrice
+      imageUrl
+      isSpecial
+      created_at
+    }
+  }
+`;
+
+const CREATE_PRODUCT = gql`
+  mutation CreateProduct($name: String!, $description: String, $price: Float!, $salePrice: Float!, $imageUrl: String!, $isSpecial: Boolean!) {
+    createProduct(name: $name, description: $description, price: $price, salePrice: $salePrice, imageUrl: $imageUrl, isSpecial: $isSpecial) {
+      product_id
+      name
+      description
+      price
+      salePrice
+      imageUrl
+      isSpecial
+      created_at
+    }
+  }
+`;
+
+const UPDATE_PRODUCT = gql`
+  mutation UpdateProduct($product_id: ID!, $name: String, $description: String, $price: Float, $salePrice: Float, $imageUrl: String, $isSpecial: Boolean) {
+    updateProduct(product_id: $product_id, name: $name, description: $description, price: $price, salePrice: $salePrice, imageUrl: $imageUrl, isSpecial: $isSpecial) {
+      product_id
+      name
+      description
+      price
+      salePrice
+      imageUrl
+      isSpecial
+      created_at
+    }
+  }
+`;
+
+const DELETE_PRODUCT = gql`
+  mutation DeleteProduct($product_id: ID!) {
+    deleteProduct(product_id: $product_id)
+  }
+`;
 
 export default function Products() {
-  const [products, setProducts] = useState(initialProducts);
+  const { loading, error, data, refetch } = useQuery(GET_PRODUCTS);
+  const [createProduct] = useMutation(CREATE_PRODUCT);
+  const [updateProduct] = useMutation(UPDATE_PRODUCT);
+  const [deleteProduct] = useMutation(DELETE_PRODUCT);
+
   const [open, setOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
 
   const handleOpen = (product) => {
     setEditingProduct(product);
@@ -52,24 +89,38 @@ export default function Products() {
     setEditingProduct(null);
   };
 
-  const handleSave = () => {
-    if (editingProduct.id) {
-      setProducts(
-        products.map((product) =>
-          product.id === editingProduct.id ? editingProduct : product
-        )
-      );
+  const handleSave = async () => {
+    if (editingProduct.product_id) {
+      await updateProduct({
+        variables: {
+          product_id: editingProduct.product_id,
+          name: editingProduct.name,
+          description: editingProduct.description,
+          price: parseFloat(editingProduct.price),
+          salePrice: parseFloat(editingProduct.salePrice),
+          imageUrl: editingProduct.imageUrl,
+          isSpecial: editingProduct.isSpecial,
+        },
+      });
     } else {
-      setProducts([
-        ...products,
-        { ...editingProduct, id: products.length + 1 },
-      ]);
+      await createProduct({
+        variables: {
+          name: editingProduct.name,
+          description: editingProduct.description,
+          price: parseFloat(editingProduct.price),
+          salePrice: parseFloat(editingProduct.salePrice),
+          imageUrl: editingProduct.imageUrl,
+          isSpecial: editingProduct.isSpecial,
+        },
+      });
     }
+    refetch();
     handleClose();
   };
 
-  const handleDelete = (id) => {
-    setProducts(products.filter((product) => product.id !== id));
+  const handleDelete = async (productId) => {
+    await deleteProduct({ variables: { product_id: productId } });
+    refetch();
   };
 
   const handleChange = (e) => {
@@ -87,8 +138,8 @@ export default function Products() {
     { field: 'salePrice', headerName: 'Sale Price', width: 120 },
     { field: 'imageUrl', headerName: 'Image URL', width: 230 },
     {
-      field: 'isSale',
-      headerName: 'Is Sale',
+      field: 'isSpecial',
+      headerName: 'Is Special',
       width: 100,
       renderCell: (params) => (params.value ? 'Yes' : 'No'),
     },
@@ -99,7 +150,7 @@ export default function Products() {
       renderCell: (params) => (
         <>
           <Button onClick={() => handleOpen(params.row)}>Edit</Button>
-          <Button onClick={() => handleDelete(params.row.id)}>Delete</Button>
+          <Button onClick={() => handleDelete(params.row.product_id)}>Delete</Button>
         </>
       ),
     },
@@ -133,48 +184,18 @@ export default function Products() {
                   price: '',
                   salePrice: '',
                   imageUrl: '',
-                  isSale: false,
+                  isSpecial: false,
                 })
               }
             >
               Add Product
             </Button>
           </Stack>
-          {/* <Stack
-          direction='row'
-          justifyContent='space-between'
-          sx={{ width: '100%', mb: 2 }}
-        >
-          <Typography variant='h4' sx={{ marginBottom: 2 }}>
-            Products
-          </Typography>
-          <Button
-            variant='contained'
-            sx={{
-              mt: 2,
-              backgroundColor: '#329632',
-              '&:hover': {
-                backgroundColor: '#4BAF4B',
-              },
-            }}
-            onClick={() =>
-              handleOpen({
-                name: '',
-                description: '',
-                price: '',
-                salePrice: '',
-                imageUrl: '',
-                isSale: false,
-              })
-            }
-          >
-            Add Product
-          </Button>
-        </Stack> */}
           <DataGrid
-            rows={products}
+            rows={data?.products || []}
             columns={columns}
             pageSize={5}
+            getRowId={(row) => row.product_id}
             componentsProps={{
               columnHeaders: {
                 style: {
@@ -190,7 +211,7 @@ export default function Products() {
 
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>
-          {editingProduct?.id ? 'Edit Product' : 'Add Product'}
+          {editingProduct?.product_id ? 'Edit Product' : 'Add Product'}
         </DialogTitle>
         <DialogContent>
           <TextField
@@ -238,12 +259,12 @@ export default function Products() {
           <FormControlLabel
             control={
               <Checkbox
-                checked={editingProduct?.isSale || false}
+                checked={editingProduct?.isSpecial || false}
                 onChange={handleChange}
-                name='isSale'
+                name='isSpecial'
               />
             }
-            label='Is Sale'
+            label='Is Special'
           />
         </DialogContent>
         <DialogActions>
@@ -251,7 +272,7 @@ export default function Products() {
             Cancel
           </Button>
           <Button onClick={handleSave} color='primary'>
-            {editingProduct?.id ? 'Save' : 'Add'}
+            {editingProduct?.product_id ? 'Save' : 'Add'}
           </Button>
         </DialogActions>
       </Dialog>

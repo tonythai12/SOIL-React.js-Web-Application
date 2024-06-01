@@ -16,72 +16,32 @@ import {
   Stack,
 } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useQuery, useMutation, gql } from '@apollo/client';
 
-const initialReviews = [
-  {
-    id: 1,
-    username: 'John Doe',
-    title: 'Great Product!',
-    productName: 'Product A',
-    rating: 5,
-    content: 'This product exceeded my expectations.',
-    created_at: '2024-05-31',
-  },
-  {
-    id: 2,
-    username: 'Jane Smith',
-    title: 'Disappointed',
-    productName: 'Product B',
-    rating: 2,
-    content: 'Poor quality, not worth the price.',
-    created_at: '2024-05-30',
-  },
-  {
-    id: 6,
-    username: 'Emily Johnson',
-    title: 'Highly Recommended!',
-    productName: 'Product C',
-    rating: 4,
-    content: 'I love this product, it works great!',
-    created_at: '2024-06-01',
-  },
-  {
-    id: 7,
-    username: 'Michael Brown',
-    title: 'Not Bad',
-    productName: 'Product D',
-    rating: 3,
-    content: "It's okay, but I expected more.",
-    created_at: '2024-06-02',
-  },
-  {
-    id: 8,
-    username: 'Sophia Martinez',
-    title: 'Excellent Service!',
-    productName: 'Product E',
-    rating: 5,
-    content: 'The customer service was outstanding!',
-    created_at: '2024-06-03',
-  },
-  {
-    id: 9,
-    username: 'William Taylor',
-    title: 'Amazing Product',
-    productName: 'Product F',
-    rating: 5,
-    content: "I'm so impressed with the quality!",
-    created_at: '2024-06-04',
-  },
-  {
-    id: 10,
-    username: 'Olivia Anderson',
-    title: 'Worst Purchase Ever',
-    productName: 'Product G',
-    rating: 1,
-    content: "Fuck!!!!!😡 I regret buying this, it's a waste of money.",
-    created_at: '2024-06-05',
-  },
-];
+const GET_REVIEWS = gql`
+  query {
+    reviews {
+      review_id
+      user {
+        username
+      }
+      title
+      product {
+        name
+      }
+      rating
+      content
+      userImage
+      created_at
+    }
+  }
+`;
+
+const DELETE_REVIEW = gql`
+  mutation DeleteReview($review_id: ID!) {
+    deleteReview(review_id: $review_id)
+  }
+`;
 
 const theme = createTheme({
   palette: {
@@ -95,12 +55,17 @@ const theme = createTheme({
 });
 
 export default function Reviews() {
-  const [reviews, setReviews] = useState(initialReviews);
+  const { loading, error, data, refetch } = useQuery(GET_REVIEWS);
+  const [deleteReview] = useMutation(DELETE_REVIEW);
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedReview, setSelectedReview] = useState(null);
 
-  const handleDeleteReview = (id) => {
-    setReviews(reviews.filter((review) => review.id !== id));
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+
+  const handleDeleteReview = async (reviewId) => {
+    await deleteReview({ variables: { review_id: reviewId } });
+    refetch();
     setOpenDialog(false);
   };
 
@@ -139,9 +104,9 @@ export default function Reviews() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {reviews.map((review) => (
+                {data.reviews.map((review) => (
                   <TableRow
-                    key={review.id}
+                    key={review.review_id}
                     sx={
                       review.title.toLowerCase().includes('disappointed') ||
                       review.content.toLowerCase().includes('poor quality') ||
@@ -151,11 +116,11 @@ export default function Reviews() {
                     }
                   >
                     <TableCell>{review.title}</TableCell>
-                    <TableCell>{review.username}</TableCell>
-                    <TableCell>{review.productName}</TableCell>
+                    <TableCell>{review.user.username}</TableCell>
+                    <TableCell>{review.product.name}</TableCell>
                     <TableCell>{review.rating}</TableCell>
                     <TableCell>{review.content}</TableCell>
-                    <TableCell>{review.created_at}</TableCell>
+                    <TableCell>{new Date(parseInt(review.created_at)).toLocaleDateString()}</TableCell>
                     <TableCell>
                       <Button
                         onClick={() => handleOpenDialog(review)}
@@ -200,10 +165,10 @@ export default function Reviews() {
                     variant='subtitle1'
                     sx={{ color: '#888', marginBottom: 1 }}
                   >
-                    By: {selectedReview.username}
+                    By: {selectedReview.user.username}
                   </Typography>
                   <Typography variant='body1' sx={{ marginBottom: 1 }}>
-                    Product: {selectedReview.productName}
+                    Product: {selectedReview.product.name}
                   </Typography>
                   <Typography variant='body1' sx={{ marginBottom: 1 }}>
                     Rating: {selectedReview.rating}
@@ -212,7 +177,7 @@ export default function Reviews() {
                     {selectedReview.content}
                   </Typography>
                   <Typography variant='caption' sx={{ color: '#888' }}>
-                    Created at: {selectedReview.created_at}
+                    Created at: {new Date(parseInt(selectedReview.created_at)).toLocaleDateString()}
                   </Typography>
                 </Stack>
               )}
@@ -224,19 +189,19 @@ export default function Reviews() {
                   bgcolor: '#FF9330',
                   color: '#fff',
                   '&:hover': {
-                    bgcolor: '#FF9D6E', // 호버됐을 때의 배경색
+                    bgcolor: '#FF9D6E',
                   },
                 }}
               >
                 Cancel
               </Button>
               <Button
-                onClick={() => handleDeleteReview(selectedReview.id)}
+                onClick={() => handleDeleteReview(selectedReview.review_id)}
                 sx={{
                   bgcolor: '#f44336',
                   color: '#fff',
                   '&:hover': {
-                    bgcolor: '#FF5722', // 호버됐을 때의 배경색
+                    bgcolor: '#FF5722',
                   },
                 }}
               >
