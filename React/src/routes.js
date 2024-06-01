@@ -4,7 +4,6 @@ import LoginAndSignUp from './pages/LoginAndSignUp';
 import MyPage from './pages/MyPage';
 import DietPlan from './pages/DietPlan';
 import Products from './pages/Products';
-import GardenInfoAndSale from './pages/GardenInfoAndSale';
 import Cart from './pages/Cart';
 import Review from './pages/Review';
 
@@ -16,7 +15,6 @@ const routes = [
     element: <Main />,
     children: [
       { path: 'product', element: <Products /> },
-      { path: 'sale', element: <GardenInfoAndSale /> },
       { path: 'dietplan', element: <DietPlan /> },
       { path: 'cart', element: <Cart /> },
       { path: 'review', element: <Review /> },

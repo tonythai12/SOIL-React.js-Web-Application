@@ -4,7 +4,8 @@ import * as productController from '../controller/product.js';
 
 const router = express.Router();
 
-// get user when user log in
+// get all products
 router.get('/', productController.getProducts);
-
+// get all special products
+router.get('/special', productController.getSpecialProducts);
 export default router;

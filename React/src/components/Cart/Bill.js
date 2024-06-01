@@ -44,7 +44,7 @@ function Bill({
               >
                 <div className='flex items-center'>
                   <img
-                    src={item.imageUrl}
+                    src={item.image_url}
                     alt={item.name}
                     className='w-12 h-12 rounded-full object-cover mr-4'
                   />
