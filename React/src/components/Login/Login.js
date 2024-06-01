@@ -43,11 +43,9 @@ export default function LogIn({ isLogin, toggleForm, logIn }) {
 
   const handleLogin = async (values) => {
     const { email, password } = values;
-    // const token = tokenStorage.getToken();
-    // console.log(`login token => ${token}`);
+
     const res = await httpClient.fetch('/soil/auth/login', {
       method: 'POST',
-      // headers: { Authorization: `Bearer ${token}` },
       body: JSON.stringify({
         email,
         password,
@@ -56,16 +54,16 @@ export default function LogIn({ isLogin, toggleForm, logIn }) {
 
     if (res.status === 401) {
       return alert(res.message);
+    } else if (res.status === 204) {
+      return alert('Your account has been blocked');
     } else {
       // if email, password is passed.
       if (rememberMe) {
         localStorage.setItem('emailForRememberMe', email);
-        // localStorage.setItem('pwForRememberMe', password);
       } else {
         localStorage.removeItem('emailForRememberMe');
-        // localStorage.removeItem('pwForRememberMe');
       }
-      console.log(res);
+
       logIn({
         user_id: res.data?.user_id,
         username: res.data?.username,

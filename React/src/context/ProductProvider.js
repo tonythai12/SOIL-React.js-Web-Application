@@ -7,7 +7,7 @@ const ProductContext = createContext();
 export const ProductProvider = ({ children }) => {
   const { httpClient } = useAuth();
   const [products, setProducts] = useState([]);
-  const [saleProducts, setSaleProducts] = useState({});
+  const [specialProducts, setSpecialProducts] = useState([]);
 
   const getProducts = async () => {
     const res = await httpClient.fetch('/soil/product', {
@@ -22,16 +22,18 @@ export const ProductProvider = ({ children }) => {
     }
   };
 
-  const getSpecialSale = async () => {
-    const res = await httpClient.fetch('/soil/sale', {
+  const getSpecial = async () => {
+    const res = await httpClient.fetch('/soil/product/special', {
       method: 'GET',
     });
     if (res.status === 200) {
-      setSaleProducts(JSON.parse(res.data));
+      setSpecialProducts(res.data);
     } else if (res.status === 404) {
+      setSpecialProducts([]);
       console.error(res.message);
     }
   };
+
   // get all products
   useEffect(() => {
     getProducts();
@@ -39,7 +41,7 @@ export const ProductProvider = ({ children }) => {
 
   // get all sales products
   useEffect(() => {
-    getSpecialSale();
+    getSpecial();
   }, []);
 
   return (
@@ -47,7 +49,7 @@ export const ProductProvider = ({ children }) => {
     <ProductContext.Provider
       value={{
         products,
-        saleProducts,
+        specialProducts,
       }}
     >
       {children}

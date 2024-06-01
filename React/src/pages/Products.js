@@ -4,10 +4,11 @@ import { useProduct } from '../context/ProductProvider';
 import { useAuth } from '../context/AuthProvider';
 import { useCart } from '../context/CartProvider';
 import AddCartBtn from '../components/Cart/AddCartBtn';
+import { SpecialProducts } from '../components/Product/SpecialProducts';
 
 export default function Products() {
   const { userData } = useAuth();
-  const { products } = useProduct();
+  const { products, specialProducts } = useProduct();
   const { addToCart } = useCart();
 
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -46,6 +47,9 @@ export default function Products() {
 
   return (
     <div className='container mx-auto px-4 py-8'>
+      <h2 className='text-2xl font-extrabold tracking-tight text-gray-900 mb-5'>
+        🌱 SOIL Products 🌱
+      </h2>
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
         {products.map((product) => (
           <div
@@ -126,6 +130,12 @@ export default function Products() {
           </div>
         </div>
       )}
+      {/* Special Products */}
+      <SpecialProducts
+        specialProducts={specialProducts}
+        userData={userData}
+        addToCart={addToCart}
+      />
       {/* confirm products when user add product to cart */}
       {isOpen2 && (
         <Modal

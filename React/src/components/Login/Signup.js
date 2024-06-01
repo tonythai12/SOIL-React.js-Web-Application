@@ -30,11 +30,19 @@ export default function SignUp({ isLogin, toggleForm }) {
       username: '',
       email: '',
       password: '',
+      password2: '',
     },
     validationSchema,
     onSubmit: async (values) => {
-      const { username, email, password } = values;
+      const { username, email, password, password2 } = values;
 
+      if (!password2) {
+        return alert('Please confirm your password');
+      }
+
+      if (password !== password2) {
+        return alert('Passwords do not match. Please try again');
+      }
       try {
         const res = await httpClient.fetch('/soil/auth/signup', {
           method: 'POST',
@@ -100,6 +108,18 @@ export default function SignUp({ isLogin, toggleForm }) {
       />
       {formik.touched.password && formik.errors.password && (
         <p className='text-red-500'>{formik.errors.password}</p>
+      )}
+      <input
+        type='password'
+        name='password2'
+        placeholder='Confirm Password'
+        className='w-full h-10 px-3 bg-gray-200 rounded-md'
+        value={formik.values.password2}
+        onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
+      />
+      {formik.touched.password2 && formik.errors.password2 && (
+        <p className='text-red-500'>{formik.errors.password2}</p>
       )}
       {/* Error message */}
       {errorMessage && <p className='text-red-500'>{errorMessage}</p>}
