@@ -21,10 +21,10 @@ export default function MainPage() {
     navigate(`/admin/${pathName}`);
   };
 
-  console.log(pathName);
   useEffect(() => {
     setSelectedTab(pathName);
   }, [pathName]);
+
   return (
     <Stack
       sx={{
@@ -32,6 +32,7 @@ export default function MainPage() {
         width: '`100%',
       }}
     >
+      {/* Menus */}
       <AppBar position='static' sx={{ bgcolor: appBarBgColor }}>
         <Toolbar>
           <h1 style={{ flexGrow: 1 }}>
