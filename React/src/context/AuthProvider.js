@@ -7,7 +7,7 @@ export const AuthProvider = ({ children, httpClient, tokenStorage }) => {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const getAuth = async () => {
-    // get user info using token whenever refreshed.
+    // get user info using token whenever refreshed so they can be logged in until they log out.
     const token = tokenStorage.getToken();
     const res = await httpClient.fetch('/soil/auth/me', {
       method: 'GET',
@@ -35,6 +35,7 @@ export const AuthProvider = ({ children, httpClient, tokenStorage }) => {
     setUserData({ ...userInfo });
   };
 
+  // when user log out,userData state should be null and remove token.
   const logOut = () => {
     setUserData(null);
     tokenStorage.clearToken();

@@ -9,7 +9,7 @@ export default function Cart() {
   const { cartProducts, setCartProducts, updateQuantity, removeItem } =
     useCart();
   const [isCheckout, setIsCheckout] = useState(false);
-  console.log(cartProducts);
+
   const totalCost =
     cartProducts &&
     cartProducts.reduce(

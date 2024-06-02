@@ -85,7 +85,6 @@ export async function create(user_id, title, product_id, rating, content) {
       [user_id, title, product_id, rating, content]
     )
     .then((result) => {
-      console.log(result[0]);
       return result[0];
     });
 }
@@ -146,7 +145,6 @@ export async function update(user_id, follower_id) {
         follower_id,
       ])
       .then((result) => {
-        console.log(`delete result =>`, result);
         return result[0];
       });
   } else {
@@ -156,7 +154,6 @@ export async function update(user_id, follower_id) {
         [user_id, follower_id]
       )
       .then((result) => {
-        console.log(result[0]);
         return result[0];
       });
   }

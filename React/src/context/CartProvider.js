@@ -6,9 +6,9 @@ const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
   const { userData, httpClient } = useAuth();
-  // state
   const [cartProducts, setCartProducts] = useState([]);
 
+  // get user's cart from db and save it to useState
   const getCarts = async () => {
     if (userData) {
       const res = await httpClient.fetch(`/soil/cart/${userData?.user_id}`, {
@@ -24,7 +24,7 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-  // Unit Test ✅ : remove cart item from Cart
+  // remove cart item from db
   const removeItem = async (cart_id, product_id) => {
     const res = await httpClient.fetch(`/soil/cart`, {
       method: 'DELETE',
@@ -41,9 +41,8 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-  // Unit Test ✅ : updateQuantity
+  // update Quantity from db
   const updateQuantity = async (cart_id, product_id, delta) => {
-    // Send a request to update the quantity of a product in the cart
     const res = await httpClient.fetch('/soil/cart', {
       method: 'POST',
       body: JSON.stringify({
@@ -53,7 +52,6 @@ export const CartProvider = ({ children }) => {
       }),
     });
 
-    // If the response status is not 200 (OK), display an alert with the error message
     if (res.status !== 200) {
       return alert(res.message);
     } else {
@@ -62,11 +60,12 @@ export const CartProvider = ({ children }) => {
     }
   };
 
+  // get uset's cart from db only wheb page is refreshed
   useEffect(() => {
     getCarts();
   }, [userData]);
 
-  // Unit Test ✅ : add products to cart.
+  // add products to cart db and save the data to state..
   const addToCart = async (product) => {
     const res = await httpClient.fetch(`/soil/cart/${userData?.user_id}`, {
       method: 'POST',
@@ -85,7 +84,7 @@ export const CartProvider = ({ children }) => {
   };
 
   return (
-    // provide user info to children so that they can use userInfo whenever they want without prop drilling.
+    // provide user cart info to children so that they can use userInfo whenever they want without prop drilling.
     <CartContext.Provider
       value={{
         cartProducts,

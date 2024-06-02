@@ -15,7 +15,7 @@ const Review = () => {
     const res = await httpClient.fetch('/soil/review', {
       method: 'GET',
     });
-    console.log(res.data);
+
     if (res.status === 200) {
       const newReviews = res.data.map((review) => {
         if (review.followingUserInfos.length === 0) {
@@ -24,7 +24,6 @@ const Review = () => {
           const checkFollowing = review.followingUserInfos.filter(
             (info) => info.user_id === userData?.user_id
           );
-          console.log(`checkFollowing =>`, checkFollowing);
           return {
             ...review,
             heart: checkFollowing[0] ? true : false,
@@ -38,7 +37,7 @@ const Review = () => {
       console.error(res.message);
     }
   };
-  console.log(`reviews =>`, reviews);
+
   useEffect(() => {
     getReviews();
   }, [userData]);
@@ -85,7 +84,6 @@ const Review = () => {
   };
 
   const handleCreateReview = async (createReview) => {
-    console.log(createReview);
     const { user_id, title, product_id, rating, content } = createReview;
     if (!content) {
       return alert('There is no written content.');

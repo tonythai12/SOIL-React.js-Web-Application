@@ -55,7 +55,7 @@ const MyPage = () => {
     password: userData?.password,
     registration_date: userData?.created_at.split('T')[0],
   };
-  console.log(userData);
+
   const handleEditProfile = () => {
     setisEdit(true);
   };

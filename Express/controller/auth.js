@@ -95,7 +95,6 @@ export async function modifyUserInfo(req, res) {
 export async function remove(req, res) {
   const { user_id } = req.params;
   try {
-    // console.log(`userId =>`, user_id);
     const deleteResult = await authRepository.deleteUser(user_id);
     console.log(`deleteResult =>`, deleteResult);
 

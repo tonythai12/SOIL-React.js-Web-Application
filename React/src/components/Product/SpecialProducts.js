@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import Modal from '../Cart/Modal';
+import React from 'react';
 import AddCartBtn from '../Cart/AddCartBtn';
 
 // Component displaying special deals based on the selected vegetable
