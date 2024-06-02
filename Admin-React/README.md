@@ -8,6 +8,10 @@
 
 - @mui/material @emotion/react @emotion/styled
 - @mui/x-data-grid
+- subscriptions-transport-ws
+- recharts
+- @apollo/client
+- graphql
 
 # Admin Dashboard for SOIL Website
 
