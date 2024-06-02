@@ -19,16 +19,16 @@ const tabs = [
     route: '/soil/product',
   },
   {
-    label: 'Diet Plan',
-    icon: <FaCarrot />,
-    value: 'dietplan',
-    route: '/soil/dietplan',
-  },
-  {
     label: 'Cart',
     icon: <FaShoppingCart />,
     value: 'cart',
     route: '/soil/cart',
+  },
+  {
+    label: 'Diet Plan',
+    icon: <FaCarrot />,
+    value: 'dietplan',
+    route: '/soil/dietplan',
   },
   {
     label: 'Review',

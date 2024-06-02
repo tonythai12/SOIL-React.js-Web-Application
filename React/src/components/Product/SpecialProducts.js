@@ -13,7 +13,7 @@ export function SpecialProducts({
   isOpen,
 }) {
   return (
-    <div className='py-12 bg-white z-0'>
+    <div className='py-12 bg-orange-200 z-0 my-5 rounded-lg'>
       <div className='max-w-2xl mx-auto px-4 sm:px-6 lg:max-w-7xl lg:px-8'>
         <h2 className='text-2xl font-extrabold tracking-tight text-gray-900'>
           🔥 Special Products 🔥
@@ -35,7 +35,9 @@ export function SpecialProducts({
                 </div>
                 <div className='mt-4 flex justify-between'>
                   <div>
-                    <h3 className='text-sm text-gray-700'>{item.name}</h3>
+                    <h3 className='font-medium text-lg text-gray-700 '>
+                      {item.name}
+                    </h3>
                     <div className='flex'>
                       <p className='mt-1  text-sm text-gray-500 line-through'>
                         {`$${item.price}`}
