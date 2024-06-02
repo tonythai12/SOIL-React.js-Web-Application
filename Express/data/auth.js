@@ -16,7 +16,6 @@ export async function findByUseremail(email) {
   return db
     .execute('SELECT * FROM Users WHERE email=?', [email]) //
     .then((result) => {
-      console.log(result);
       return result[0][0];
     });
 }
