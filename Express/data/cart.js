@@ -1,5 +1,6 @@
 import db from '../db/database.js';
 
+// get cart info from Cart DB and product info from Product DB
 export async function getAll(user_id) {
   try {
     const [rows] = await db.execute(
@@ -35,7 +36,7 @@ export async function getAll(user_id) {
   }
 }
 
-// Unit Test ✅ :
+// add product to Cart DB.
 export async function addProduct(user_id, product) {
   try {
     // 1. Check if the user_id exists in the ShoppingCart
@@ -95,7 +96,7 @@ export async function addProduct(user_id, product) {
   }
 }
 
-// Unit Test ✅ :
+// update cart product quantity
 export async function updateProductQuantity(cart_id, product_id, delta) {
   // Check if the cart item exists
   const [rows] = await db.execute(
@@ -141,11 +142,12 @@ export async function updateProductQuantity(cart_id, product_id, delta) {
   }
 }
 
+// revmove all cart by userid from ShoppingCart DB
 export async function removeAll(user_id) {
   return db.execute('DELETE FROM ShoppingCart WHERE user_id=?', [user_id]);
 }
 
-// Unit Test ✅ :
+// remove one cart item from CartItems DB
 export async function remove(cart_id, product_id) {
   return db.execute('DELETE FROM CartItems WHERE cart_id=? AND product_id=?', [
     cart_id,

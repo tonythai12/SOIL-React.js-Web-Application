@@ -1,5 +1,6 @@
 import * as reviewRepository from '../data/review.js';
 
+// get all Reviews
 export async function getReviews(req, res) {
   const reviews = await reviewRepository.getAll();
   if (reviews.length > 0) {
@@ -9,6 +10,7 @@ export async function getReviews(req, res) {
   }
 }
 
+// create Reviews
 export function createReviews(req, res) {
   const { user_id, title, product_id, rating, content } = req.body;
   const review = reviewRepository.create(
@@ -25,6 +27,7 @@ export function createReviews(req, res) {
   }
 }
 
+// edit revies
 export function editReviews(req, res) {
   const { review_id } = req.params;
   const { title, product_id, rating, content } = req.body;
@@ -38,12 +41,14 @@ export function editReviews(req, res) {
   res.status(200).json(review);
 }
 
+// delete reviews
 export function deleteReviews(req, res) {
   const { review_id } = req.params;
   const deleted = reviewRepository.remove(review_id);
   res.status(204).json(deleted);
 }
 
+// update followers in reviewList
 export function updateFollowings(req, res) {
   const { user_id } = req.params;
   const { follower_id } = req.body;

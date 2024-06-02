@@ -1,10 +1,12 @@
 import db from '../db/database.js';
 import * as authRepository from './auth.js';
 
+// get All reviews
 export async function getAll() {
   const res = await db.execute('SELECT * FROM Reviews');
   let reviewArr = [];
 
+  // if get all reviews, get username from Users using reviews_user_id and get productInfo from Products using reviews.product_id
   if (res[0].length > 0) {
     for (const li of res[0]) {
       const [userResult] = await db.execute(
@@ -22,19 +24,20 @@ export async function getAll() {
       const productImg =
         productResult.length > 0 ? productResult[0].imageUrl : null;
 
-      // get follow info
+      // get follow info using reives.user_id
       const followInfo = await db.execute(
         'SELECT * FROM Following WHERE follower_id=? ',
         [li.user_id]
       );
 
-      // get folling user info
+      // get following users info
       let followingUserInfos = [];
       for (const li of followInfo[0]) {
         const user = await authRepository.findById(li.following_id);
         followingUserInfos.push(user);
       }
 
+      // return data which is needed when show review list to client.
       const data = {
         review_id: li.review_id,
         user_id: li.user_id,
@@ -56,7 +59,9 @@ export async function getAll() {
   }
 }
 
+// This is using when show best reviews in Product pages
 export async function geAllByRating(productId) {
+  // get reviews corresponding productId which rating is 5 and also username from DB User.
   try {
     const [results] = await db.execute(
       `
@@ -74,10 +79,11 @@ export async function geAllByRating(productId) {
     return results;
   } catch (error) {
     console.error('Error executing query:', error);
-    throw error; // 에러 발생 시 예외를 던져 호출자가 이를 처리할 수 있도록 합니다.
+    throw error;
   }
 }
 
+// create reviews
 export async function create(user_id, title, product_id, rating, content) {
   return db
     .execute(
@@ -89,6 +95,7 @@ export async function create(user_id, title, product_id, rating, content) {
     });
 }
 
+// edit reviews using review_id.
 export async function edit(review_id, title, product_id, rating, content) {
   const query = `
       UPDATE Reviews 
@@ -106,6 +113,7 @@ export async function edit(review_id, title, product_id, rating, content) {
   return result[0];
 }
 
+// remove review using review_id from DB Reviews
 export async function remove(review_id) {
   try {
     const result = await db.execute('DELETE FROM Reviews WHERE review_id=?', [
@@ -118,6 +126,7 @@ export async function remove(review_id) {
   }
 }
 
+// remove review using user_id from DB Reviews
 export async function removeByUserId(user_id) {
   try {
     const result = await db.execute('DELETE FROM Reviews WHERE user_id=?', [
@@ -130,14 +139,15 @@ export async function removeByUserId(user_id) {
   }
 }
 
-// follwing
-
+// update follwing info.
 export async function update(user_id, follower_id) {
+  // check if it has following info.
   const checkFollower = await db.execute(
     'SELECT * FROM Following WHERE following_id=? AND follower_id=?',
     [user_id, follower_id]
   );
 
+  // if user already followed follower, remove it from Following DB.
   if (checkFollower[0].length > 0) {
     return await db
       .execute('DELETE FROM Following WHERE following_id=? AND follower_id=?', [
@@ -148,6 +158,7 @@ export async function update(user_id, follower_id) {
         return result[0];
       });
   } else {
+    // if user are not followed follower, add info to Following DB
     return await db
       .execute(
         'INSERT INTO Following (following_id, follower_id) VALUES (?,?)',
