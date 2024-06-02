@@ -1,6 +1,8 @@
 const db = require('../db.js');
 const { resolvers: subscriptionResolvers, pubsub } = require('./Subscription.js');
+const Filter = require('bad-words');
 
+const filter = new Filter();
 const resolvers = {
   Query: {
     reviews: async (_, { product_id }) => {
@@ -18,8 +20,9 @@ const resolvers = {
     },
   },
   Mutation: {
-    createReview: async (_, { user_id, title, product_id, rating, content, userImage, blocked = false }) => {
+    createReview: async (_, { user_id, title, product_id, rating, content, userImage }) => {
       try {
+        const blocked = filter.isProfane(content);
         const review = await db.createReview(user_id, title, product_id, rating, content, userImage, blocked);
         pubsub.publish('NEW_REVIEW', { newReview: review });
         return review;
@@ -29,7 +32,8 @@ const resolvers = {
       }
     },
     updateReview: async (_, { review_id, title, rating, content, userImage }) => {
-      const review = await db.updateReview(review_id, title, rating, content, userImage);
+      const blocked = filter.isProfane(content);
+      const review = await db.updateReview(review_id, title, rating, content, userImage, blocked);
       return review;
     },
     deleteReview: async (_, { review_id }) => {
