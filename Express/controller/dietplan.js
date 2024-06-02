@@ -1,13 +1,13 @@
 import * as dietPlanRepository from '../data/dietplan.js';
 
-export async function getDietPlanList(req, res) {
-  const dietplanList = await dietPlanRepository.getAll();
-  if (dietplanList) {
-    res.status(200).json(dietplanList);
-  } else {
-    res.status(404).json({ message: 'Cannot get dietplanList' });
-  }
-}
+// export async function getDietPlanList(req, res) {
+//   const dietplanList = await dietPlanRepository.getAll();
+//   if (dietplanList) {
+//     res.status(200).json(dietplanList);
+//   } else {
+//     res.status(404).json({ message: 'Cannot get dietplanList' });
+//   }
+// }
 
 export async function getDietPlan(req, res) {
   const { user_id } = req.params;

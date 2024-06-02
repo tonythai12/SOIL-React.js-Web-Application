@@ -1,5 +1,6 @@
 import * as cartRepository from '../data/cart.js';
 
+// get user's cart items.
 export async function getCarts(req, res) {
   const { user_id } = req.params;
 
@@ -11,6 +12,7 @@ export async function getCarts(req, res) {
   }
 }
 
+// add product to Cart DB and if it is successed, return user's Cart DB
 export async function addToCart(req, res) {
   const { user_id } = req.params;
   const { product } = req.body;
@@ -30,6 +32,7 @@ export async function addToCart(req, res) {
   }
 }
 
+// update cart quantity
 export async function updatedCartQuantity(req, res) {
   const { cart_id, product_id, delta } = req.body;
 
@@ -45,6 +48,7 @@ export async function updatedCartQuantity(req, res) {
   }
 }
 
+// delete shopping cart.
 export async function deleteShoppingCart(req, res) {
   const { user_id } = req.params;
   const removed = await cartRepository.removeAll(user_id);
@@ -56,6 +60,7 @@ export async function deleteShoppingCart(req, res) {
   }
 }
 
+// delete cart items
 export async function deleteCartItem(req, res) {
   const { cart_id, product_id } = req.body;
   const removed = await cartRepository.remove(cart_id, product_id);

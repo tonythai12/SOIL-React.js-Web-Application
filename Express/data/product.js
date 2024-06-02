@@ -1,5 +1,6 @@
 import db from '../db/database.js';
 
+// get all product which is not isSpecial from Products DB
 export async function getAll() {
   try {
     const result = await db.execute(
@@ -11,7 +12,7 @@ export async function getAll() {
     throw error;
   }
 }
-
+// get all product which is 'isSpecial = true' from Products DB
 export async function getAllSpecial() {
   try {
     const result = await db.execute(

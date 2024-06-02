@@ -1,13 +1,14 @@
 import db from '../db/database.js';
 
-export async function getAll() {
-  const [rows] = await db.execute('SELECT * FROM DietPlan');
-  if (rows.length === 0) {
-    return null; // Return null if no dietplan exists
-  } else {
-    return rows[0];
-  }
-}
+// // get user's diet palnList
+// export async function getAll() {
+//   const [rows] = await db.execute('SELECT * FROM DietPlan');
+//   if (rows.length === 0) {
+//     return null; // Return null if no dietplan exists
+//   } else {
+//     return rows[0];
+//   }
+// }
 
 export async function getByUserId(user_id) {
   const [rows] = await db.execute('SELECT * FROM DietPlan WHERE user_id=?', [

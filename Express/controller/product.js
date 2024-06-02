@@ -1,6 +1,7 @@
 import * as productRepository from '../data/product.js';
 import * as reviewRepository from '../data/review.js';
 
+// get products and add bestReviews array to products.
 export async function getProducts(req, res) {
   try {
     const products = await productRepository.getAll();
@@ -21,10 +22,11 @@ export async function getProducts(req, res) {
   }
 }
 
+// get special products and add bestReviews array to products.
 export async function getSpecialProducts(req, res) {
   try {
     const specialProducts = await productRepository.getAllSpecial();
-    console.log(`specialProducts =>`, specialProducts);
+
     if (specialProducts && specialProducts.length > 0) {
       for (const product of specialProducts) {
         const bestReviews = await reviewRepository.geAllByRating(
