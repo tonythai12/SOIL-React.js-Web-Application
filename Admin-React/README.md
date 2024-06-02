@@ -12,6 +12,7 @@
 - recharts
 - @apollo/client
 - graphql
+- bad-words
 
 # Admin Dashboard for SOIL Website
 
@@ -34,6 +35,7 @@ This is the admin dashboard for the SOIL website, built using React and GraphQL.
 ### Review Management
 - Display a list of recent reviews
 - Delete inappropriate reviews
+  > Use the 'bad-words' library to automatically block abusive reviews. Blocked reviews are marked with a red background and can be found on the reviews page. 
 - Real-time updates when a new review is added or deleted
 
 ### Review Metrics
