@@ -1,19 +1,12 @@
 # Project Overview
 
+This is the admin dashboard for the SOIL website, built using React and GraphQL. It provides features for managing users, products, and reviews.
+
 ### Github URL
 
 - https://github.com/rmit-fsd-2024-s1/s3939906-s4002970-a2
 
-### Tools to be installed:
 
-- @mui/material @emotion/react @emotion/styled
-- @mui/x-data-grid
-
-# Admin Dashboard for SOIL Website
-
-This is the admin dashboard for the SOIL website, built using React and GraphQL. It provides features for managing users, products, and reviews.
-
-## Features
 
 ### User Management
 - Display a list of all users
