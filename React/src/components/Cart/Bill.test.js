@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Bill from './Bill';
-
+// Test ensures that payment information which includes product name and total cost, is rendered correctly on Bill component and confirms that clicking "Pay now" button alert message saying "Payment Successful!".
 describe('Bill component', () => {
   // Setup mock functions globally for the test suite
   beforeAll(() => {
