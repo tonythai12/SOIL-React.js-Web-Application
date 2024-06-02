@@ -56,6 +56,7 @@ export default function Products() {
     setSelectedProduct(product);
     setShowBestReviews(true);
   };
+
   return (
     <div className='container mx-auto px-4 py-8'>
       <h2 className='text-2xl font-extrabold tracking-tight text-gray-900 mb-5'>
@@ -156,9 +157,14 @@ export default function Products() {
       {/* Special Products */}
       <SpecialProducts
         specialProducts={specialProducts}
+        selectedProduct={selectedProduct}
         showReviewDetail={showReviewDetail}
+        setSelectedProduct={setSelectedProduct}
         userData={userData}
-        addToCart={addToCart}
+        handleAddToCart={handleAddToCart}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        handleCloseDetail={handleCloseDetail}
       />
       {/* confirm products when user add product to cart */}
       {isOpen2 && (
