@@ -67,6 +67,8 @@ const theme = createTheme({
 export default function Reviews() {
   const { loading, error, data, refetch } = useQuery(GET_REVIEWS);
   const [toggleBlockReview] = useMutation(TOGGLE_BLOCK_REVIEW);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedReview, setSelectedReview] = useState(null);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
@@ -76,6 +78,22 @@ export default function Reviews() {
       variables: { review_id: review.review_id, blocked: !review.blocked },
     });
     refetch();
+  };
+
+  const handleOpenDialog = (review) => {
+    setSelectedReview(review);
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setSelectedReview(null);
+    setOpenDialog(false);
+  };
+
+  const isReviewInappropriate = (review) => {
+    const inappropriateWords = ['fuck', 'shit', 'damn']; // 부적절한 단어 목록
+    const { title, content } = review;
+    return inappropriateWords.some(word => title.toLowerCase().includes(word) || content.toLowerCase().includes(word));
   };
 
   return (
@@ -106,13 +124,9 @@ export default function Reviews() {
                 {data.reviews.map((review) => (
                   <TableRow
                     key={review.review_id}
-                    sx={
-                      review.title.toLowerCase().includes('disappointed') ||
-                      review.content.toLowerCase().includes('poor quality') ||
-                      review.content.toLowerCase().includes('fuck')
-                        ? { backgroundColor: '#ffcccc' }
-                        : {}
-                    }
+                    sx={{
+                      backgroundColor: isReviewInappropriate(review) ? '#ffcccc' : 'inherit',
+                    }}
                   >
                     <TableCell>{review.title}</TableCell>
                     <TableCell>{review.user.username}</TableCell>
@@ -128,7 +142,7 @@ export default function Reviews() {
                       <Button
                         variant='contained'
                         color={review.blocked ? 'primary' : 'secondary'}
-                        onClick={() => handleToggleBlockReview(review)}
+                        onClick={() => handleOpenDialog(review)}
                       >
                         {review.blocked ? 'Unblock' : 'Block'}
                       </Button>
@@ -138,6 +152,25 @@ export default function Reviews() {
               </TableBody>
             </Table>
           </TableContainer>
+          <Dialog open={openDialog} onClose={handleCloseDialog}>
+            <DialogTitle>
+              {selectedReview && selectedReview.blocked ? 'Unblock Review' : 'Block Review'}
+            </DialogTitle>
+            <DialogContent>
+              <Typography variant='body1'>
+                Are you sure you want to {selectedReview && selectedReview.blocked ? 'unblock' : 'block'} this review?
+              </Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseDialog}>Cancel</Button>
+              <Button onClick={() => {
+                handleToggleBlockReview(selectedReview);
+                handleCloseDialog();
+              }} color="primary">
+                {selectedReview && selectedReview.blocked ? 'Unblock' : 'Block'}
+              </Button>
+            </DialogActions>
+          </Dialog>
         </ThemeProvider>
       </Stack>
     </Stack>

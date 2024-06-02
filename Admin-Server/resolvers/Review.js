@@ -36,6 +36,10 @@ const resolvers = {
       const deletedReviewId = await db.deleteReview(review_id);
       return deletedReviewId;
     },
+    toggleBlockReview: async (_, { review_id, blocked }) => {
+      const review = await db.blockReview(review_id, blocked);
+      return review;
+    },
   },
   Review: {
     user: async (review) => {

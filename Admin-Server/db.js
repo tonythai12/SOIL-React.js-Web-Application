@@ -14,6 +14,11 @@ async function getAllUsers() {
   return rows;
 }
 
+async function blockReview(reviewId, blocked) {
+  await pool.query('UPDATE Reviews SET blocked = ? WHERE review_id = ?', [blocked, reviewId]);
+  return getReviewById(reviewId);
+}
+
 async function blockUser(userId) {
   const [rows] = await pool.query(
     'UPDATE Users SET blocked = 1 WHERE user_id = ?',
@@ -193,4 +198,5 @@ module.exports = {
   updateProduct,
   deleteProduct,
   getReviews,
+  blockReview,
 };

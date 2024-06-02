@@ -4,12 +4,13 @@ const typeDefs = gql`
   type Mutation {
     blockUser(user_id: ID!): User!
     unblockUser(user_id: ID!): User!
-    createReview(user_id: ID!, title: String, product_id: ID!, rating: Int!, content: String, userImage: String): Review!
+    createReview(user_id: ID!, title: String, product_id: ID!, rating: Int!, content: String, userImage: String, blocked: Boolean): Review!
     updateReview(review_id: ID!, title: String, rating: Int, content: String, userImage: String): Review!
     deleteReview(review_id: ID!): ID!
     createProduct(name: String!, description: String, price: Float!, salePrice: Float!, imageUrl: String!, isSpecial: Boolean!): Product!
     updateProduct(product_id: ID!, name: String, description: String, price: Float, salePrice: Float, imageUrl: String, isSpecial: Boolean): Product!
     deleteProduct(product_id: ID!): ID!
+    toggleBlockReview(review_id: ID!, blocked: Boolean!): Review!
   }
 `;
 
