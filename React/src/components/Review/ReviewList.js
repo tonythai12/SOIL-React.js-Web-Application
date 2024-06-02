@@ -94,6 +94,8 @@ export default function ReviewList({
                         alt={review?.userName}
                       />
                       <p className='text-gray-200 mt-1'>{review?.userName}</p>
+                      <p className='text-gray-200 mt-1'>⇡</p>
+                      <p className='text-gray-200 mt-1'>Click</p>
                     </div>
                     {/* Products reviews */}
                     <div className='flex flex-col justify-center mt-3'>

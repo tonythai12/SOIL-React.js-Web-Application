@@ -49,6 +49,7 @@ export async function getAll() {
         rating: li.rating,
         product_id: li.product_id,
         product: { name: productName, imgUrl: productImg },
+        blocked: li.blocked,
       };
 
       reviewArr.push(data);
