@@ -66,24 +66,10 @@ const theme = createTheme({
 
 export default function Reviews() {
   const { loading, error, data, refetch } = useQuery(GET_REVIEWS);
-  const [deleteReview] = useMutation(DELETE_REVIEW);
   const [toggleBlockReview] = useMutation(TOGGLE_BLOCK_REVIEW);
-  const [openDialog, setOpenDialog] = useState(false);
-  const [selectedReview, setSelectedReview] = useState(null);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
-
-  const handleDeleteReview = async (reviewId) => {
-    await deleteReview({ variables: { review_id: reviewId } });
-    refetch();
-    setOpenDialog(false);
-  };
-
-  const handleCloseDialog = () => {
-    setSelectedReview(null);
-    setOpenDialog(false);
-  };
 
   const handleToggleBlockReview = async (review) => {
     await toggleBlockReview({
